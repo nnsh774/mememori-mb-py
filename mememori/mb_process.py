@@ -32,6 +32,8 @@ def expand_cls(obj, cls):
                 m for m in inner_type.__members__.values()
                 if obj[field.name] & m.value
             ])
+            if not params[field.name].values and 'None_' in inner_type.__members__:
+                params[field.name] = Flags([inner_type.__members__['None_']])
         elif field.name in obj:
             params[field.name] = expand_obj(obj[field.name], get_type(field.type))
         else:
