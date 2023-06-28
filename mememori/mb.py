@@ -19,26 +19,26 @@ class ActiveSkillMB(MasterBookBase):
     # [Description("スキル名キー")]
     # [PropertyOrder(1)]
     NameKey: str
+    # [Description("ルートスキルID")]
+    # [PropertyOrder(5)]
+    RootActiveSkillId: int
     # [Description("初期スキルクールタイム")]
     # [PropertyOrder(2)]
     SkillInitCoolTime: int
     # [Description("スキルMAXクールタイム")]
     # [PropertyOrder(3)]
     SkillMaxCoolTime: int
-    # [Description("ルートスキルID")]
-    # [PropertyOrder(5)]
-    RootActiveSkillId: int
 
 # [Description("アプリバージョン")]
 # [MessagePackObject(True)]
 @dataclass
 class AppVersionMB(MasterBookBase):
-    # [Description("デバイス種別")]
-    # [PropertyOrder(1)]
-    DeviceType: DeviceType
     # [Description("アプリバージョン")]
     # [PropertyOrder(2)]
     AppVersion: str
+    # [Description("デバイス種別")]
+    # [PropertyOrder(1)]
+    DeviceType: DeviceType
 
 # [Description("放置バトル敵データ")]
 # [MessagePackObject(True)]
@@ -120,12 +120,12 @@ class BattleScheduleMB(MasterBookBase):
 # [MessagePackObject(True)]
 @dataclass
 class BattleSkillCharacterSettingMB(MasterBookBase):
-    # [Description("キャラID (CharacterMB)")]
-    # [PropertyOrder(1)]
-    CharacterId: int
     # [Description("文字背景色タイプ")]
     # [PropertyOrder(2)]
     CharacterColorType: CharacterColorType
+    # [Description("キャラID (CharacterMB)")]
+    # [PropertyOrder(1)]
+    CharacterId: int
 
 # [Description("バトルスキル演出設定")]
 # [MessagePackObject(True)]
@@ -137,15 +137,15 @@ class BattleSkillNameSettingMB(MasterBookBase):
     # [Description("改行位置設定 JP")]
     # [PropertyOrder(2)]
     NewLineIndexJP: int
-    # [Description("改行位置設定 US")]
-    # [PropertyOrder(3)]
-    NewLineIndexUS: int
     # [Description("改行位置設定 KR")]
     # [PropertyOrder(2)]
     NewLineIndexKR: int
     # [Description("改行位置設定 TW")]
     # [PropertyOrder(3)]
     NewLineIndexTW: int
+    # [Description("改行位置設定 US")]
+    # [PropertyOrder(3)]
+    NewLineIndexUS: int
 
 # [Description("祈りの泉　ボードランク")]
 # [MessagePackObject(True)]
@@ -179,6 +179,9 @@ class BossBattleEnemyMB(MasterBookBase, IBattleEnemy):
     # [Nest(True, 1)]
     # [PropertyOrder(9)]
     BaseParameter: BaseParameter
+    # [Description("敵キャラID")]
+    # [PropertyOrder(14)]
+    BattleEnemyCharacterId: int
     # [Description("バトルパラメータ")]
     # [Nest(True, 1)]
     # [PropertyOrder(10)]
@@ -195,9 +198,6 @@ class BossBattleEnemyMB(MasterBookBase, IBattleEnemy):
     # [Description("敵調整ID")]
     # [PropertyOrder(16)]
     EnemyAdjustId: int
-    # [Description("敵キャラID")]
-    # [PropertyOrder(14)]
-    BattleEnemyCharacterId: int
     # [Description("敵武具ID")]
     # [PropertyOrder(15)]
     EnemyEquipmentId: int
@@ -227,6 +227,9 @@ class BossBattleEnemyMB(MasterBookBase, IBattleEnemy):
 # [MessagePackObject(True)]
 @dataclass
 class BountyQuestEventMB(MasterBookBase, IHasStartEndTime):
+    # [Description("終了時刻")]
+    # [PropertyOrder(4)]
+    EndTime: str
     # [Description("イベント説明")]
     # [PropertyOrder(2)]
     EventDescriptionKey: str
@@ -236,6 +239,9 @@ class BountyQuestEventMB(MasterBookBase, IHasStartEndTime):
     # [Description("報酬量の増加率(%)")]
     # [PropertyOrder(5)]
     MultipleNumber: int
+    # [Description("開始時刻")]
+    # [PropertyOrder(3)]
+    StartTime: str
     # [Description("対象となるアイテムリスト")]
     # [Nest(False, 0)]
     # [PropertyOrder(7)]
@@ -244,24 +250,18 @@ class BountyQuestEventMB(MasterBookBase, IHasStartEndTime):
     # [Nest(False, 0)]
     # [PropertyOrder(6)]
     TargetQuestTypeList: list[BountyQuestEventTargetQuestTypeInfo]
-    # [Description("終了時刻")]
-    # [PropertyOrder(4)]
-    EndTime: str
-    # [Description("開始時刻")]
-    # [PropertyOrder(3)]
-    StartTime: str
 
 # [Description("アイテム変換情報")]
 # [MessagePackObject(True)]
 @dataclass
 class ChangeItemMB(MasterBookBase):
+    # [Description("アイテム変換タイプ")]
+    # [PropertyOrder(1)]
+    ChangeItemType: ChangeItemType
     # [Description("変換されるアイテムリスト")]
     # [Nest(False, 0)]
     # [PropertyOrder(5)]
     ChangeItems: list[UserItem]
-    # [Description("アイテム変換タイプ")]
-    # [PropertyOrder(1)]
-    ChangeItemType: ChangeItemType
     # [Description("アイテムID")]
     # [PropertyOrder(3)]
     ItemId: int
@@ -283,12 +283,12 @@ class ChapterMB(MasterBookBase):
     # [MasterBookId(typeof)]
     # [PropertyOrder(1)]
     StateId: int
-    # [Description("テキストキー")]
-    # [PropertyOrder(3)]
-    TextKey: str
     # [Description("領地名")]
     # [PropertyOrder(4)]
     TerritoryNameKey: str
+    # [Description("テキストキー")]
+    # [PropertyOrder(3)]
+    TextKey: str
 
 # [Description("キャラクターボックスサイズ")]
 # [MessagePackObject(True)]
@@ -333,15 +333,15 @@ class CharacterCollectionLevelMB(MasterBookBase):
 # [MessagePackObject(True)]
 @dataclass
 class CharacterCollectionMB(MasterBookBase, IHasJstStartEndTime):
+    # [Description("新アルカナの終了時間(JST)")]
+    # [PropertyOrder(4)]
+    EndTimeFixJST: str
     # [Description("名称キー")]
     # [PropertyOrder(1)]
     NameKey: str
     # [Description("開放に必要なキャラーIDリスト")]
     # [PropertyOrder(2)]
     RequiredCharacterIds: list[int]
-    # [Description("新アルカナの終了時間(JST)")]
-    # [PropertyOrder(4)]
-    EndTimeFixJST: str
     # [Description("新アルカナの開始時間(JST)")]
     # [PropertyOrder(3)]
     StartTimeFixJST: str
@@ -353,12 +353,12 @@ class CharacterCollectionRewardMB(MasterBookBase):
     # [Description("構成キャラ数")]
     # [PropertyOrder(1)]
     CharacterCount: int
-    # [Description("段階（アルカナレベル）")]
-    # [PropertyOrder(2)]
-    CollectionLevel: int
     # [Description("アルカナが解放されるキャラレアリティ")]
     # [PropertyOrder(3)]
     CharacterRarityFlags: Flags[CharacterRarityFlags]
+    # [Description("段階（アルカナレベル）")]
+    # [PropertyOrder(2)]
+    CollectionLevel: int
     # [Description("報酬アイテム")]
     # [Nest(False, 0)]
     # [PropertyOrder(4)]
@@ -387,12 +387,12 @@ class CharacterDetailVoiceMB(MasterBookBase):
     # [Description("解放条件")]
     # [PropertyOrder(5)]
     UnlockCondition: UnlockCharacterDetailVoiceType
-    # [Description("ボタン表示用テキスト（解放済）キー")]
-    # [PropertyOrder(2)]
-    UnlockedVoiceButtonTextKey: str
     # [Description("クエストID")]
     # [PropertyOrder(6)]
     UnlockQuestId: int
+    # [Description("ボタン表示用テキスト（解放済）キー")]
+    # [PropertyOrder(2)]
+    UnlockedVoiceButtonTextKey: str
 
 # [Description("キャラクターレベル")]
 # [MessagePackObject(True)]
@@ -449,6 +449,9 @@ class CharacterMB(MasterBookBase, IHasJstStartEndTime):
     # [Description("属性")]
     # [PropertyOrder(4)]
     ElementType: ElementType
+    # [Description("新キャラの図鑑表示終了時間(JST)")]
+    # [PropertyOrder(17)]
+    EndTimeFixJST: str
     # [Description("初期バトルパラメータ")]
     # [Nest(False, 0)]
     # [PropertyOrder(7)]
@@ -477,9 +480,6 @@ class CharacterMB(MasterBookBase, IHasJstStartEndTime):
     # [Description("解放に必要な絆の数")]
     # [PropertyOrder(13)]
     RequireFragmentCount: int
-    # [Description("新キャラの図鑑表示終了時間(JST)")]
-    # [PropertyOrder(17)]
-    EndTimeFixJST: str
     # [Description("新キャラの図鑑表示開始時間(JST)")]
     # [PropertyOrder(16)]
     StartTimeFixJST: str
@@ -677,12 +677,12 @@ class DungeonBattleGuestMB(MasterBookBase, IHasJstStartEndTime):
     # [Description("キャラクターID")]
     # [PropertyOrder(1)]
     CharacterId: int
-    # [Description("優先的に出現させるか")]
-    # [PropertyOrder(2)]
-    IsPickup: bool
     # [Description("優先出現終了時間(JST)")]
     # [PropertyOrder(4)]
     EndTimeFixJST: str
+    # [Description("優先的に出現させるか")]
+    # [PropertyOrder(2)]
+    IsPickup: bool
     # [Description("優先出現開始時間(JST)")]
     # [PropertyOrder(3)]
     StartTimeFixJST: str
@@ -706,6 +706,9 @@ class DungeonBattleRelicMB(MasterBookBase):
     # [Description("レアリティ")]
     # [PropertyOrder(2)]
     DungeonRelicRarityType: DungeonBattleRelicRarityType
+    # [Description("アイコンID")]
+    # [PropertyOrder(9)]
+    IconId: int
     # [Description("名前キー")]
     # [PropertyOrder(1)]
     NameKey: str
@@ -716,9 +719,6 @@ class DungeonBattleRelicMB(MasterBookBase):
     # [Description("下位ID（0の場合は直接入手可能）")]
     # [PropertyOrder(3)]
     ReinforceFrom: int
-    # [Description("アイコンID")]
-    # [PropertyOrder(9)]
-    IconId: int
 
 # [Description("スキル効果グループ")]
 # [MessagePackObject(True)]
@@ -739,15 +739,15 @@ class EffectGroupMB(MasterBookBase):
     # [Description("効果アイコンタイプ")]
     # [PropertyOrder(3)]
     IconType: EffectGroupIconType
-    # [Description("効果名キー")]
-    # [PropertyOrder(1)]
-    NameKey: str
     # [Description("強制非表示フラグ")]
     # [PropertyOrder(7)]
     IsHide: bool
     # [Description("ターン数非表示フラグ")]
     # [PropertyOrder(8)]
     IsTurnHide: bool
+    # [Description("効果名キー")]
+    # [PropertyOrder(1)]
+    NameKey: str
 
 # [Description("属性ボーナス")]
 # [MessagePackObject(True)]
@@ -995,6 +995,9 @@ class EquipmentSetMaterialMB(MasterBookBase):
     # [Description("説明文キー")]
     # [PropertyOrder(4)]
     DescriptionKey: str
+    # [Description("表示名キー")]
+    # [PropertyOrder(2)]
+    DisplayNameKey: str
     # [Description("アイコンID")]
     # [PropertyOrder(5)]
     IconId: int
@@ -1007,9 +1010,6 @@ class EquipmentSetMaterialMB(MasterBookBase):
     # [Description("名称キー")]
     # [PropertyOrder(1)]
     NameKey: str
-    # [Description("表示名キー")]
-    # [PropertyOrder(2)]
-    DisplayNameKey: str
     # [Description("入手ステージ Quest ID")]
     # [PropertyOrder(6)]
     QuestIdList: list[int]
@@ -1050,12 +1050,27 @@ class FaqListMB(MasterBookBase):
 # [MessagePackObject(True)]
 @dataclass
 class FriendCampaignMB(MasterBookBase, IHasStartEndTime, ICharacterImage):
+    # [Description("キャラ画像Id")]
+    # [PropertyOrder(4)]
+    CharacterImageId: int
+    # [Description("キャラ画像サイズ")]
+    # [PropertyOrder(7)]
+    CharacterImageSize: float
+    # [Description("キャラ画像座標X")]
+    # [PropertyOrder(5)]
+    CharacterImageX: float
+    # [Description("キャラ画像座標Y")]
+    # [PropertyOrder(6)]
+    CharacterImageY: float
     # [Description("コード入力有効期間")]
     # [PropertyOrder(3)]
     CodeExpirationPeriod: int
     # [Description("招待コード入力上限数")]
     # [PropertyOrder(10)]
     CodeLimitCount: int
+    # [Description("終了時刻")]
+    # [PropertyOrder(2)]
+    EndTime: str
     # [Description("対象フレンドミッションリスト")]
     # [PropertyOrder(8)]
     FriendMissionIdList: list[int]
@@ -1063,57 +1078,42 @@ class FriendCampaignMB(MasterBookBase, IHasStartEndTime, ICharacterImage):
     # [Nest(False, 0)]
     # [PropertyOrder(11)]
     RewardItemList: list[UserItem]
-    # [Description("キャンペーンタイトル")]
-    # [PropertyOrder(9)]
-    Title: str
-    # [Description("キャラ画像Id")]
-    # [PropertyOrder(4)]
-    CharacterImageId: int
-    # [Description("キャラ画像座標X")]
-    # [PropertyOrder(5)]
-    CharacterImageX: float
-    # [Description("キャラ画像座標Y")]
-    # [PropertyOrder(6)]
-    CharacterImageY: float
-    # [Description("キャラ画像サイズ")]
-    # [PropertyOrder(7)]
-    CharacterImageSize: float
-    # [Description("終了時刻")]
-    # [PropertyOrder(2)]
-    EndTime: str
     # [Description("開始時刻")]
     # [PropertyOrder(1)]
     StartTime: str
+    # [Description("キャンペーンタイトル")]
+    # [PropertyOrder(9)]
+    Title: str
 
 # [Description("フレンドミッション")]
 # [MessagePackObject(True)]
 @dataclass
 class FriendMissionMB(MasterBookBase, IHasStartEndTime):
-    # [Description("ミッション名")]
-    # [PropertyOrder(1)]
-    NameKey: str
-    # [Description("遷移先")]
-    # [PropertyOrder(2)]
-    TransitionDestination: MissionTransitionDestinationType
     # [Description("ミッションタイプ")]
     # [PropertyOrder(3)]
     AchievementType: MissionAchievementType
+    # [Description("終了時刻")]
+    # [PropertyOrder(6)]
+    EndTime: str
+    # [Description("ミッション名")]
+    # [PropertyOrder(1)]
+    NameKey: str
     # [Description("達成要求値")]
     # [PropertyOrder(4)]
     RequireValue: int
-    # [Description("表示優先度")]
-    # [PropertyOrder(7)]
-    SortOrder: int
     # [Description("報酬リスト")]
     # [Nest(False, 0)]
     # [PropertyOrder(8)]
     RewardList: list[UserItem]
-    # [Description("終了時刻")]
-    # [PropertyOrder(6)]
-    EndTime: str
+    # [Description("表示優先度")]
+    # [PropertyOrder(7)]
+    SortOrder: int
     # [Description("開始時刻")]
     # [PropertyOrder(5)]
     StartTime: str
+    # [Description("遷移先")]
+    # [PropertyOrder(2)]
+    TransitionDestination: MissionTransitionDestinationType
 
 # [Description("ガチャ筐体")]
 # [MessagePackObject(True)]
@@ -1125,6 +1125,12 @@ class GachaCaseMB(MasterBookBase, IHasJstStartEndTime):
     # [Description("属性(属性ガチャ用)")]
     # [PropertyOrder(5)]
     ElementType: ElementType
+    # [Description("新ガチャの終了時間(JST)")]
+    # [PropertyOrder(12)]
+    EndTimeFixJST: str
+    # [Description("ガチャ天井表示用フラグ")]
+    # [PropertyOrder(10)]
+    GachaCaseFlags: Flags[GachaCaseFlags]
     # [Description("GachaCaseUiMBのID")]
     # [PropertyOrder(1)]
     GachaCaseUiId: int
@@ -1137,6 +1143,9 @@ class GachaCaseMB(MasterBookBase, IHasJstStartEndTime):
     # [Description("ガチャグループタイプ")]
     # [PropertyOrder(4)]
     GachaGroupType: GachaGroupType
+    # [Description("ガチャの日数制限(プレイヤー生成時から計算、０は無視)")]
+    # [PropertyOrder(13)]
+    GachaLimitDayFromCreatePlayer: int
     # [Description("聖遺物(聖天使の信託ガチャ用)")]
     # [PropertyOrder(6)]
     GachaRelicType: GachaRelicType
@@ -1146,18 +1155,9 @@ class GachaCaseMB(MasterBookBase, IHasJstStartEndTime):
     # [Description("セレクトリストタイプ")]
     # [PropertyOrder(8)]
     GachaSelectListType: GachaSelectListType
-    # [Description("ガチャ天井表示用フラグ")]
-    # [PropertyOrder(10)]
-    GachaCaseFlags: Flags[GachaCaseFlags]
-    # [Description("ガチャの日数制限(プレイヤー生成時から計算、０は無視)")]
-    # [PropertyOrder(13)]
-    GachaLimitDayFromCreatePlayer: int
     # [Description("新ガチャの開始時間(JST)")]
     # [PropertyOrder(11)]
     StartTimeFixJST: str
-    # [Description("新ガチャの終了時間(JST)")]
-    # [PropertyOrder(12)]
-    EndTimeFixJST: str
 
 # [Description("ガチャ筐体描画用")]
 # [MessagePackObject(True)]
@@ -1236,15 +1236,15 @@ class GachaDestinyAddCharacterMB(MasterBookBase):
     # [Description("キャラクターID")]
     # [PropertyOrder(1)]
     CharacterId: int
+    # [Description("終了時間参照用GachaSelectListMBのID")]
+    # [PropertyOrder(4)]
+    EndGachaSelectListId: int
     # [Description("セレクトリスト追加タイプ")]
     # [PropertyOrder(2)]
     GachaAddCharacterType: GachaAddCharacterType
     # [Description("開始時間参照用GachaSelectListMBのID")]
     # [PropertyOrder(3)]
     StartGachaSelectListId: int
-    # [Description("終了時間参照用GachaSelectListMBのID")]
-    # [PropertyOrder(4)]
-    EndGachaSelectListId: int
 
 # [Description("ガチャセレクトリスト")]
 # [MessagePackObject(True)]
@@ -1253,6 +1253,9 @@ class GachaSelectListMB(MasterBookBase, IHasJstStartEndTime):
     # [Description("設定可能キャラクターIDリスト")]
     # [PropertyOrder(5)]
     CharacterIdList: list[int]
+    # [Description("終了時間(JST)")]
+    # [PropertyOrder(3)]
+    EndTimeFixJST: str
     # [Description("ガチャセレクトリストタイプ")]
     # [PropertyOrder(1)]
     GachaSelectListType: GachaSelectListType
@@ -1265,9 +1268,6 @@ class GachaSelectListMB(MasterBookBase, IHasJstStartEndTime):
     # [Description("開始時間(JST)")]
     # [PropertyOrder(2)]
     StartTimeFixJST: str
-    # [Description("終了時間(JST)")]
-    # [PropertyOrder(3)]
-    EndTimeFixJST: str
 
 # [Description("グランドバトル城")]
 # [MessagePackObject(True)]
@@ -1320,6 +1320,9 @@ class GuildRaidBossMB(MasterBookBase, IHasStartEndTime):
     # [Description("アクティブスキルIDのリスト")]
     # [PropertyOrder(17)]
     ActiveSkillIds: list[int]
+    # [Description("バナーテキスト")]
+    # [PropertyOrder(23)]
+    BannerText: str
     # [Description("ベースパラメータ")]
     # [Nest(True, 1)]
     # [PropertyOrder(14)]
@@ -1331,12 +1334,21 @@ class GuildRaidBossMB(MasterBookBase, IHasStartEndTime):
     # [Description("戦闘力")]
     # [PropertyOrder(12)]
     BattlePower: int
+    # [Description("キャラクター座標X")]
+    # [PropertyOrder(21)]
+    CharacterImageX: float
+    # [Description("キャラクター座標Y")]
+    # [PropertyOrder(22)]
+    CharacterImageY: float
     # [Description("レアリティ")]
     # [PropertyOrder(13)]
     CharacterRarityFlags: Flags[CharacterRarityFlags]
     # [Description("属性")]
     # [PropertyOrder(10)]
     ElementType: ElementType
+    # [Description("終了日時（現地時間")]
+    # [PropertyOrder(5)]
+    EndTime: str
     # [Description("敵のランク")]
     # [PropertyOrder(8)]
     EnemyRank: int
@@ -1347,6 +1359,12 @@ class GuildRaidBossMB(MasterBookBase, IHasStartEndTime):
     # [Description("ボス種別")]
     # [PropertyOrder(3)]
     GuildRaidBossType: GuildRaidBossType
+    # [Description("ギルドレイドボタン座標U")]
+    # [PropertyOrder(24)]
+    GuildRaidButtonU: float
+    # [Description("ギルドレイドボタン座標V")]
+    # [PropertyOrder(25)]
+    GuildRaidButtonV: float
     # [Description("職業")]
     # [PropertyOrder(11)]
     JobFlags: Flags[JobFlags]
@@ -1366,33 +1384,15 @@ class GuildRaidBossMB(MasterBookBase, IHasStartEndTime):
     # [Description("必要ギルド貢献値")]
     # [PropertyOrder(6)]
     ReleasableGuildFame: int
+    # [Description("開始日時（現地時間）")]
+    # [PropertyOrder(4)]
+    StartTime: str
     # [Description("ユニットアイコンID")]
     # [PropertyOrder(2)]
     UnitIconId: int
     # [Description("ユニットアイコンタイプ")]
     # [PropertyOrder(1)]
     UnitIconType: UnitIconType
-    # [Description("開始日時（現地時間）")]
-    # [PropertyOrder(4)]
-    StartTime: str
-    # [Description("終了日時（現地時間")]
-    # [PropertyOrder(5)]
-    EndTime: str
-    # [Description("キャラクター座標X")]
-    # [PropertyOrder(21)]
-    CharacterImageX: float
-    # [Description("キャラクター座標Y")]
-    # [PropertyOrder(22)]
-    CharacterImageY: float
-    # [Description("バナーテキスト")]
-    # [PropertyOrder(23)]
-    BannerText: str
-    # [Description("ギルドレイドボタン座標U")]
-    # [PropertyOrder(24)]
-    GuildRaidButtonU: float
-    # [Description("ギルドレイドボタン座標V")]
-    # [PropertyOrder(25)]
-    GuildRaidButtonV: float
 
 # [Description(" ギルドレイド報酬データ")]
 # [MessagePackObject(True)]
@@ -1408,6 +1408,9 @@ class GuildRaidRewardMB(MasterBookBase):
     # [Description("ギルドレイドボスID")]
     # [PropertyOrder(1)]
     GuildRaidBossId: int
+    # [Description("非表示ワールドダメージ")]
+    # [PropertyOrder(8)]
+    HideWorldDamage: int
     # [Description("抽選報酬ID")]
     # [PropertyOrder(3)]
     LotteryRewardId: int
@@ -1423,9 +1426,6 @@ class GuildRaidRewardMB(MasterBookBase):
     # [Nest(False, 0)]
     # [PropertyOrder(7)]
     WorldDamageBarRewards: list[WorldDamageBarReward]
-    # [Description("非表示ワールドダメージ")]
-    # [PropertyOrder(8)]
-    HideWorldDamage: int
 
 # [Description("GvG修練レベル")]
 # [MessagePackObject(True)]
@@ -1437,33 +1437,33 @@ class GvGServerLvMB(MasterBookBase):
     # [Description("修練レベル")]
     # [PropertyOrder(1)]
     Lv: int
-    # [Description("グランドバトル神殿上位最小配置数")]
-    # [PropertyOrder(6)]
-    MinCharacterNumGrandBattleLargeGolden: int
-    # [Description("グランドバトル教会上位最小配置数")]
-    # [PropertyOrder(7)]
-    MinCharacterNumGrandBattleMediumGolden: int
-    # [Description("グランドバトル城上位最小配置数")]
-    # [PropertyOrder(8)]
-    MinCharacterNumGrandBattleSmallGolden: int
-    # [Description("グランドバトル神殿中位最小配置数")]
-    # [PropertyOrder(9)]
-    MinCharacterNumGrandBattleLargeSilver: int
-    # [Description("グランドバトル教会中位最小配置数")]
-    # [PropertyOrder(10)]
-    MinCharacterNumGrandBattleMediumSilver: int
-    # [Description("グランドバトル城中位最小配置数")]
-    # [PropertyOrder(11)]
-    MinCharacterNumGrandBattleSmallSilver: int
     # [Description("グランドバトル神殿下位最小配置数")]
     # [PropertyOrder(12)]
     MinCharacterNumGrandBattleLargeBronze: int
+    # [Description("グランドバトル神殿上位最小配置数")]
+    # [PropertyOrder(6)]
+    MinCharacterNumGrandBattleLargeGolden: int
+    # [Description("グランドバトル神殿中位最小配置数")]
+    # [PropertyOrder(9)]
+    MinCharacterNumGrandBattleLargeSilver: int
     # [Description("グランドバトル教会下位最小配置数")]
     # [PropertyOrder(13)]
     MinCharacterNumGrandBattleMediumBronze: int
+    # [Description("グランドバトル教会上位最小配置数")]
+    # [PropertyOrder(7)]
+    MinCharacterNumGrandBattleMediumGolden: int
+    # [Description("グランドバトル教会中位最小配置数")]
+    # [PropertyOrder(10)]
+    MinCharacterNumGrandBattleMediumSilver: int
     # [Description("グランドバトル城下位最小配置数")]
     # [PropertyOrder(14)]
     MinCharacterNumGrandBattleSmallBronze: int
+    # [Description("グランドバトル城上位最小配置数")]
+    # [PropertyOrder(8)]
+    MinCharacterNumGrandBattleSmallGolden: int
+    # [Description("グランドバトル城中位最小配置数")]
+    # [PropertyOrder(11)]
+    MinCharacterNumGrandBattleSmallSilver: int
     # [Description("ギルドバトル神殿最小配置数")]
     # [PropertyOrder(3)]
     MinCharacterNumGuildBattleLarge: int
@@ -1529,6 +1529,9 @@ class ItemMB(MasterBookBase, IHasStartEndTime):
     # [Description("終了時刻")]
     # [PropertyOrder(9)]
     EndTime: str
+    # [Description("アイコンId")]
+    # [PropertyOrder(11)]
+    IconId: int
     # [Description("アイテムID")]
     # [PropertyOrder(2)]
     ItemId: int
@@ -1544,9 +1547,6 @@ class ItemMB(MasterBookBase, IHasStartEndTime):
     # [Description("名称キー")]
     # [PropertyOrder(3)]
     NameKey: str
-    # [Description("アイコンId")]
-    # [PropertyOrder(11)]
-    IconId: int
     # [Description("第2フレーム値")]
     # [PropertyOrder(14)]
     SecondaryFrameNum: int
@@ -1605,15 +1605,15 @@ class LevelLinkMB(MasterBookBase):
 # [MessagePackObject(True)]
 @dataclass
 class LimitedEventMB(MasterBookBase, IHasStartEndTime):
+    # [Description("終了日時")]
+    # [PropertyOrder(3)]
+    EndTime: str
     # [Description("イベントの種類")]
     # [PropertyOrder(1)]
     LimitedEventType: LimitedEventType
     # [Description("開始日時")]
     # [PropertyOrder(2)]
     StartTime: str
-    # [Description("終了日時")]
-    # [PropertyOrder(3)]
-    EndTime: str
 
 # [Description("期間限定ログインボーナス")]
 # [MessagePackObject(True)]
@@ -1625,6 +1625,9 @@ class LimitedLoginBonusMB(MasterBookBase, IHasStartEndTime):
     # [Description("キャラ画像Id")]
     # [PropertyOrder(4)]
     CharacterImageId: int
+    # [Description("終了日時")]
+    # [PropertyOrder(2)]
+    EndTime: str
     # [Description("報酬背景画像ID")]
     # [PropertyOrder(5)]
     RewardBackgroundImageId: int
@@ -1646,15 +1649,12 @@ class LimitedLoginBonusMB(MasterBookBase, IHasStartEndTime):
     # [Description("特別報酬ラベルアウトライン色")]
     # [PropertyOrder(11)]
     SpecialRewardLabelTextOutlineColor: str
-    # [Description("タイトル")]
-    # [PropertyOrder(7)]
-    TitleTextKey: str
     # [Description("開始日時")]
     # [PropertyOrder(1)]
     StartTime: str
-    # [Description("終了日時")]
-    # [PropertyOrder(2)]
-    EndTime: str
+    # [Description("タイトル")]
+    # [PropertyOrder(7)]
+    TitleTextKey: str
 
 # [Description("期間限定ログインボーナス報酬リスト")]
 # [MessagePackObject(True)]
@@ -1683,33 +1683,33 @@ class LimitedLoginBonusRewardListMB(MasterBookBase):
 # [MessagePackObject(True)]
 @dataclass
 class LimitedMissionMB(MasterBookBase, IHasStartEndTime):
-    # [Description("開始日時")]
-    # [PropertyOrder(1)]
-    StartTime: str
-    # [Description("終了日時")]
-    # [PropertyOrder(2)]
-    EndTime: str
+    # [Description("訴求文言")]
+    # [PropertyOrder(8)]
+    AppealTextKey: str
     # [Description("キャラ画像Id")]
     # [PropertyOrder(3)]
     CharacterImageId: int
+    # [Description("キャラ画像サイズ")]
+    # [PropertyOrder(6)]
+    CharacterImageSize: float
     # [Description("キャラ画像座標X")]
     # [PropertyOrder(4)]
     CharacterImageX: float
     # [Description("キャラ画像座標Y")]
     # [PropertyOrder(5)]
     CharacterImageY: float
-    # [Description("キャラ画像サイズ")]
-    # [PropertyOrder(6)]
-    CharacterImageSize: float
-    # [Description("タイトル")]
-    # [PropertyOrder(7)]
-    TitleTextKey: str
-    # [Description("訴求文言")]
-    # [PropertyOrder(8)]
-    AppealTextKey: str
+    # [Description("終了日時")]
+    # [PropertyOrder(2)]
+    EndTime: str
+    # [Description("開始日時")]
+    # [PropertyOrder(1)]
+    StartTime: str
     # [Description("対象ミッションID")]
     # [PropertyOrder(9)]
     TargetMissionIdList: list[int]
+    # [Description("タイトル")]
+    # [PropertyOrder(7)]
+    TitleTextKey: str
 
 # [Description("ギルドバトル城")]
 # [MessagePackObject(True)]
@@ -1736,6 +1736,9 @@ class LocalGvgCastleMB(MasterBookBase):
 # [MessagePackObject(True)]
 @dataclass
 class LocalPushNotificationMB(MasterBookBase, IHasStartEndTime):
+    # [Description("終了時間")]
+    # [PropertyOrder(4)]
+    EndTime: str
     # [Description("グループID")]
     # [PropertyOrder(2)]
     GroupId: int
@@ -1754,29 +1757,26 @@ class LocalPushNotificationMB(MasterBookBase, IHasStartEndTime):
     # [Description("送信時刻")]
     # [PropertyOrder(9)]
     SendTime: str
-    # [Description("タイトル")]
-    # [PropertyOrder(6)]
-    TitleKey: str
-    # [Description("終了時間")]
-    # [PropertyOrder(4)]
-    EndTime: str
     # [Description("開始時間")]
     # [PropertyOrder(3)]
     StartTime: str
+    # [Description("タイトル")]
+    # [PropertyOrder(6)]
+    TitleKey: str
 
 # [Description("幻影の神殿バナー")]
 # [MessagePackObject(True)]
 @dataclass
 class LocalRaidBannerMB(MasterBookBase):
-    # [Description("クエスト名キー")]
-    # [PropertyOrder(1)]
-    NameKey: str
-    # [Description("デコレーションID")]
-    # [PropertyOrder(2)]
-    DecorationId: int
     # [Description("デコレーション色")]
     # [PropertyOrder(3)]
     DecorationColor: str
+    # [Description("デコレーションID")]
+    # [PropertyOrder(2)]
+    DecorationId: int
+    # [Description("クエスト名キー")]
+    # [PropertyOrder(1)]
+    NameKey: str
 
 # [Description("幻影の神殿敵データ")]
 # [MessagePackObject(True)]
@@ -1792,12 +1792,6 @@ class LocalRaidEnemyMB(MasterBookBase, IBattleEnemy):
     # [Description("敵キャラクターID")]
     # [PropertyOrder(14)]
     BattleEnemyCharacterId: int
-    # [Description("ユニットアイコンタイプ")]
-    # [PropertyOrder(1)]
-    UnitIconType: UnitIconType
-    # [Description("ユニットアイコンID")]
-    # [PropertyOrder(2)]
-    UnitIconId: int
     # [Description("バトルパラメータ")]
     # [Nest(True, 1)]
     # [PropertyOrder(10)]
@@ -1805,18 +1799,24 @@ class LocalRaidEnemyMB(MasterBookBase, IBattleEnemy):
     # [Description("戦闘力")]
     # [PropertyOrder(5)]
     BattlePower: int
-    # [Description("職業")]
-    # [PropertyOrder(6)]
-    JobFlags: Flags[JobFlags]
-    # [Description("属性")]
-    # [PropertyOrder(7)]
-    ElementType: ElementType
     # [Description("レアリティ")]
     # [PropertyOrder(8)]
     CharacterRarityFlags: Flags[CharacterRarityFlags]
+    # [Description("属性")]
+    # [PropertyOrder(7)]
+    ElementType: ElementType
+    # [Description("敵調整ID")]
+    # [PropertyOrder(16)]
+    EnemyAdjustId: int
+    # [Description("敵武具ID")]
+    # [PropertyOrder(15)]
+    EnemyEquipmentId: int
     # [Description("敵のランク")]
     # [PropertyOrder(4)]
     EnemyRank: int
+    # [Description("職業")]
+    # [PropertyOrder(6)]
+    JobFlags: Flags[JobFlags]
     # [Description("名称キー")]
     # [PropertyOrder(3)]
     NameKey: str
@@ -1826,12 +1826,12 @@ class LocalRaidEnemyMB(MasterBookBase, IBattleEnemy):
     # [Description("パッシブスキルIDのリスト")]
     # [PropertyOrder(13)]
     PassiveSkillIds: list[int]
-    # [Description("敵調整ID")]
-    # [PropertyOrder(16)]
-    EnemyAdjustId: int
-    # [Description("敵武具ID")]
-    # [PropertyOrder(15)]
-    EnemyEquipmentId: int
+    # [Description("ユニットアイコンID")]
+    # [PropertyOrder(2)]
+    UnitIconId: int
+    # [Description("ユニットアイコンタイプ")]
+    # [PropertyOrder(1)]
+    UnitIconType: UnitIconType
 
 # [Description("幻影の神殿イベントクエストグループ")]
 # [MessagePackObject(True)]
@@ -1840,26 +1840,32 @@ class LocalRaidEventQuestGroupMB(MasterBookBase):
     # [Description("イベント追加挑戦回数")]
     # [PropertyOrder(4)]
     EventBattleCount: int
-    # [Description("LocalRaidQuestMBのIdリスト")]
-    # [PropertyOrder(1)]
-    LocalRaidQuestIds: list[int]
     # [Description("修練レベル")]
     # [PropertyOrder(3)]
     LocalRaidLevel: int
-    # [Description("イベント経過日数")]
-    # [PropertyOrder(2)]
-    OverDayFromStartEventTime: int
+    # [Description("LocalRaidQuestMBのIdリスト")]
+    # [PropertyOrder(1)]
+    LocalRaidQuestIds: list[int]
     # [Description("ワールド生成経過日数")]
     # [PropertyOrder(5)]
     OverDayFromCreateWorldTime: int
+    # [Description("イベント経過日数")]
+    # [PropertyOrder(2)]
+    OverDayFromStartEventTime: int
 
 # [Description("幻影の神殿イベントスケジュール")]
 # [MessagePackObject(True)]
 @dataclass
 class LocalRaidEventScheduleMB(MasterBookBase, IHasStartEndTime):
+    # [Description("終了日時")]
+    # [PropertyOrder(6)]
+    EndTime: str
     # [Description("LocalRaidEventQuestGroupMBのIdリスト")]
     # [PropertyOrder(1)]
     LocalRaidEventQuestGroupIds: list[int]
+    # [Description("イベントチュートリアルダイアログのID")]
+    # [PropertyOrder(7)]
+    LocalRaidEventTutorialId: int
     # [Description("イベントタイプ")]
     # [PropertyOrder(2)]
     LocalRaidEventType: LocalRaidEventType
@@ -1873,27 +1879,21 @@ class LocalRaidEventScheduleMB(MasterBookBase, IHasStartEndTime):
     # [Description("開始日時")]
     # [PropertyOrder(5)]
     StartTime: str
-    # [Description("終了日時")]
-    # [PropertyOrder(6)]
-    EndTime: str
-    # [Description("イベントチュートリアルダイアログのID")]
-    # [PropertyOrder(7)]
-    LocalRaidEventTutorialId: int
 
 # [Description("幻影の神殿クエストグループ")]
 # [MessagePackObject(True)]
 @dataclass
 class LocalRaidQuestGroupMB(MasterBookBase):
-    # [Description("最大挑戦回数")]
-    # [PropertyOrder(3)]
-    MaxBattleCount: int
+    # [Description("修練レベル")]
+    # [PropertyOrder(2)]
+    LocalRaidLevel: int
     # [Description("幻影の神殿Idグループリスト")]
     # [Nest(True, 0)]
     # [PropertyOrder(1)]
     LocalRaidQuestIdGroups: list[LocalRaidQuestIdGroup]
-    # [Description("修練レベル")]
-    # [PropertyOrder(2)]
-    LocalRaidLevel: int
+    # [Description("最大挑戦回数")]
+    # [PropertyOrder(3)]
+    MaxBattleCount: int
     # [Description("ワールド生成経過日数")]
     # [PropertyOrder(4)]
     OverDayFromCreateWorldTime: int
@@ -1910,15 +1910,15 @@ class LocalRaidQuestMB(MasterBookBase):
     # [Nest(False, 0)]
     # [PropertyOrder(5)]
     FixedBattleRewards: list[UserItem]
-    # [Description("敵Idリスト")]
-    # [PropertyOrder(6)]
-    LocalRaidEnemyIds: list[int]
     # [Description("レベル")]
     # [PropertyOrder(2)]
     Level: int
     # [Description("クエスト名キー")]
     # [PropertyOrder(1)]
     LocalRaidBannerId: int
+    # [Description("敵Idリスト")]
+    # [PropertyOrder(6)]
+    LocalRaidEnemyIds: list[int]
     # [Description("個人戦力目安")]
     # [PropertyOrder(3)]
     RecommendedBattlePower: int
@@ -1942,6 +1942,9 @@ class MissionClearCountRewardMB(MasterBookBase):
 # [MessagePackObject(True)]
 @dataclass
 class MissionGuideMB(MasterBookBase, IHasStartEndTime):
+    # [Description("ユーザ登録終了日時")]
+    # [PropertyOrder(4)]
+    EndTime: str
     # [Description("ガイドID")]
     # [PropertyOrder(1)]
     GuideId: int
@@ -1954,9 +1957,6 @@ class MissionGuideMB(MasterBookBase, IHasStartEndTime):
     # [Description("ガイド表示優先度B")]
     # [PropertyOrder(6)]
     SortOrderB: int
-    # [Description("ユーザ登録終了日時")]
-    # [PropertyOrder(4)]
-    EndTime: str
     # [Description("ユーザ登録開始日時")]
     # [PropertyOrder(3)]
     StartTime: str
@@ -1971,6 +1971,9 @@ class MissionMB(MasterBookBase, IHasStartEndTime):
     # [Description("ミッション説明")]
     # [PropertyOrder(4)]
     DescriptionKey: str
+    # [Description("終了時刻")]
+    # [PropertyOrder(9)]
+    EndTime: str
     # [Description("ミッション種別")]
     # [PropertyOrder(1)]
     MissionType: MissionType
@@ -1993,15 +1996,12 @@ class MissionMB(MasterBookBase, IHasStartEndTime):
     # [Description("表示優先度B")]
     # [PropertyOrder(11)]
     SortOrderB: int
-    # [Description("遷移先")]
-    # [PropertyOrder(5)]
-    TransitionDestination: MissionTransitionDestinationType
-    # [Description("終了時刻")]
-    # [PropertyOrder(9)]
-    EndTime: str
     # [Description("開始時刻")]
     # [PropertyOrder(8)]
     StartTime: str
+    # [Description("遷移先")]
+    # [PropertyOrder(5)]
+    TransitionDestination: MissionTransitionDestinationType
 
 # [Description("ミッション機能解放")]
 # [MessagePackObject(True)]
@@ -2056,9 +2056,18 @@ class MonthlyLoginBonusRewardListMB(MasterBookBase):
 # [MessagePackObject(True)]
 @dataclass
 class NewCharacterMissionMB(MasterBookBase, IHasJstStartEndTime):
-    # [Description("開始日時")]
-    # [PropertyOrder(1)]
-    StartTimeFixJST: str
+    # [Description("キャラ画像Id")]
+    # [PropertyOrder(4)]
+    CharacterImageId: int
+    # [Description("キャラ画像サイズ")]
+    # [PropertyOrder(7)]
+    CharacterImageSize: float
+    # [Description("キャラ画像座標X")]
+    # [PropertyOrder(5)]
+    CharacterImageX: float
+    # [Description("キャラ画像座標Y")]
+    # [PropertyOrder(6)]
+    CharacterImageY: float
     # [Description("終了日時")]
     # [PropertyOrder(2)]
     EndTimeFixJST: str
@@ -2066,30 +2075,21 @@ class NewCharacterMissionMB(MasterBookBase, IHasJstStartEndTime):
     # [Description("強制開始時間")]
     # [PropertyOrder(3)]
     ForceStartTime: str
-    # [Description("キャラ画像Id")]
-    # [PropertyOrder(4)]
-    CharacterImageId: int
-    # [Description("キャラ画像座標X")]
-    # [PropertyOrder(5)]
-    CharacterImageX: float
-    # [Description("キャラ画像座標Y")]
-    # [PropertyOrder(6)]
-    CharacterImageY: float
-    # [Description("キャラ画像サイズ")]
-    # [PropertyOrder(7)]
-    CharacterImageSize: float
-    # [Description("タイトル")]
-    # [PropertyOrder(8)]
-    TitleTextKey: str
+    # [Description("開始日時")]
+    # [PropertyOrder(1)]
+    StartTimeFixJST: str
     # [Description("対象ミッションID")]
     # [PropertyOrder(9)]
     TargetMissionIdList: list[int]
-    # [Description("YouTube")]
-    # [PropertyOrder(10)]
-    YouTubeUrl: str
+    # [Description("タイトル")]
+    # [PropertyOrder(8)]
+    TitleTextKey: str
     # [Description("Twitter")]
     # [PropertyOrder(11)]
     TwitterUrl: str
+    # [Description("YouTube")]
+    # [PropertyOrder(10)]
+    YouTubeUrl: str
 
 # [Description("コンテンツ開放")]
 # [MessagePackObject(True)]
@@ -2166,18 +2166,18 @@ class PlayerRankMB(MasterBookBase):
     # [Description("キャラパラメータ命中ボーナス")]
     # [PropertyOrder(10)]
     HitBonus: int
-    # [Description("キャラパラメータHPボーナス")]
-    # [PropertyOrder(5)]
-    HpBonus: int
-    # [Description("キャラパラメータHP%ボーナス")]
-    # [PropertyOrder(6)]
-    HpPercentBonus: int
-    # [Description("キャラパラメータHPドレインボーナス")]
-    # [PropertyOrder(15)]
-    HpDrainBonus: int
     # [Description("命中率ボーナス(パラメータX)")]
     # [PropertyOrder(16)]
     HitDirectPercentBonus: int
+    # [Description("キャラパラメータHPボーナス")]
+    # [PropertyOrder(5)]
+    HpBonus: int
+    # [Description("キャラパラメータHPドレインボーナス")]
+    # [PropertyOrder(15)]
+    HpDrainBonus: int
+    # [Description("キャラパラメータHP%ボーナス")]
+    # [PropertyOrder(6)]
+    HpPercentBonus: int
     # [Description("レベルリンク枠最大数")]
     # [PropertyOrder(17)]
     LevelLinkMemberMaxCount: int
@@ -2187,13 +2187,13 @@ class PlayerRankMB(MasterBookBase):
     # [Description("必要累計経験値")]
     # [PropertyOrder(2)]
     RequiredTotalExp: int
+    # [Description("キャラパラメータスピードボーナス")]
+    # [PropertyOrder(12)]
+    SpeedBonus: int
     # [DateTimeString]
     # [Description("解放時間")]
     # [PropertyOrder(3)]
     StartTimeFixJST: str
-    # [Description("キャラパラメータスピードボーナス")]
-    # [PropertyOrder(12)]
-    SpeedBonus: int
 
 # [Description("PVPランキング報酬")]
 # [MessagePackObject(True)]
@@ -2250,12 +2250,12 @@ class QuestMB(MasterBookBase):
     # [Description("最低獲得プレイヤー経験値")]
     # [PropertyOrder(9)]
     MinPlayerExp: int
-    # [Description("潜在宝珠(/d)")]
-    # [PropertyOrder(4)]
-    PotentialJewelPerDay: int
     # [Description("人口")]
     # [PropertyOrder(2)]
     Population: int
+    # [Description("潜在宝珠(/d)")]
+    # [PropertyOrder(4)]
+    PotentialJewelPerDay: int
     # [Description("クエスト難易度")]
     # [PropertyOrder(6)]
     QuestDifficultyType: QuestDifficultyType
@@ -2276,6 +2276,9 @@ class RequiredCurrencyMB(MasterBookBase):
     # [Description("レジェンドリーグ挑戦回数に必要な仮想通貨")]
     # [PropertyOrder(5)]
     LegendLeague: int
+    # [Description("レベルリンク枠開放に必要な仮想通貨")]
+    # [PropertyOrder(7)]
+    LevelLinkMember: int
     # [Description("PvP挑戦回数に必要な仮想通貨")]
     # [PropertyOrder(4)]
     Pvp: int
@@ -2285,9 +2288,6 @@ class RequiredCurrencyMB(MasterBookBase):
     # [Description("訓練所挑戦回数の購入に必要な仮想通貨")]
     # [PropertyOrder(6)]
     TowerBattle: int
-    # [Description("レベルリンク枠開放に必要な仮想通貨")]
-    # [PropertyOrder(7)]
-    LevelLinkMember: int
 
 # [Description("スフィア")]
 # [MessagePackObject(True)]
@@ -2359,6 +2359,18 @@ class StateBonusMB(MasterBookBase):
 # [MessagePackObject(True)]
 @dataclass
 class StateMB(MasterBookBase):
+    # [Description("クリファテキストキー")]
+    # [PropertyOrder(5)]
+    AppearQliphaId: int
+    # [Description("クリファテキストキー")]
+    # [PropertyOrder(4)]
+    AppearQliphaKey: str
+    # [Description("開始時間(JP)")]
+    # [PropertyOrder(7)]
+    BgmStartTimeJP: float
+    # [Description("開始時間(US)")]
+    # [PropertyOrder(8)]
+    BgmStartTimeUS: float
     # [Description("名称キー")]
     # [PropertyOrder(1)]
     NameKey: str
@@ -2371,18 +2383,6 @@ class StateMB(MasterBookBase):
     # [Description("テキストキー")]
     # [PropertyOrder(3)]
     TextKey: str
-    # [Description("クリファテキストキー")]
-    # [PropertyOrder(4)]
-    AppearQliphaKey: str
-    # [Description("クリファテキストキー")]
-    # [PropertyOrder(5)]
-    AppearQliphaId: int
-    # [Description("開始時間(JP)")]
-    # [PropertyOrder(7)]
-    BgmStartTimeJP: float
-    # [Description("開始時間(US)")]
-    # [PropertyOrder(8)]
-    BgmStartTimeUS: float
 
 # [Description("Steam商品価格表")]
 # [MessagePackObject(True)]
@@ -2400,16 +2400,9 @@ class SteamProductPriceListMB(MasterBookBase):
 # [MessagePackObject(True)]
 @dataclass
 class TermsMB(MasterBookBase):
-    # [Description("TimeServerMBのID")]
-    # [PropertyOrder(1)]
-    TimeServerId: int
     # [Description("DMM用か？")]
     # [PropertyOrder(2)]
     IsDmm: bool
-    # [Description("利用規約")]
-    # [Nest(False, 0)]
-    # [PropertyOrder(3)]
-    Terms: TermsButtonInfo
     # [Description("プライバシーポリシー")]
     # [Nest(False, 0)]
     # [PropertyOrder(4)]
@@ -2418,32 +2411,42 @@ class TermsMB(MasterBookBase):
     # [Nest(False, 0)]
     # [PropertyOrder(5)]
     Subscription: TermsButtonInfo
+    # [Description("利用規約")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(3)]
+    Terms: TermsButtonInfo
     # [Description("その他")]
     # [Nest(False, 0)]
     # [PropertyOrder(6)]
     TermsButtonInfos: list[TermsButtonInfo]
+    # [Description("TimeServerMBのID")]
+    # [PropertyOrder(1)]
+    TimeServerId: int
 
 # [Description("テキスト言語")]
 # [MessagePackObject(True)]
 @dataclass
 class TextLanguageMB(MasterBookBase):
-    # [Description("言語")]
-    # [PropertyOrder(1)]
-    LanguageType: LanguageType
-    # [Description("行頭禁則文字")]
-    # [PropertyOrder(2)]
-    HyphenationFront: str
     # [Description("行末禁則文字")]
     # [PropertyOrder(3)]
     HyphenationBack: str
+    # [Description("行頭禁則文字")]
+    # [PropertyOrder(2)]
+    HyphenationFront: str
     # [Description("分離禁止文字")]
     # [PropertyOrder(4)]
     HyphenationSeparable: list[str]
+    # [Description("言語")]
+    # [PropertyOrder(1)]
+    LanguageType: LanguageType
 
 # [Description("リソース")]
 # [MessagePackObject(True)]
 @dataclass
 class TextResourceMB(MasterBookBase):
+    # [Description("文字列キー")]
+    # [PropertyOrder(1)]
+    StringKey: str
     # [Description("英語")]
     # [PropertyOrder(2)]
     enUS: str
@@ -2453,9 +2456,6 @@ class TextResourceMB(MasterBookBase):
     # [Description("韓国語")]
     # [PropertyOrder(4)]
     koKR: str
-    # [Description("文字列キー")]
-    # [PropertyOrder(1)]
-    StringKey: str
     # [Description("中国語(繁体字)")]
     # [PropertyOrder(6)]
     zhTW: str
@@ -2618,9 +2618,6 @@ class TextResourceArEgMB(MasterBookBase, ITextResource):
 # [MessagePackObject(True)]
 @dataclass
 class TimeServerMB(MasterBookBase):
-    # [Description("時差グループタイプ")]
-    # [PropertyOrder(2)]
-    TimeServerType: TimeServerType
     # [Description("国コードリスト")]
     # [PropertyOrder(6)]
     CountryCodeList: list[str]
@@ -2630,15 +2627,18 @@ class TimeServerMB(MasterBookBase):
     # [Description("デフォルト設定ボイス言語")]
     # [PropertyOrder(4)]
     DefaultVoiceLanguageType: LanguageType
+    # [Description("UTCとの時差(例 01:00:00)")]
+    # [PropertyOrder(2)]
+    DifferenceDateTimeFromUtc: str
     # [Description("表示名のキー")]
     # [PropertyOrder(5)]
     DisplayNameKey: str
     # [Description("時差グループ名")]
     # [PropertyOrder(1)]
     Name: str
-    # [Description("UTCとの時差(例 01:00:00)")]
+    # [Description("時差グループタイプ")]
     # [PropertyOrder(2)]
-    DifferenceDateTimeFromUtc: str
+    TimeServerType: TimeServerType
 
 # [Description("Tips")]
 # [MessagePackObject(True)]
@@ -2647,17 +2647,27 @@ class TipMB(MasterBookBase):
     # [Description("Tipメッセージキー")]
     # [PropertyOrder(1)]
     MessageKey: str
-    # [Description("遷移先")]
-    # [PropertyOrder(2)]
-    ViewTransitionType: ViewTransitionType
     # [Description("解放判定")]
     # [PropertyOrder(3)]
     OpenCommandType: OpenCommandType
+    # [Description("遷移先")]
+    # [PropertyOrder(2)]
+    ViewTransitionType: ViewTransitionType
 
 # [Description("累計貢献メダル報酬")]
 # [MessagePackObject(True)]
 @dataclass
 class TotalActivityMedalRewardMB(MasterBookBase, IHasEventStartEndTime):
+    # [Description("イベント終了時刻")]
+    # [PropertyOrder(5)]
+    EventEndTime: str
+    # [Description("イベント報酬リスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(6)]
+    EventMissionRewardList: list[EventMissionReward]
+    # [Description("イベント開始時刻")]
+    # [PropertyOrder(4)]
+    EventStartTime: str
     # [Description("ミッション種別")]
     # [PropertyOrder(1)]
     MissionGroupType: MissionGroupType
@@ -2668,16 +2678,6 @@ class TotalActivityMedalRewardMB(MasterBookBase, IHasEventStartEndTime):
     # [Nest(False, 0)]
     # [PropertyOrder(3)]
     RewardList: list[MissionReward]
-    # [Description("イベント開始時刻")]
-    # [PropertyOrder(4)]
-    EventStartTime: str
-    # [Description("イベント終了時刻")]
-    # [PropertyOrder(5)]
-    EventEndTime: str
-    # [Description("イベント報酬リスト")]
-    # [Nest(False, 0)]
-    # [PropertyOrder(6)]
-    EventMissionRewardList: list[EventMissionReward]
 
 # [Description("無窮の塔　敵データ")]
 # [MessagePackObject(True)]
@@ -2766,9 +2766,6 @@ class TowerBattleQuestMB(MasterBookBase):
 # [MessagePackObject(True)]
 @dataclass
 class TradeShopSphereMB(MasterBookBase):
-    # [Description("スフィアのLv")]
-    # [PropertyOrder(1)]
-    SphereLevel: int
     # [Description("消費アイテム1")]
     # [Nest(False, 0)]
     # [PropertyOrder(2)]
@@ -2777,6 +2774,9 @@ class TradeShopSphereMB(MasterBookBase):
     # [Nest(False, 0)]
     # [PropertyOrder(3)]
     ConsumeItem2: UserItem
+    # [Description("スフィアのLv")]
+    # [PropertyOrder(1)]
+    SphereLevel: int
 
 # [Description("交換所タブ")]
 # [MessagePackObject(True)]
@@ -2805,6 +2805,9 @@ class TradeShopTabMB(MasterBookBase, IHasStartEndTime):
     # [Description("デコレーションスペシャルId")]
     # [PropertyOrder(4)]
     DecorationSpecialId: int
+    # [Description("終了日時")]
+    # [PropertyOrder(20)]
+    EndTime: str
     # [Description("アイコンId")]
     # [PropertyOrder(2)]
     IconId: int
@@ -2826,6 +2829,9 @@ class TradeShopTabMB(MasterBookBase, IHasStartEndTime):
     # [Description("並び順")]
     # [PropertyOrder(8)]
     SortOrder: int
+    # [Description("開始日時")]
+    # [PropertyOrder(19)]
+    StartTime: str
     # [Description("タブ名")]
     # [PropertyOrder(7)]
     TabNameKey: str
@@ -2835,12 +2841,6 @@ class TradeShopTabMB(MasterBookBase, IHasStartEndTime):
     # [Description("交換所種類")]
     # [PropertyOrder(12)]
     TradeShopType: TradeShopType
-    # [Description("終了日時")]
-    # [PropertyOrder(20)]
-    EndTime: str
-    # [Description("開始日時")]
-    # [PropertyOrder(19)]
-    StartTime: str
 
 # [Description("宝箱天井設定")]
 # [MessagePackObject(True)]
@@ -2885,6 +2885,9 @@ class TreasureChestMB(MasterBookBase, IHasStartEndTime):
     # [Description("表示名キー")]
     # [PropertyOrder(2)]
     DisplayNameKey: str
+    # [Description("終了日時")]
+    # [PropertyOrder(13)]
+    EndTime: str
     # [Description("アイコンID")]
     # [PropertyOrder(4)]
     IconId: int
@@ -2906,18 +2909,15 @@ class TreasureChestMB(MasterBookBase, IHasStartEndTime):
     # [Description("第2フラーム種類")]
     # [PropertyOrder(10)]
     SecondaryFrameType: SecondaryFrameType
+    # [Description("開始日時")]
+    # [PropertyOrder(14)]
+    StartTime: str
     # [Description("TreasureChestItemMBのIdリスト")]
     # [PropertyOrder(12)]
     TreasureChestItemIdList: list[int]
     # [Description("宝箱の報酬判定方法タイプ")]
     # [PropertyOrder(6)]
     TreasureChestLotteryType: TreasureChestLotteryType
-    # [Description("終了日時")]
-    # [PropertyOrder(13)]
-    EndTime: str
-    # [Description("開始日時")]
-    # [PropertyOrder(14)]
-    StartTime: str
 
 # [Description("チュートリアル詳細")]
 # [MessagePackObject(True)]
@@ -2926,6 +2926,9 @@ class TutorialDescriptionMB(MasterBookBase):
     # [Description("HelpMB ID(チュートリアル用)")]
     # [PropertyOrder(2)]
     HelpId: int
+    # [Description("可変画像キャラID")]
+    # [PropertyOrder(6)]
+    ImageCharacterId: int
     # [Description("可変画像アイテム1")]
     # [Nest(False, 0)]
     # [PropertyOrder(4)]
@@ -2941,9 +2944,6 @@ class TutorialDescriptionMB(MasterBookBase):
     # [Nest(False, 0)]
     # [PropertyOrder(1)]
     PageInfo: list[TutorialDescriptionPageInfo]
-    # [Description("可変画像キャラID")]
-    # [PropertyOrder(6)]
-    ImageCharacterId: int
 
 # [Description("チュートリアルテキストボックス")]
 # [MessagePackObject(True)]
@@ -3052,19 +3052,13 @@ class VipMB(MasterBookBase):
 # [MessagePackObject(True)]
 @dataclass
 class WorldGroupMB(MasterBookBase, IHasStartEndTime):
-    # [Description("終了日時")]
-    # [PropertyOrder(5)]
-    EndTime: str
     # [DateTimeString]
     # [Description("レジェンドリーグ終了日時")]
     # [PropertyOrder(9)]
     EndLegendLeagueDateTime: str
-    # [Description("タイムサーバー")]
-    # [PropertyOrder(1)]
-    TimeServerId: int
-    # [Description("開始日時")]
-    # [PropertyOrder(4)]
-    StartTime: str
+    # [Description("終了日時")]
+    # [PropertyOrder(5)]
+    EndTime: str
     # [Description("グランドバトル開始日時")]
     # [Nest(False, 0)]
     # [PropertyOrder(6)]
@@ -3073,6 +3067,12 @@ class WorldGroupMB(MasterBookBase, IHasStartEndTime):
     # [Description("レジェンドリーグ開始日時")]
     # [PropertyOrder(8)]
     StartLegendLeagueDateTime: str
+    # [Description("開始日時")]
+    # [PropertyOrder(4)]
+    StartTime: str
+    # [Description("タイムサーバー")]
+    # [PropertyOrder(1)]
+    TimeServerId: int
     # [Description("WorldIdのリスト")]
     # [PropertyOrder(3)]
     WorldIdList: list[int]

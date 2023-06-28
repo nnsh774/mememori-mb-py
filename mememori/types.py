@@ -41,16 +41,16 @@ class EquipmentRarityFlags(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class ActiveSkillInfo():
-    # [Description("優先順位")]
-    OrderNumber: int
-    # [Description("スキル説明文キー")]
-    DescriptionKey: str
-    # [Description("キャラクターレベル制限")]
-    CharacterLevel: int
-    # [Description("専属武具レアリティ")]
-    EquipmentRarityFlags: Flags[EquipmentRarityFlags]
     # [Description("加護ID")]
     BlessingItemId: int
+    # [Description("キャラクターレベル制限")]
+    CharacterLevel: int
+    # [Description("スキル説明文キー")]
+    DescriptionKey: str
+    # [Description("専属武具レアリティ")]
+    EquipmentRarityFlags: Flags[EquipmentRarityFlags]
+    # [Description("優先順位")]
+    OrderNumber: int
     # [Description("サブセットIDリスト")]
     SubSetSkillIds: list[int]
 
@@ -110,10 +110,10 @@ class BattleParameter():
     Defense: int
     # [Description("防御貫通力")]
     DefensePenetration: int
-    # [Description("命中")]
-    Hit: int
     # [Description("HP")]
     HP: int
+    # [Description("命中")]
+    Hit: int
     # [Description("HP吸収")]
     HpDrain: int
     # [Description("魔法クリダメ緩和")]
@@ -285,10 +285,10 @@ class BountyQuestRarityFlags(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class BoardRankConditionInfo():
-    # [Description("懸賞カウンタークエストタイプ")]
-    BountyQuestType: BountyQuestType
     # [Description("クエストレベル")]
     BountyQuestRarity: BountyQuestRarityFlags
+    # [Description("懸賞カウンタークエストタイプ")]
+    BountyQuestType: BountyQuestType
     # [Description("必要な数")]
     RequireCount: int
     # [Description("累計必要クリア数")]
@@ -599,8 +599,8 @@ class ItemRarityFlags(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class CharacterRarityCoefficientInfo():
-    m: float
     b: int
+    m: float
 
 # [Description("キャラクターの血液型")]
 class CharacterBloodType(Enum):
@@ -619,48 +619,48 @@ class CharacterBloodType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class TranslatedText():
-    # [Description("日本語")]
-    # [PropertyOrder(1)]
-    jaJP: str
-    # [Description("英語")]
-    # [PropertyOrder(2)]
-    enUS: str
-    # [Description("韓国語")]
-    # [PropertyOrder(3)]
-    koKR: str
-    # [Description("中国語(繁体字)")]
-    # [PropertyOrder(4)]
-    zhTW: str
-    # [Description("中国語(簡体字)")]
-    # [PropertyOrder(5)]
-    zhCN: str
-    # [Description("フランス語")]
-    # [PropertyOrder(6)]
-    frFR: str
-    # [Description("スペイン語")]
-    # [PropertyOrder(7)]
-    esMX: str
-    # [Description("ポルトガル語")]
-    # [PropertyOrder(8)]
-    ptBR: str
-    # [Description("タイ語")]
-    # [PropertyOrder(9)]
-    thTH: str
-    # [Description("インドネシア語")]
-    # [PropertyOrder(10)]
-    idID: str
-    # [Description("ベトナム語")]
-    # [PropertyOrder(11)]
-    viVN: str
-    # [Description("ロシア語")]
-    # [PropertyOrder(12)]
-    ruRU: str
-    # [Description("ドイツ語")]
-    # [PropertyOrder(13)]
-    deDE: str
     # [Description("アラビア語")]
     # [PropertyOrder(14)]
     arEG: str
+    # [Description("ドイツ語")]
+    # [PropertyOrder(13)]
+    deDE: str
+    # [Description("英語")]
+    # [PropertyOrder(2)]
+    enUS: str
+    # [Description("スペイン語")]
+    # [PropertyOrder(7)]
+    esMX: str
+    # [Description("フランス語")]
+    # [PropertyOrder(6)]
+    frFR: str
+    # [Description("インドネシア語")]
+    # [PropertyOrder(10)]
+    idID: str
+    # [Description("日本語")]
+    # [PropertyOrder(1)]
+    jaJP: str
+    # [Description("韓国語")]
+    # [PropertyOrder(3)]
+    koKR: str
+    # [Description("ポルトガル語")]
+    # [PropertyOrder(8)]
+    ptBR: str
+    # [Description("ロシア語")]
+    # [PropertyOrder(12)]
+    ruRU: str
+    # [Description("タイ語")]
+    # [PropertyOrder(9)]
+    thTH: str
+    # [Description("ベトナム語")]
+    # [PropertyOrder(11)]
+    viVN: str
+    # [Description("中国語(簡体字)")]
+    # [PropertyOrder(5)]
+    zhCN: str
+    # [Description("中国語(繁体字)")]
+    # [PropertyOrder(4)]
+    zhTW: str
 
 # [Description("ランクアップ·タイプ")]
 class ElementClassificationType(Enum):
@@ -884,12 +884,12 @@ class MissionAchievementType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class SnsInfo():
+    # [Description("ミッション達成条件タイプ")]
+    MissionAchievementType: MissionAchievementType
     # [Description("SNS名称のキー")]
     NameKey: str
     # [Description("URL")]
     Url: str
-    # [Description("ミッション達成条件タイプ")]
-    MissionAchievementType: MissionAchievementType
 
 # [Description("遷移先タイプ")]
 class TransferSpotType(Enum):
@@ -1042,10 +1042,10 @@ class PassiveType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class PassiveSkillTypeInfo():
-    # [Description("パッシブタイプ")]
-    PassiveType: PassiveType
     # [Description("パッシブスキルID")]
     PassiveSkillId: int
+    # [Description("パッシブタイプ")]
+    PassiveType: PassiveType
 
 # [Description("エフェクトグループアイコンタイプ")]
 class EffectGroupIconType(Enum):
@@ -1086,15 +1086,15 @@ class ElementBonusPhaseType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class EquipmentEvolutionInfo():
-    # [Description("レアリティ")]
-    # [PropertyOrder(1)]
-    RarityFlags: Flags[EquipmentRarityFlags]
-    # [Description("進化前武具レベル")]
-    # [PropertyOrder(2)]
-    BeforeEquipmentLv: int
     # [Description("進化後武具レベル")]
     # [PropertyOrder(3)]
     AfterEquipmentLv: int
+    # [Description("進化前武具レベル")]
+    # [PropertyOrder(2)]
+    BeforeEquipmentLv: int
+    # [Description("レアリティ")]
+    # [PropertyOrder(1)]
+    RarityFlags: Flags[EquipmentRarityFlags]
     # [Description("必要アイテムリスト")]
     # [Nest(True, 1)]
     # [PropertyOrder(4)]
@@ -1169,12 +1169,12 @@ class ErrorMessageType(Enum):
 class ICharacterImage():
     # [Description("キャラ画像Id")]
     CharacterImageId: int
+    # [Description("キャラ画像サイズ")]
+    CharacterImageSize: float
     # [Description("キャラ画像座標X")]
     CharacterImageX: float
     # [Description("キャラ画像座標Y")]
     CharacterImageY: float
-    # [Description("キャラ画像サイズ")]
-    CharacterImageSize: float
 
 # [Description("ミッション遷移先タイプ")]
 class MissionTransitionDestinationType(Enum):
@@ -1331,62 +1331,62 @@ class CustomTextLayoutInfo():
 # [MessagePackObject(True)]
 @dataclass
 class CustomTextLayout():
-    # [Description("日本語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(1)]
-    jaJP: CustomTextLayoutInfo
-    # [Description("英語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(2)]
-    enUS: CustomTextLayoutInfo
-    # [Description("韓国語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(3)]
-    koKR: CustomTextLayoutInfo
-    # [Description("中国語(繁体字)")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(4)]
-    zhTW: CustomTextLayoutInfo
-    # [Description("中国語(簡体字)")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(5)]
-    zhCN: CustomTextLayoutInfo
-    # [Description("フランス語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(6)]
-    frFR: CustomTextLayoutInfo
-    # [Description("スペイン語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(7)]
-    esMX: CustomTextLayoutInfo
-    # [Description("ポルトガル語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(8)]
-    ptBR: CustomTextLayoutInfo
-    # [Description("タイ語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(9)]
-    thTH: CustomTextLayoutInfo
-    # [Description("インドネシア語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(10)]
-    idID: CustomTextLayoutInfo
-    # [Description("ベトナム語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(11)]
-    viVN: CustomTextLayoutInfo
-    # [Description("ロシア語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(12)]
-    ruRU: CustomTextLayoutInfo
-    # [Description("ドイツ語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(13)]
-    deDE: CustomTextLayoutInfo
     # [Description("アラビア語")]
     # [Nest(True, 2)]
     # [PropertyOrder(14)]
     arEG: CustomTextLayoutInfo
+    # [Description("ドイツ語")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(13)]
+    deDE: CustomTextLayoutInfo
+    # [Description("英語")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(2)]
+    enUS: CustomTextLayoutInfo
+    # [Description("スペイン語")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(7)]
+    esMX: CustomTextLayoutInfo
+    # [Description("フランス語")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(6)]
+    frFR: CustomTextLayoutInfo
+    # [Description("インドネシア語")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(10)]
+    idID: CustomTextLayoutInfo
+    # [Description("日本語")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(1)]
+    jaJP: CustomTextLayoutInfo
+    # [Description("韓国語")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(3)]
+    koKR: CustomTextLayoutInfo
+    # [Description("ポルトガル語")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(8)]
+    ptBR: CustomTextLayoutInfo
+    # [Description("ロシア語")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(12)]
+    ruRU: CustomTextLayoutInfo
+    # [Description("タイ語")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(9)]
+    thTH: CustomTextLayoutInfo
+    # [Description("ベトナム語")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(11)]
+    viVN: CustomTextLayoutInfo
+    # [Description("中国語(簡体字)")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(5)]
+    zhCN: CustomTextLayoutInfo
+    # [Description("中国語(繁体字)")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(4)]
+    zhTW: CustomTextLayoutInfo
 
 # [Description("ガチャボーナスゲージ表示タイプ")]
 class GachaBonusGaugeType(Enum):
@@ -1473,9 +1473,9 @@ class GuildRaidGoldCoefficientInfo():
 # [MessagePackObject(True)]
 @dataclass
 class NormalDamageBarReward():
+    DamageBarCount: int
     # [Nest(True, 1)]
     NormalRewardGoldCoefficientInfo: GuildRaidGoldCoefficientInfo
-    DamageBarCount: int
     # [Nest(True, 1)]
     NormalRewardItems: list[UserItem]
 
@@ -1506,12 +1506,12 @@ class HelpPartInfo():
     # [Description("見出し")]
     # [PropertyOrder(1)]
     HeadLine: str
-    # [Description("本文")]
-    # [PropertyOrder(2)]
-    MainText: str
     # [Description("付加情報")]
     # [PropertyOrder(3)]
     HelpParameterType: HelpParameterType
+    # [Description("本文")]
+    # [PropertyOrder(2)]
+    MainText: str
 
 # [Description("問い合わせボタンタイプ")]
 class InquiryButtonType(Enum):
@@ -1604,13 +1604,13 @@ class SpecialLimitedLoginBonusItem(IUserCharacterItem):
     # [Description("日付")]
     # [PropertyOrder(1)]
     Date: int
+    # [Description("キャラレアリティ")]
+    # [PropertyOrder(3)]
+    RarityFlags: Flags[CharacterRarityFlags]
     # [Description("特別報酬アイテム")]
     # [Nest(True, 1)]
     # [PropertyOrder(2)]
     SpecialRewardItem: UserItem
-    # [Description("キャラレアリティ")]
-    # [PropertyOrder(3)]
-    RarityFlags: Flags[CharacterRarityFlags]
 
 # [Description("ローカル通知種別")]
 class LocalNotificationSendType(Enum):
@@ -1643,8 +1643,8 @@ class LocalRaidEventType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class LocalRaidStartEndTime():
-    StartTime: int
     EndTime: int
+    StartTime: int
 
 class LocalRaidQuestGroupType(Enum):
     # [Description("1欄")]
@@ -2003,30 +2003,30 @@ class PassiveTrigger(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class PassiveSubSetSkillInfo():
+    # [Description("同じパッシブスキルのクールタイムグループ")]
+    PassiveGroupId: int
     # [Description("パッシブトリガー")]
     PassiveTrigger: PassiveTrigger
     # [Description("スキルクールタイム(MB : 初期スキルクールタイム)")]
     SkillCoolTime: int
     # [Description("スキルMAXクールタイム")]
     SkillMaxCoolTime: int
-    # [Description("同じパッシブスキルのクールタイムグループ")]
-    PassiveGroupId: int
     # [Description("サブセットスキルId")]
     SubSetSkillId: int
 
 # [MessagePackObject(True)]
 @dataclass
 class PassiveSkillInfo():
-    # [Description("優先順位")]
-    OrderNumber: int
-    # [Description("スキル説明文キー")]
-    DescriptionKey: str
-    # [Description("キャラクターレベル制限")]
-    CharacterLevel: int
-    # [Description("専属武具レアリティ")]
-    EquipmentRarityFlags: Flags[EquipmentRarityFlags]
     # [Description("加護ID")]
     BlessingItemId: int
+    # [Description("キャラクターレベル制限")]
+    CharacterLevel: int
+    # [Description("スキル説明文キー")]
+    DescriptionKey: str
+    # [Description("専属武具レアリティ")]
+    EquipmentRarityFlags: Flags[EquipmentRarityFlags]
+    # [Description("優先順位")]
+    OrderNumber: int
     # [Description("パッシブサブセット情報")]
     # [Nest(True, 2)]
     PassiveSubSetSkillInfos: list[PassiveSubSetSkillInfo]
@@ -2173,7 +2173,7 @@ class IHasEventStartEndTime():
 
 # [MessagePackObject(True)]
 @dataclass
-class EventMissionReward: #(IUserCharacterItem): # TODO FIX
+class EventMissionReward: # (IUserCharacterItem): # TODO fix
     # [Nest(True, 1)]
     # [PropertyOrder(1)]
     EventItem: UserItem
@@ -2210,10 +2210,10 @@ class TradeShopAutoUpdateType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class ConsumeItemInfo():
-    # [Description("アイテムの種類")]
-    ItemType: ItemType
     # [Description("アイテムのID")]
     ItemId: int
+    # [Description("アイテムの種類")]
+    ItemType: ItemType
 
 # [Description("交換所種類")]
 class TradeShopType(Enum):
@@ -2253,11 +2253,11 @@ class TreasureChestFixItem():
 # [MessagePackObject(True)]
 @dataclass
 class TreasureChestSelectItem():
+    # [Description("神器タイプ")]
+    SacredTreasureType: SacredTreasureType
     # [Description("アイテム")]
     # [Nest(True, 1)]
     SelectItem: UserItem
-    # [Description("神器タイプ")]
-    SacredTreasureType: SacredTreasureType
 
 class TreasureChestItemListType(Enum):
     None_ = 0
@@ -2383,24 +2383,34 @@ class IReadOnlyEquipment():
 # [MessagePackObject(True)]
 @dataclass
 class UserEquipmentDtoInfo(IReadOnlyEquipment):
-    # [Description("キャラクター固有ID")]
-    CharacterGuid: str
-    # [Description("作成時刻")]
-    CreateAt: int
-    # [Description("プレイヤーID")]
-    PlayerId: int
+    # [Description("付与パラメータ(敏捷)")]
+    AdditionalParameterEnergy: int
     # [Description("付与パラメータ(体力)")]
     AdditionalParameterHealth: int
     # [Description("付与パラメータ(知力)")]
     AdditionalParameterIntelligence: int
     # [Description("付与パラメータ(筋力)")]
     AdditionalParameterMuscle: int
-    # [Description("付与パラメータ(敏捷)")]
-    AdditionalParameterEnergy: int
+    # [Description("キャラクター固有ID")]
+    CharacterGuid: str
+    # [Description("作成時刻")]
+    CreateAt: int
     # [Description("武具ID")]
     EquipmentId: int
     # [Description("固有ID")]
     Guid: str
+    # [Description("聖装経験値")]
+    LegendSacredTreasureExp: int
+    # [Description("聖装レベル")]
+    LegendSacredTreasureLv: int
+    # [Description("魔装経験値")]
+    MatchlessSacredTreasureExp: int
+    # [Description("魔装レベル")]
+    MatchlessSacredTreasureLv: int
+    # [Description("プレイヤーID")]
+    PlayerId: int
+    # [Description("強化レベル")]
+    ReinforcementLv: int
     # [Description("宝石ID1")]
     SphereId1: int
     # [Description("宝石ID2")]
@@ -2411,16 +2421,6 @@ class UserEquipmentDtoInfo(IReadOnlyEquipment):
     SphereId4: int
     # [Description("宝石スロット解放数")]
     SphereUnlockedCount: int
-    # [Description("聖装経験値")]
-    LegendSacredTreasureExp: int
-    # [Description("聖装レベル")]
-    LegendSacredTreasureLv: int
-    # [Description("魔装経験値")]
-    MatchlessSacredTreasureExp: int
-    # [Description("魔装レベル")]
-    MatchlessSacredTreasureLv: int
-    # [Description("強化レベル")]
-    ReinforcementLv: int
 
 # [Description("プライバシー設定タイプ")]
 class PrivacySettingsType(Enum):
@@ -2461,12 +2461,12 @@ class ShopProductGuerrillaPack():
     NameKey: str
     # [Description("ProductIdのDictonary")]
     ProductIdDict: dict[DeviceType, str]
+    # [Description("ゲリラパックID")]
+    ShopGuerrillaPackId: int
     # [Description("ランク種別")]
     ShopGuerrillaPackRankType: ShopGuerrillaPackRankType
     # [Description("商品値段")]
     ShopProductPrice: int
-    # [Description("ゲリラパックID")]
-    ShopGuerrillaPackId: int
     # [Description("訴求文言キー")]
     TextKey: str
     # [Description("報酬リスト")]
@@ -2475,8 +2475,8 @@ class ShopProductGuerrillaPack():
 # [MessagePackObject(True)]
 @dataclass
 class UserBattleBossDtoInfo():
-    BossLastChallengeTime: int
     BossClearMaxQuestId: int
+    BossLastChallengeTime: int
     BossTodayUseCurrencyCount: int
     BossTodayUseTicketCount: int
     BossTodayWinCount: int
@@ -2487,10 +2487,10 @@ class UserBattleBossDtoInfo():
 class UserBattleLegendLeagueDtoInfo():
     AttackSucceededNum: int
     DefenseSucceededNum: int
+    LegendLeagueConsecutiveVictoryCount: int
     LegendLeagueLastChallengeTime: int
     LegendLeagueTodayCount: int
     LegendLeagueTodayUseCurrencyCount: int
-    LegendLeagueConsecutiveVictoryCount: int
 
 # [MessagePackObject(True)]
 @dataclass
@@ -2528,13 +2528,13 @@ class UserCharacterCollectionDtoInfo():
 # [MessagePackObject(True)]
 @dataclass
 class UserCharacterDtoInfo():
-    Guid: str
-    PlayerId: int
     CharacterId: int
-    Level: int
     Exp: int
-    RarityFlags: Flags[CharacterRarityFlags]
+    Guid: str
     IsLocked: bool
+    Level: int
+    PlayerId: int
+    RarityFlags: Flags[CharacterRarityFlags]
 
 # [Description("デッキを使用したコンテンツ")]
 class DeckUseContentType(Enum):
@@ -2575,19 +2575,19 @@ class DeckUseContentType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class UserDeckDtoInfo():
+    CharacterId1: int
+    CharacterId2: int
+    CharacterId3: int
+    CharacterId4: int
+    CharacterId5: int
+    DeckBattlePower: int
     DeckNo: int
     DeckUseContentType: DeckUseContentType
-    DeckBattlePower: int
     UserCharacterGuid1: str
-    CharacterId1: int
     UserCharacterGuid2: str
-    CharacterId2: int
     UserCharacterGuid3: str
-    CharacterId3: int
     UserCharacterGuid4: str
-    CharacterId4: int
     UserCharacterGuid5: str
-    CharacterId5: int
 
 # [MessagePackObject(True)]
 @dataclass
@@ -2600,20 +2600,20 @@ class UserItemDtoInfo(IUserItem):
 # [MessagePackObject(True)]
 @dataclass
 class UserLevelLinkDtoInfo():
-    PartyMaxLevel: int
-    PartyLevel: int
-    PartySubLevel: int
-    MemberMaxCount: int
     BuyFrameCount: int
     IsPartyMode: bool
+    MemberMaxCount: int
+    PartyLevel: int
+    PartyMaxLevel: int
+    PartySubLevel: int
 
 # [MessagePackObject(True)]
 @dataclass
 class UserLevelLinkMemberDtoInfo():
     CellNo: int
-    UserCharacterGuid: str
     CharacterId: int
     UnavailableTime: int
+    UserCharacterGuid: str
 
 # [Description("ミッションクリア個数/累計貢献メダル報酬状態種別")]
 class MissionActivityRewardStatusType(Enum):
@@ -2658,18 +2658,18 @@ class UserMissionOccurrenceHistoryDtoInfo():
     BeginnerStartTime: int
     ComebackStartTime: int
     DailyStartTime: int
-    WeeklyStartTime: int
-    LimitedStartTime: int
     LimitedMissionMBId: int
+    LimitedStartTime: int
     NewCharacterMissionMBId: int
+    WeeklyStartTime: int
 
 # [MessagePackObject(True)]
 @dataclass
 class UserFriendMissionDtoInfo():
-    FriendCampaignId: int
     AchievementType: MissionAchievementType
-    ProgressCount: int
+    FriendCampaignId: int
     MissionStatusHistory: dict[MissionStatusType, list[int]]
+    ProgressCount: int
 
 # [Description("通知タイプ")]
 class NotificationType(Enum):
@@ -2714,9 +2714,9 @@ class PlayerSettingsType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class UserSettingsDtoInfo():
+    PlayerId: int
     PlayerSettingsType: PlayerSettingsType
     Value: int
-    PlayerId: int
 
 # [MessagePackObject(True)]
 @dataclass
@@ -2767,49 +2767,49 @@ class DateTimeKind(Enum):
 # [Serializable]
 @dataclass
 class TimeSpan(IComparable, IFormattable):
-    Zero: TimeSpan
-    MaxValue: TimeSpan
-    MinValue: TimeSpan
-    Ticks: int
     Days: int
     Hours: int
+    MaxValue: TimeSpan
+    MinValue: TimeSpan
     Minutes: int
     Seconds: int
+    Ticks: int
     TotalDays: float
     TotalHours: float
     TotalMilliseconds: float
     TotalMinutes: float
     TotalSeconds: float
+    Zero: TimeSpan
 
 # [IsReadOnly]
 # [Serializable]
 @dataclass
 class DateTime(IComparable, IFormattable, IConvertible, ISerializable):
-    MinValue: DateTime
-    MaxValue: DateTime
-    UnixEpoch: DateTime
     Date: DateTime
     Day: int
     DayOfWeek: DayOfWeek
     Hour: int
     Kind: DateTimeKind
+    MaxValue: DateTime
     Millisecond: int
+    MinValue: DateTime
     Minute: int
     Month: int
     Now: DateTime
     Second: int
     Ticks: int
     TimeOfDay: TimeSpan
-    Year: int
+    UnixEpoch: DateTime
     UtcNow: DateTime
+    Year: int
 
 # [MessagePackObject(True)]
 @dataclass
 class UserShopFreeGrowthPackDtoInfo():
-    ShopGrowthPackId: int
     IsBuff: bool
     PlayerId: int
     ReceiveDateTime: DateTime
+    ShopGrowthPackId: int
     ShopProductGrowthPackId: int
 
 # [MessagePackObject(True)]
@@ -2825,10 +2825,10 @@ class UserShopMonthlyBoostDtoInfo():
 # [MessagePackObject(True)]
 @dataclass
 class UserShopSubscriptionDtoInfo():
-    ProductId: str
     DeviceType: DeviceType
-    TransactionId: str
     ExpirationTimeStamp: int
+    ProductId: str
+    TransactionId: str
 
 @dataclass
 class IUserStatusDtoInfo():
@@ -2841,9 +2841,9 @@ class IUserStatusDtoInfo():
     FavoriteCharacterId3: int
     FavoriteCharacterId4: int
     FavoriteCharacterId5: int
+    IsAlreadyChangedName: bool
     IsFirstVisitGuildAtDay: bool
     IsReachBattleLeagueTop50: bool
-    IsAlreadyChangedName: bool
     LastLoginTime: int
     LastLvUpTime: int
     MainCharacterIconId: int
@@ -2857,27 +2857,27 @@ class IUserStatusDtoInfo():
 # [MessagePackObject(True)]
 @dataclass
 class UserStatusDtoInfo(IUserStatusDtoInfo):
-    CreateAt: int
-    IsFirstVisitGuildAtDay: bool
-    IsReachBattleLeagueTop50: bool
-    IsAlreadyChangedName: bool
     Birthday: int
+    BoardRank: int
     Comment: str
-    PlayerId: int
-    MainCharacterIconId: int
+    CreateAt: int
+    Exp: int
     FavoriteCharacterId1: int
     FavoriteCharacterId2: int
     FavoriteCharacterId3: int
     FavoriteCharacterId4: int
     FavoriteCharacterId5: int
-    Name: str
-    Rank: int
-    BoardRank: int
-    Exp: int
-    Vip: int
+    IsAlreadyChangedName: bool
+    IsFirstVisitGuildAtDay: bool
+    IsReachBattleLeagueTop50: bool
     LastLoginTime: int
-    PreviousLoginTime: int
     LastLvUpTime: int
+    MainCharacterIconId: int
+    Name: str
+    PlayerId: int
+    PreviousLoginTime: int
+    Rank: int
+    Vip: int
     VipExp: int
 
 # [MessagePackObject(True)]
@@ -2937,13 +2937,13 @@ class UserSyncData():
     UserCharacterDtoInfos: list[UserCharacterDtoInfo]
     UserDeckDtoInfos: list[UserDeckDtoInfo]
     UserEquipmentDtoInfos: list[UserEquipmentDtoInfo]
+    UserFriendMissionDtoInfoList: list[UserFriendMissionDtoInfo]
     UserItemDtoInfo: list[UserItemDtoInfo]
     UserLevelLinkDtoInfo: UserLevelLinkDtoInfo
     UserLevelLinkMemberDtoInfos: list[UserLevelLinkMemberDtoInfo]
     UserMissionActivityDtoInfos: list[UserMissionActivityDtoInfo]
     UserMissionDtoInfos: list[UserMissionDtoInfo]
     UserMissionOccurrenceHistoryDtoInfo: UserMissionOccurrenceHistoryDtoInfo
-    UserFriendMissionDtoInfoList: list[UserFriendMissionDtoInfo]
     UserNotificationDtoInfoInfos: list[UserNotificationDtoInfo]
     UserOpenContentDtoInfos: list[UserOpenContentDtoInfo]
     UserSettingsDtoInfoList: list[UserSettingsDtoInfo]
@@ -2987,14 +2987,14 @@ class BanChatInfo():
 # [MessagePackObject(True)]
 @dataclass
 class UserCharacterInfo():
-    Guid: str
-    PlayerId: int
     CharacterId: int
-    Level: int
-    SubLevel: int
     Exp: int
-    RarityFlags: Flags[CharacterRarityFlags]
+    Guid: str
     IsLocked: bool
+    Level: int
+    PlayerId: int
+    RarityFlags: Flags[CharacterRarityFlags]
+    SubLevel: int
 
 # [Description("フレンド状態種別")]
 class FriendStatusType(Enum):
@@ -3018,10 +3018,10 @@ class PlayerGuildPositionType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class PlayerInfo():
-    DeckUserCharacterInfoList: list[UserCharacterInfo]
     BattlePower: int
     Comment: str
     CumulativeGuildFame: int
+    DeckUserCharacterInfoList: list[UserCharacterInfo]
     FriendStatus: FriendStatusType
     GuildId: int
     GuildJoinRequestUtcTimeStamp: int
@@ -3068,9 +3068,9 @@ class GuildOverView():
 @dataclass
 class GuildInfo():
     GuildExp: int
+    GuildFame: int
     GuildId: int
     GuildLevel: int
-    GuildFame: int
     GuildMemberCount: int
     GuildOverView: GuildOverView
     LeaderPlayerInfo: PlayerInfo
@@ -3126,8 +3126,8 @@ class MypageIconInfo():
     ImageId: int
     IsDisplayBadge: bool
     SortOrder: int
-    StoredIconInfoList: list[MypageIconInfo]
     StoreIconId: int
+    StoredIconInfoList: list[MypageIconInfo]
     TransferDetailInfo: TransferDetailInfo
 
 # [MessagePackObject(True)]
@@ -3149,14 +3149,14 @@ class UserFriendDtoInfo():
 # [MessagePackObject(True)]
 @dataclass
 class GvgDeckInfo():
-    UserCharacterGuidList: list[str]
     DeckNo: int
+    UserCharacterGuidList: list[str]
 
 # [MessagePackObject(True)]
 @dataclass
 class BattleTime():
-    StartBattle: int
     EndBattle: int
+    StartBattle: int
     TotalCommand: int
     TotalCommandOrMinBattleTime: int
 
@@ -3179,8 +3179,8 @@ class BattleFieldCharacterGroupType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class BattleEndInfo():
-    IsOutOfTurn: bool
     EndTurn: int
+    IsOutOfTurn: bool
     WinGroupType: BattleFieldCharacterGroupType
     WinPlayerIdSet: set[int]
 
@@ -3236,9 +3236,9 @@ class BattlePosition():
 @dataclass
 class BattleActiveSkill():
     ActiveSkillId: int
-    SkillOrderNumber: int
-    SkillMaxCoolTime: int
     SkillCoolTime: int
+    SkillMaxCoolTime: int
+    SkillOrderNumber: int
     SubSetSkillIds: list[int]
 
 # [MessagePackObject(True)]
@@ -3258,40 +3258,40 @@ class DungeonBattleInfo():
 # [MessagePackObject(True)]
 @dataclass
 class BattleFieldCharacter():
-    PlayerName: str
+    ActiveSkills: list[BattleActiveSkill]
+    BattleParameterWithoutBonus: BattleParameter
     CharacterGuid: str
     CharacterLevel: int
     CharacterRarityFlags: Flags[CharacterRarityFlags]
-    EquipmentMaxLevel: int
-    EquipmentDtoInfos: list[UserEquipmentDtoInfo]
-    UnitType: UnitType
-    UnitId: int
-    JobFlags: Flags[JobFlags]
-    ElementType: ElementType
     DefaultBaseParameter: BaseParameter
     DefaultBattleParameter: BattleParameter
-    BattleParameterWithoutBonus: BattleParameter
-    OnStartHP: int
     DefaultPosition: BattlePosition
-    Guid: int
-    NormalSkill: BattleActiveSkill
-    ActiveSkills: list[BattleActiveSkill]
-    PassiveSkills: list[BattlePassiveSkill]
-    OwnerPlayerId: int
-    PlayerRankHitBonus: int
     DungeonBattleInfo: DungeonBattleInfo
+    ElementType: ElementType
+    EquipmentDtoInfos: list[UserEquipmentDtoInfo]
+    EquipmentMaxLevel: int
+    Guid: int
+    JobFlags: Flags[JobFlags]
+    NormalSkill: BattleActiveSkill
+    OnStartHP: int
+    OwnerPlayerId: int
+    PassiveSkills: list[BattlePassiveSkill]
+    PlayerName: str
+    PlayerRankHitBonus: int
+    UnitId: int
+    UnitType: UnitType
 
 # [MessagePackObject(True)]
 @dataclass
 class BattleField():
+    AttackTeamPassiveSkillIds: list[int]
+    AttackTeamTotalKillCount: int
     BattleType: BattleType
     Characters: list[BattleFieldCharacter]
-    AttackTeamPassiveSkillIds: list[int]
-    ReceiveTeamPassiveSkillIds: list[int]
-    AttackTeamTotalKillCount: int
-    ReceiveTeamTotalKillCount: int
     # [Obsolete("TODO 2019-12-05 takeda 使わないなら削除、使うならLinq排除")]
     JoinPlayerIds: list[int]
+    ReceiveTeamPassiveSkillIds: list[int]
+    ReceiveTeamTotalKillCount: int
 
 # [Description("スキル演出タイプ")]
 class SkillDisplayType(Enum):
@@ -3702,10 +3702,10 @@ class EffectType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class Effect():
+    EffectCount: int
+    EffectMaxCount: int
     EffectType: EffectType
     EffectValue: int
-    EffectMaxCount: int
-    EffectCount: int
 
 # [Description("効果削除種別")]
 class RemoveEffectType(Enum):
@@ -3718,12 +3718,12 @@ class RemoveEffectType(Enum):
 @dataclass
 class EffectGroup():
     EffectGroupId: int
-    SkillCategory: SkillCategory
     EffectGroupType: EffectGroupType
     EffectTurn: int
     Effects: list[Effect]
-    RemoveEffectType: RemoveEffectType
     LinkTargetGuid: int
+    RemoveEffectType: RemoveEffectType
+    SkillCategory: SkillCategory
 
 # [Description("命中種別")]
 class HitType(Enum):
@@ -3751,15 +3751,15 @@ class HitType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class SubSkillResult():
-    SubSkillIndex: int
-    SkillDisplayType: SkillDisplayType
-    AttackUnitGuid: int
-    TargetUnitGuid: int
     AddEffectGroups: list[EffectGroup]
-    RemoveEffectGroups: list[EffectGroup]
-    HitType: HitType
+    AttackUnitGuid: int
     ChangeHp: int
+    HitType: HitType
+    RemoveEffectGroups: list[EffectGroup]
+    SkillDisplayType: SkillDisplayType
+    SubSkillIndex: int
     TargetRemainHp: int
+    TargetUnitGuid: int
 
 # [MessagePackObject(True)]
 @dataclass
@@ -3774,9 +3774,9 @@ class TransientEffect():
 # [MessagePackObject(True)]
 @dataclass
 class TransientEffectResult():
-    TransientEffects: list[TransientEffect]
-    TransientEffectSubSkillResults: list[SubSkillResult]
     RemainHp: int
+    TransientEffectSubSkillResults: list[SubSkillResult]
+    TransientEffects: list[TransientEffect]
 
 # [Description("サブセットタイプ")]
 class SubSetType(Enum):
@@ -3809,62 +3809,62 @@ class SubSetSkillResult():
     DamageSubSkillResults: list[SubSkillResult]
     EffectSubSkillResults: list[SubSkillResult]
     PassiveSubSkillResults: list[SubSkillResult]
-    TempSubSkillResults: list[SubSkillResult]
     SubSetType: SubSetType
+    TempSubSkillResults: list[SubSkillResult]
 
 # [MessagePackObject(True)]
 @dataclass
 class ActiveSkillData():
-    TransientEffectResult: TransientEffectResult
     ActiveSkillId: int
-    SubSetSkillResults: list[SubSetSkillResult]
-    TurnEndSubSkillResults: list[SubSkillResult]
-    IsNonActionStance: bool
     FromGuid: int
+    IsNonActionStance: bool
+    SubSetSkillResults: list[SubSetSkillResult]
+    TransientEffectResult: TransientEffectResult
+    TurnEndSubSkillResults: list[SubSkillResult]
 
 # [MessagePackObject(True)]
 @dataclass
 class BattleSubLog():
-    TurnStartPassiveResults: list[SubSkillResult]
-    TurnEndPassiveResults: list[SubSkillResult]
     ActiveSkillDatas: list[ActiveSkillData]
     Turn: int
+    TurnEndPassiveResults: list[SubSkillResult]
+    TurnStartPassiveResults: list[SubSkillResult]
 
 # [MessagePackObject(True)]
 @dataclass
 class BattleLog():
-    BattleStartPassiveResults: list[SubSkillResult]
     BattleEndPassiveResults: list[SubSkillResult]
+    BattleStartPassiveResults: list[SubSkillResult]
     BattleSubLogs: list[BattleSubLog]
 
 # [MessagePackObject(True)]
 @dataclass
 class BattleCharacterReport():
-    PlayerName: str
-    OwnerPlayerId: int
-    DeckIndex: int
-    GroupType: BattleFieldCharacterGroupType
-    CharacterGuid: str
     BattleCharacterGuid: int
-    UnitType: UnitType
-    UnitId: int
+    CharacterGuid: str
     CharacterLevel: int
     CharacterRarityFlags: Flags[CharacterRarityFlags]
+    DeckIndex: int
     ElementType: ElementType
+    GroupType: BattleFieldCharacterGroupType
+    Hp: int
+    MaxHp: int
+    OwnerPlayerId: int
+    PlayerName: str
     TotalGiveDamage: int
     TotalHpRecovery: int
     TotalReceiveDamage: int
-    MaxHp: int
-    Hp: int
+    UnitId: int
+    UnitType: UnitType
 
 # [MessagePackObject(True)]
 @dataclass
 class BattleSimulationResult():
+    BattleCharacterReports: list[BattleCharacterReport]
     BattleEndInfo: BattleEndInfo
     BattleField: BattleField
     BattleLog: BattleLog
     BattleToken: str
-    BattleCharacterReports: list[BattleCharacterReport]
 
 # [MessagePackObject(True)]
 @dataclass
@@ -3879,57 +3879,57 @@ class BattleResult():
 class UserBattleAutoDtoInfo():
     AverageBattleTime: int
     BattleEfficiency: int
+    BattleResult: BattleResult
     ConsecutiveWinCount: int
-    CurrentQuestId: int
     CurrentMaxQuestId: int
+    CurrentQuestId: int
     ExpectedCharacterExp: int
     ExpectedPlayerExp: int
     QuickLastExecuteTime: int
     QuickTodayUseCurrencyCount: int
     QuickTodayUsePrivilegeCount: int
-    BattleResult: BattleResult
 
 # [MessagePackObject(True)]
 @dataclass
 class TradeShopItemInfo():
-    # [Description("TradeShopItemMBのId")]
-    TradeShopItemId: int
     # [Description("交換回数")]
     TradeCount: int
+    # [Description("TradeShopItemMBのId")]
+    TradeShopItemId: int
 
 # [MessagePackObject(True)]
 @dataclass
 class TradeShopItem():
-    # [Description("TradeShopItemMBのId")]
-    TradeShopItemId: int
     # [Description("消費アイテム1")]
     ConsumeItem1: UserItem
     # [Description("消費アイテム2")]
     ConsumeItem2: UserItem
     # [Description("獲得アイテム")]
     GiveItem: UserItem
-    # [Description("割引率")]
-    SalePercent: int
-    # [Description("交換回数")]
-    TradeCount: int
     # [Description("交換制限回数(0:無制限s)")]
     LimitTradeCount: int
     # [Description("神器タイプ")]
     SacredTreasureType: SacredTreasureType
+    # [Description("割引率")]
+    SalePercent: int
     # [Description("並び順")]
     SortOrder: int
+    # [Description("交換回数")]
+    TradeCount: int
+    # [Description("TradeShopItemMBのId")]
+    TradeShopItemId: int
 
 # [MessagePackObject(True)]
 @dataclass
 class TradeShopTabInfo():
-    # [Description("交換所タブMBのID")]
-    TradeShopTabId: int
-    # [Description("アイテムの種類")]
-    TradeShopItems: list[TradeShopItem]
-    # [Description("最後に無料更新を行った時間")]
-    LastFreeManualUpdateTime: int
     # [Description("自動更新時間")]
     ExpirationTimeStamp: int
+    # [Description("最後に無料更新を行った時間")]
+    LastFreeManualUpdateTime: int
+    # [Description("アイテムの種類")]
+    TradeShopItems: list[TradeShopItem]
+    # [Description("交換所タブMBのID")]
+    TradeShopTabId: int
 
 # [MessagePackObject(True)]
 @dataclass
@@ -5321,11 +5321,11 @@ class ErrorCode(Enum):
 @dataclass
 class ApiErrorResponse(ApiResponseBase, IErrorResponse):
     ErrorCode: ErrorCode
-    Message: str
     # [Obsolete("ErrorCodeに移行します")]
     ErrorHandlingType: ErrorHandlingType
     # [Obsolete("ErrorCodeに移行します")]
     ErrorMessageId: int
+    Message: str
     # [Obsolete("ErrorCodeに移行します")]
     MessageParams: str
 
@@ -5333,24 +5333,24 @@ class ApiErrorResponse(ApiResponseBase, IErrorResponse):
 # [MessagePackObject(True)]
 @dataclass
 class ClearPartyCharacterInfo():
-    # [Description("Character固有キー")]
-    CharacterGuid: str
-    # [Description("CharacterMBのID")]
-    CharacterId: int
-    # [Description("レアリティ")]
-    RarityFlags: Flags[CharacterRarityFlags]
-    # [Description("レベル")]
-    Level: int
-    # [Description("レベルリンク可否")]
-    IsLevelLink: bool
-    # [Description("キャラクターが装着している武具情報")]
-    UserEquipmentDtoInfos: list[UserEquipmentDtoInfo]
     # [Description("ベースパラメータ")]
     BaseParameter: BaseParameter
     # [Description("バトルパラメータ")]
     BattleParameter: BattleParameter
     # [Description("戦闘力")]
     BattlePower: int
+    # [Description("Character固有キー")]
+    CharacterGuid: str
+    # [Description("CharacterMBのID")]
+    CharacterId: int
+    # [Description("レベルリンク可否")]
+    IsLevelLink: bool
+    # [Description("レベル")]
+    Level: int
+    # [Description("レアリティ")]
+    RarityFlags: Flags[CharacterRarityFlags]
+    # [Description("キャラクターが装着している武具情報")]
+    UserEquipmentDtoInfos: list[UserEquipmentDtoInfo]
 
 # [Description("無窮の塔クリアパーティー情報")]
 # [MessagePackObject(True)]
@@ -5499,8 +5499,6 @@ class ShopChargeBonusMissionType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class ShopProductChargeBonus():
-    # [Description("ShopChargeBonusMBのID")]
-    ShopChargeBonusMBId: int
     # [Description("詳細ダイアログベース画像ID")]
     DialogImageId: int
     # [Description("終了日時")]
@@ -5511,6 +5509,8 @@ class ShopProductChargeBonus():
     MessageKey: str
     # [Description("表示名キー")]
     NameKey: str
+    # [Description("ShopChargeBonusMBのID")]
+    ShopChargeBonusMBId: int
     # [Description("目標リスト")]
     ShopChargeBonusMissionDetailList: list[ShopChargeBonusMissionDetail]
     # [Description("チャージ特典条件タイプ")]
@@ -5543,16 +5543,16 @@ class ShopProductContractPrivilege():
     IsAlreadyUsedTrial: bool
     # [Description("パネル画像ID")]
     PanelImageId: int
-    # [Description("1週間購入ボタンのProductId")]
-    ProductIdWeekly: str
-    # [Description("1週間購入の値段")]
-    ShopProductPriceWeekly: int
     # [Description("1カ月購入ボタンのProductId")]
     ProductIdMonthly: str
-    # [Description("1カ月購入の値段")]
-    ShopProductPriceMonthly: int
+    # [Description("1週間購入ボタンのProductId")]
+    ProductIdWeekly: str
     # [Description("特権詳細説明リスト")]
     ShopContractPrivilegeDescriptionList: list[ShopContractPrivilegeDescription]
+    # [Description("1カ月購入の値段")]
+    ShopProductPriceMonthly: int
+    # [Description("1週間購入の値段")]
+    ShopProductPriceWeekly: int
 
 # [MessagePackObject(True)]
 @dataclass
@@ -5623,12 +5623,12 @@ class ShopProductCurrencyMission():
     PanelImageId: int
     # [Description("ProductId")]
     ProductId: str
-    # [Description("商品値段")]
-    ShopProductPrice: int
     # [Description("目標リスト")]
     ShopCurrencyMissionInfoList: list[ShopCurrencyMissionInfo]
     # [Description("課金機能付きミッションの種類")]
     ShopCurrencyMissionType: ShopCurrencyMissionType
+    # [Description("商品値段")]
+    ShopProductPrice: int
     # [Description("詳細ダイアログの概要説明キー")]
     SummaryKey: str
     # [Description("開放報酬")]
@@ -5658,9 +5658,9 @@ class ShopProductUiType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class ShopItem(IUserCharacterItem):
-    RarityFlags: Flags[CharacterRarityFlags]
     # [Nest(True, 1)]
     Item: UserItem
+    RarityFlags: Flags[CharacterRarityFlags]
 
 # [MessagePackObject(True)]
 @dataclass
@@ -5750,16 +5750,16 @@ class ShopProductGrowthPackDetail():
     IsBuff: bool
     # [Description("無料フラグ")]
     IsFree: bool
-    # [Description("購入可能回数")]
-    MaxBuyCount: int
     # [Description("MBのID")]
     MBId: int
+    # [Description("購入可能回数")]
+    MaxBuyCount: int
     # [Description("ProductId")]
     ProductId: str
-    # [Description("商品値段")]
-    ShopProductPrice: int
     # [Description("報酬リスト")]
     ShopItemList: list[ShopItem]
+    # [Description("商品値段")]
+    ShopProductPrice: int
 
 # [MessagePackObject(True)]
 @dataclass
@@ -5804,14 +5804,14 @@ class ShopProductMonthlyBoost():
     PanelImageId: int
     # [Description("ProductId")]
     ProductId: str
-    # [Description("商品値段")]
-    ShopProductPrice: int
     # [Description("特権詳細説明リスト")]
     ShopContractPrivilegeDescriptionList: list[ShopContractPrivilegeDescription]
-    # [Description("デイリー報酬")]
-    UserItemDailyList: list[UserItem]
+    # [Description("商品値段")]
+    ShopProductPrice: int
     # [Description("購入時報酬")]
     UserItem: UserItem
+    # [Description("デイリー報酬")]
+    UserItemDailyList: list[UserItem]
 
 # [MessagePackObject(True)]
 @dataclass
@@ -5850,16 +5850,16 @@ class ShopProductInfo():
 # [MessagePackObject(True)]
 @dataclass
 class DecorationData():
-    # [Description("アイコンID")]
-    IconId: int
-    # [Description("装飾ID")]
-    DecorationId: int
     # [Description("カラー")]
     DecorationColor: str
-    # [Description("追加装飾ID")]
-    DecorationSpecialId: int
+    # [Description("装飾ID")]
+    DecorationId: int
     # [Description("追加装飾カラー")]
     DecorationSpecialColor: str
+    # [Description("追加装飾ID")]
+    DecorationSpecialId: int
+    # [Description("アイコンID")]
+    IconId: int
     # [Description("購入回数制限タイプ")]
     ShopBuyLimitType: ShopBuyLimitType
 
@@ -5904,25 +5904,25 @@ class GuildRank():
 # [MessagePackObject(True)]
 @dataclass
 class BossDisplayInfo():
-    # [Description("ボス名称")]
-    NameKey: str
     # [Description("ボスId(BattleEnemyMB)")]
     BossEnemyId: int
+    # [Description("ボス名称")]
+    NameKey: str
 
 # [Description("ボス情報")]
 # [MessagePackObject(True)]
 @dataclass
 class BossBattleInfo():
-    # [Description("クエストId(QuestMB)")]
-    QuestId: int
     # [Description("ドロップアイテムリスト")]
     BossBattleDropItems: list[UserItem]
-    # [Description("ボスバトル確定ドロップアイテムリスト")]
-    FixedBossBattleDropItems: list[UserItem]
-    # [Description("ボスバトル初回ドロップアイテムリスト")]
-    FirstBossBattleDropItems: list[UserItem]
     # [Description("ボス表示情報リスト")]
     BossDisplayInfos: list[BossDisplayInfo]
+    # [Description("ボスバトル初回ドロップアイテムリスト")]
+    FirstBossBattleDropItems: list[UserItem]
+    # [Description("ボスバトル確定ドロップアイテムリスト")]
+    FixedBossBattleDropItems: list[UserItem]
+    # [Description("クエストId(QuestMB)")]
+    QuestId: int
 
 # [MessagePackObject(True)]
 @dataclass
@@ -5936,8 +5936,8 @@ class MapPlayerInfo():
 # [MessagePackObject(True)]
 @dataclass
 class UserMapBuildingDtoInfo():
-    SelectedIndex: int
     QuestMapBuildingId: int
+    SelectedIndex: int
 
 # [MessagePackObject(True)]
 @dataclass
@@ -6008,14 +6008,14 @@ class NoticeInfo():
     ButtonTitle: str
     # [Description("カテゴリー")]
     CategoryType: NoticeCategoryType
+    # [Description("グループID")]
+    GroupId: int
     # [Description("NoticeMBのId")]
     Id: int
     # [Description("本文")]
     MainText: str
     # [Description("本文上のタイトル")]
     Title: str
-    # [Description("グループID")]
-    GroupId: int
 
 # [Description("お知らせをどこから開いたか")]
 class NoticeAccessType(Enum):
@@ -6057,25 +6057,25 @@ class LocalRaidRoomConditionsType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class LocalRaidBattleLogPlayerInfo():
+    IsInvite: bool
     IsLeader: bool
     IsReady: bool
-    IsInvite: bool
     PlayerInfo: PlayerInfo
 
 # [MessagePackObject(True)]
 @dataclass
 class LocalRaidPartyInfo():
     ConditionsType: LocalRaidRoomConditionsType
+    IsReady: bool
     LeaderPlayerId: int
     LeaderPlayerName: str
     LocalRaidBattleLogPlayerInfoList: list[LocalRaidBattleLogPlayerInfo]
     Password: int
-    WorldId: int
     QuestId: int
     RequiredBattlePower: int
     RoomId: str
     TotalBattlePower: int
-    IsReady: bool
+    WorldId: int
 
 # [MessagePackObject(True)]
 @dataclass
@@ -6083,9 +6083,9 @@ class LocalRaidBattleLogInfo():
     BattleEndInfo: BattleEndInfo
     BattleTime: int
     BattleToken: str
+    ClearLevel: int
     LocalRaidPartyInfo: LocalRaidPartyInfo
     QuestId: int
-    ClearLevel: int
 
 # [MessagePackObject(True)]
 @dataclass
@@ -6135,12 +6135,12 @@ class CastleBattleHistoryInfo():
     IsCounter: bool
     # [Key(1)]
     LocalHoursAndMinutes: int
+    # [Key(5)]
+    LoserWinContinueCount: int
     # [Key(3)]
     ReceiverParty: CastleBattleHistoryInfo_PartyInfoAndName
     # [Key(4)]
     WinContinueCount: int
-    # [Key(5)]
-    LoserWinContinueCount: int
     # [Key(6)]
     WinGroupType: BattleFieldCharacterGroupType
 
@@ -6224,15 +6224,15 @@ class QuestQuickTicketType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class TreasureChestReward(IUserCharacterItem):
-    SacredTreasureType: SacredTreasureType
-    RarityFlags: Flags[CharacterRarityFlags]
     Item: UserItem
+    RarityFlags: Flags[CharacterRarityFlags]
+    SacredTreasureType: SacredTreasureType
 
 # [MessagePackObject(True)]
 @dataclass
 class TreasureChestItemLotteryRate():
-    LotteryRate: float
     IsCeilingTarget: bool
+    LotteryRate: float
     TreasureChestReward: TreasureChestReward
 
 # [MessagePackObject(True)]
@@ -6246,12 +6246,12 @@ class TreasureChestItemLotteryRateListInfo():
 @dataclass
 class GuildRaidBossInfo():
     BossGuid: str
-    Name: str
-    MaxHp: int
-    TotalDamage: int
-    StartTimeStamp: int
-    EndTimeStamp: int
     CurrentHp: int
+    EndTimeStamp: int
+    MaxHp: int
+    Name: str
+    StartTimeStamp: int
+    TotalDamage: int
 
 # [MessagePackObject(True)]
 @dataclass
@@ -6297,8 +6297,8 @@ class GuildRaidInfo():
     GuildRaidBossInfo: GuildRaidBossInfo
     GuildRaidDtoInfo: GuildRaidDtoInfo
     GuildRaidUserRankingInfos: list[GuildRaidUserRankingInfo]
-    IsOpen: bool
     IsExistWorldDamageReward: bool
+    IsOpen: bool
     ObtainableEquipmentList: list[UserItem]
     UserGuildRaidDtoInfo: UserGuildRaidDtoInfo
     UserGuildRaidPreviousDtoInfo: UserGuildRaidPreviousDtoInfo
@@ -6347,8 +6347,8 @@ class SystemChatMessageIdType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class GuildSystemChatOptionInfo():
-    Type: SystemChatMessageIdType
     IsValid: bool
+    Type: SystemChatMessageIdType
 
 # [MessagePackObject(True)]
 @dataclass
@@ -6366,16 +6366,16 @@ class CastleRewardInfo():
 # [MessagePackObject(True)]
 @dataclass
 class GuildGvgInfo():
-    IsOpen: bool
-    CurrentRanking: int
-    TodayRanking: int
-    RemainingDeclarationCount: int
-    RewardLimitTime: int
     CanGetCastleRewardInfoList: list[CastleRewardInfo]
-    GotCastleRewardInfoList: list[CastleRewardInfo]
     CastleCountLarge: int
     CastleCountMedium: int
     CastleCountSmall: int
+    CurrentRanking: int
+    GotCastleRewardInfoList: list[CastleRewardInfo]
+    IsOpen: bool
+    RemainingDeclarationCount: int
+    RewardLimitTime: int
+    TodayRanking: int
 
 # [MessagePackObject(True)]
 @dataclass
@@ -6439,18 +6439,18 @@ class GachaCaseInfo():
     GachaBonusDrawCount: int
     GachaBonusInfoList: list[GachaBonusInfo]
     GachaButtonInfoList: list[GachaButtonInfo]
+    GachaCaseFlags: Flags[GachaCaseFlags]
     GachaCaseId: int
     GachaCaseUiId: int
     GachaCategoryType: GachaCategoryType
+    GachaCeilingCount: int
+    GachaDrawCount: int
     GachaGroupType: GachaGroupType
     GachaRelicType: GachaRelicType
     GachaSelectCharacterIdList: list[int]
     GachaSelectListType: GachaSelectListType
     MaxDrawGold: int
     RemainingDrawGold: int
-    GachaDrawCount: int
-    GachaCeilingCount: int
-    GachaCaseFlags: Flags[GachaCaseFlags]
 
 # [MessagePackObject(True)]
 @dataclass
@@ -6482,9 +6482,9 @@ class GachaElementInfo():
 # [MessagePackObject(True)]
 @dataclass
 class GachaItemRate(IUserCharacterItem):
+    AddItem: UserItem
     CharacterRarityFlags: Flags[CharacterRarityFlags]
     Item: UserItem
-    AddItem: UserItem
     LotteryRate: float
 
 # [MessagePackObject(True)]
@@ -6521,35 +6521,35 @@ class NewFriendInfo():
 
 @dataclass
 class IAdditionalParameter():
+    AdditionalParameterEnergy: int
     AdditionalParameterHealth: int
     AdditionalParameterIntelligence: int
     AdditionalParameterMuscle: int
-    AdditionalParameterEnergy: int
 
 # [MessagePackObject(True)]
 @dataclass
 class UserEquipment(IUserItem, IReadOnlyEquipment, IAdditionalParameter):
-    CharacterGuid: str
-    HasParameter: bool
-    EquipmentId: int
-    Guid: str
-    ItemCount: int
-    ItemId: int
-    ItemType: ItemType
+    AdditionalParameterEnergy: int
     AdditionalParameterHealth: int
     AdditionalParameterIntelligence: int
     AdditionalParameterMuscle: int
-    AdditionalParameterEnergy: int
-    SphereId1: int
-    SphereId2: int
-    SphereId3: int
-    SphereId4: int
-    SphereUnlockedCount: int
+    CharacterGuid: str
+    EquipmentId: int
+    Guid: str
+    HasParameter: bool
+    ItemCount: int
+    ItemId: int
+    ItemType: ItemType
     LegendSacredTreasureExp: int
     LegendSacredTreasureLv: int
     MatchlessSacredTreasureExp: int
     MatchlessSacredTreasureLv: int
     ReinforcementLv: int
+    SphereId1: int
+    SphereId2: int
+    SphereId3: int
+    SphereId4: int
+    SphereUnlockedCount: int
 
 # [Description("武具変更情報")]
 # [MessagePackObject(True)]
@@ -6686,10 +6686,10 @@ class UserCharacter(IUserItem):
 class PrivateChatLogPlayerInfo():
     # [Key(0)]
     ExistUnread: bool
-    # [Key(1)]
-    PlayerInfo: PlayerInfo
     # [Key(2)]
     LocalTimestamp: int
+    # [Key(1)]
+    PlayerInfo: PlayerInfo
 
 class ChatType(Enum):
     SvS = 0
@@ -6727,6 +6727,8 @@ class ChatInfo():
     ChatType: ChatType
     # [Key(8)]
     LegendLeagueClass: LegendLeagueClassType
+    # [Key(7)]
+    LocalTimeStamp: int
     # [Key(2)]
     Message: str
     # [Key(3)]
@@ -6741,28 +6743,26 @@ class ChatInfo():
     SystemChatMessageKey: str
     # [Key(6)]
     SystemChatType: SystemChatType
-    # [Key(7)]
-    LocalTimeStamp: int
 
 # [MessagePackObject(True)]
 @dataclass
 class CharacterDetailInfo():
-    UserEquipmentDtoInfos: list[UserEquipmentDtoInfo]
     BaseParameter: BaseParameter
     BattleParameter: BattleParameter
     BattlePower: int
     Level: int
     RarityFlags: Flags[CharacterRarityFlags]
+    UserEquipmentDtoInfos: list[UserEquipmentDtoInfo]
 
 # [MessagePackObject(True)]
 @dataclass
 class CharacterRankUpMaterialInfo():
-    # [Description("ランクアップ対象キャラクター Guid")]
-    TargetGuid: str
     # [Description("素材キャラクターGuid1")]
     MaterialGuid1: str
     # [Description("素材キャラクター Guid2")]
     MaterialGuid2: str
+    # [Description("ランクアップ対象キャラクター Guid")]
+    TargetGuid: str
 
 # [Description("メモリーログタイプ")]
 class MemoryLogType(Enum):
@@ -6776,8 +6776,8 @@ class MemoryLogType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class RankResetReceiveCharacter(IUserCharacterItem):
-    RarityFlags: Flags[CharacterRarityFlags]
     Item: UserItem
+    RarityFlags: Flags[CharacterRarityFlags]
 
 # [Description("懸賞カウンター条件タイプ")]
 class BountyQuestConditionType(Enum):
@@ -6801,68 +6801,68 @@ class BountyQuestConditionInfo():
 # [MessagePackObject(True)]
 @dataclass
 class BountyQuestInfo():
-    # [Description("懸賞カウンタークエストID")]
-    BountyQuestId: int
-    # [Description("懸賞カウンタークエスト名キー")]
-    BountyQuestNameKey: str
-    # [Description("懸賞カウンタータイプ")]
-    BountyQuestType: BountyQuestType
-    # [Description("懸賞カウンタークエストレアリティ")]
-    BountyQuestRarity: BountyQuestRarityFlags
-    # [Description("設定可能なキャラー数")]
-    CharacterMaxCount: int
-    # [Description("懸賞カウンター制限時間(ミリ秒)")]
-    BountyQuestLimitTime: int
     # [Description("懸賞カウンタークリアタイム(ミリ秒)")]
     BountyQuestClearTime: int
     # [Description("懸賞カウンター条件リスト")]
     BountyQuestConditionInfos: list[BountyQuestConditionInfo]
-    # [Description("懸賞カウンター報酬リスト")]
-    RewardItems: list[UserItem]
+    # [Description("懸賞カウンタークエストID")]
+    BountyQuestId: int
+    # [Description("懸賞カウンター制限時間(ミリ秒)")]
+    BountyQuestLimitTime: int
+    # [Description("懸賞カウンタークエスト名キー")]
+    BountyQuestNameKey: str
+    # [Description("懸賞カウンタークエストレアリティ")]
+    BountyQuestRarity: BountyQuestRarityFlags
+    # [Description("懸賞カウンタータイプ")]
+    BountyQuestType: BountyQuestType
+    # [Description("設定可能なキャラー数")]
+    CharacterMaxCount: int
     # [Description("高速完了初期必要ダイヤ")]
     InitialRequireCurrencyForQuick: int
+    # [Description("懸賞カウンター報酬リスト")]
+    RewardItems: list[UserItem]
 
 # [MessagePackObject(True)]
 @dataclass
 class UserBountyQuestBoardDtoInfo():
-    BountyQuestType: BountyQuestType
     BountyQuestRarity: BountyQuestRarityFlags
+    BountyQuestType: BountyQuestType
     ClearCount: int
 
 # [MessagePackObject(True)]
 @dataclass
 class BountyQuestMemberInfo():
-    # [Description("プレイヤーID")]
-    PlayerId: int
     # [Description("キャラクターID")]
     CharacterId: int
-    # [Description("ユーザーキャラクターGUID")]
-    UserCharacterGuid: str
     # [Description("キャラクターレアリティ")]
     CharacterRarityFlags: Flags[CharacterRarityFlags]
+    # [Description("プレイヤーID")]
+    PlayerId: int
+    # [Description("ユーザーキャラクターGUID")]
+    UserCharacterGuid: str
 
 # [MessagePackObject(True)]
 @dataclass
 class UserBountyQuestDtoInfo():
-    Date: int
-    BountyQuestId: int
-    BountyQuestType: BountyQuestType
-    BountyQuestLimitStartTime: int
     BountyQuestEndTime: int
-    RewardEndTime: int
+    BountyQuestId: int
+    BountyQuestLimitStartTime: int
+    BountyQuestType: BountyQuestType
+    Date: int
     IsReward: bool
+    RewardEndTime: int
     StartMembers: list[BountyQuestMemberInfo]
 
 # [MessagePackObject(True)]
 @dataclass
 class UserBountyQuestMemberDtoInfo():
-    UserCharacterGuid: str
     CharacterId: int
-    RarityFlags: Flags[CharacterRarityFlags]
+    DispatchEndTime: int
     DispatchPlayerId: int
     DispatchPlayerName: str
-    DispatchEndTime: int
     PlayerId: int
+    RarityFlags: Flags[CharacterRarityFlags]
+    UserCharacterGuid: str
 
 # [Description("祈りの泉：プレイヤータイプ")]
 class BountyQuestPlayerType(Enum):
@@ -6883,10 +6883,10 @@ class BountyQuestStartInfo():
 # [MessagePackObject(True)]
 @dataclass
 class ClearPartyInfo():
-    # [Description("クリア当時のキャラクター情報")]
-    ClearPartyCharacterInfos: list[ClearPartyCharacterInfo]
     # [Description("バトルタイプ")]
     BattleType: BattleType
+    # [Description("クリア当時のキャラクター情報")]
+    ClearPartyCharacterInfos: list[ClearPartyCharacterInfo]
     # [Description("クリア日")]
     ClearTimestamp: int
     # [Description("クリア当時デッキの総合戦闘力")]
@@ -7044,12 +7044,12 @@ class WorldInfo():
 # [MessagePackObject(True)]
 @dataclass
 class MaintenanceDebugUserInfo():
-    # [Description("ユーザーID")]
-    UserId: int
-    # [Description("プレイヤーID")]
-    PlayerId: int
     # [Description("デバックユーザー状態")]
     IsDebugUser: bool
+    # [Description("プレイヤーID")]
+    PlayerId: int
+    # [Description("ユーザーID")]
+    UserId: int
 
 # [Description("ターゲットサーバータイプ")]
 class MaintenanceServerType(Enum):
@@ -7073,20 +7073,20 @@ class MaintenanceAreaType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class MaintenanceInfo():
+    # [Description("領域Idタイプ")]
+    AreaIds: list[int]
+    # [Description("終了日時")]
+    EndTimeFixJST: DateTime
+    # [Description("領域タイプ")]
+    MaintenanceAreaType: MaintenanceAreaType
+    # [Description("メンテナンス対象機能種別リスト")]
+    MaintenanceFunctionTypes: list[int]
+    # [Description("プラットフォームリスト")]
+    MaintenancePlatformTypes: list[int]
     # [Description("対象サーバー種別")]
     MaintenanceServerType: MaintenanceServerType
     # [Description("開始日時")]
     StartTimeFixJST: DateTime
-    # [Description("終了日時")]
-    EndTimeFixJST: DateTime
-    # [Description("プラットフォームリスト")]
-    MaintenancePlatformTypes: list[int]
-    # [Description("領域タイプ")]
-    MaintenanceAreaType: MaintenanceAreaType
-    # [Description("領域Idタイプ")]
-    AreaIds: list[int]
-    # [Description("メンテナンス対象機能種別リスト")]
-    MaintenanceFunctionTypes: list[int]
 
 # [Description("新規ユーザー管理種別")]
 class ManagementNewUserType(Enum):
@@ -7116,9 +7116,9 @@ class TitleInfo():
     BgmNumberJP: int
     BgmNumberUS: int
     MovieNumber: int
+    Scale: float
     X: float
     Y: float
-    Scale: float
 
 # [Description("リモート通知種別")]
 class RemoteNotificationType(Enum):
