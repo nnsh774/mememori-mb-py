@@ -1,11 +1,9 @@
 from enum import Enum
 import json
 
-import mb
-
-class FlagsUnion:
-    def __init__(self, values: list[Enum]) -> None:
-        self.values = values
+from .flags import Flags
+from . import types
+from . import mb
 
 def get_type(name):
     if name.endswith(' | None'):
@@ -18,6 +16,8 @@ def get_type(name):
         return float
     if name == 'bool':
         return bool
+    if hasattr(types, name):
+        return getattr(types, name)
     return getattr(mb, name)
 
 def expand_cls(obj, cls):
@@ -26,17 +26,18 @@ def expand_cls(obj, cls):
         if field.type.startswith('list['):
             inner_type = get_type(field.type[5:-1])
             params[field.name] = [expand_obj(value, inner_type) for value in obj[field.name] or []]
+        elif field.type.startswith('Flags['):
+            inner_type = get_type(field.type[5:-1])
+            params[field.name] = Flags([
+                m for m in inner_type.__members__.values()
+                if obj[field.name] & m.value
+            ])
         else:
             params[field.name] = expand_obj(obj[field.name], get_type(field.type))
     return cls(**params)
 
 def expand_enum(obj, enum):
-    try:
-        return enum(obj)
-    except ValueError:
-        if enum.__name__.endswith('Flags'):
-            return FlagsUnion(values=[m for m in enum.__members__.values() if obj & m.value])
-        return obj
+    return enum(obj)
 
 def expand_obj(obj, cls_or_enum):
     if obj == None:
@@ -60,7 +61,7 @@ class EnumJSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Enum):
             return self.encode_enum(obj)
-        if isinstance(obj, FlagsUnion):
+        if isinstance(obj, Flags):
             return ' | '.join(self.encode_enum(e) for e in obj.values)
         return json.JSONEncoder.default(self, obj)
 
