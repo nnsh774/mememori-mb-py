@@ -32,8 +32,10 @@ def expand_cls(obj, cls):
                 m for m in inner_type.__members__.values()
                 if obj[field.name] & m.value
             ])
-        else:
+        elif field.name in obj:
             params[field.name] = expand_obj(obj[field.name], get_type(field.type))
+        else:
+            params[field.name] = None
     return cls(**params)
 
 def expand_enum(obj, enum):

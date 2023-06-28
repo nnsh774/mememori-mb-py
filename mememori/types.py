@@ -2173,7 +2173,7 @@ class IHasEventStartEndTime():
 
 # [MessagePackObject(True)]
 @dataclass
-class EventMissionReward(IUserCharacterItem):
+class EventMissionReward: #(IUserCharacterItem): # TODO FIX
     # [Nest(True, 1)]
     # [PropertyOrder(1)]
     EventItem: UserItem
