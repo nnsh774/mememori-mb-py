@@ -27,7 +27,7 @@ def expand_cls(obj, cls):
             inner_type = get_type(field.type[5:-1])
             params[field.name] = [expand_obj(value, inner_type) for value in obj[field.name] or []]
         elif field.type.startswith('Flags['):
-            inner_type = get_type(field.type[5:-1])
+            inner_type = get_type(field.type[6:-1])
             params[field.name] = Flags([
                 m for m in inner_type.__members__.values()
                 if obj[field.name] & m.value
