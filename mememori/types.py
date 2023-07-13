@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 from enum import Enum
 
 from .flags import Flags
@@ -2099,6 +2100,7 @@ class TermsButtonInfo():
     Url: str
 
 # [Description("言語")]
+# [Serializable]
 class LanguageType(Enum):
     None_ = 0
     # [Description("日本語")]
@@ -2769,8 +2771,8 @@ class DateTimeKind(Enum):
 class TimeSpan(IComparable, IFormattable):
     Days: int
     Hours: int
-    MaxValue: TimeSpan
-    MinValue: TimeSpan
+    MaxValue: timedelta
+    MinValue: timedelta
     Minutes: int
     Seconds: int
     Ticks: int
@@ -2779,28 +2781,28 @@ class TimeSpan(IComparable, IFormattable):
     TotalMilliseconds: float
     TotalMinutes: float
     TotalSeconds: float
-    Zero: TimeSpan
+    Zero: timedelta
 
 # [IsReadOnly]
 # [Serializable]
 @dataclass
 class DateTime(IComparable, IFormattable, IConvertible, ISerializable):
-    Date: DateTime
+    Date: datetime
     Day: int
     DayOfWeek: DayOfWeek
     Hour: int
     Kind: DateTimeKind
-    MaxValue: DateTime
+    MaxValue: datetime
     Millisecond: int
-    MinValue: DateTime
+    MinValue: datetime
     Minute: int
     Month: int
-    Now: DateTime
+    Now: datetime
     Second: int
     Ticks: int
-    TimeOfDay: TimeSpan
-    UnixEpoch: DateTime
-    UtcNow: DateTime
+    TimeOfDay: timedelta
+    UnixEpoch: datetime
+    UtcNow: datetime
     Year: int
 
 # [MessagePackObject(True)]
@@ -2808,7 +2810,7 @@ class DateTime(IComparable, IFormattable, IConvertible, ISerializable):
 class UserShopFreeGrowthPackDtoInfo():
     IsBuff: bool
     PlayerId: int
-    ReceiveDateTime: DateTime
+    ReceiveDateTime: datetime
     ShopGrowthPackId: int
     ShopProductGrowthPackId: int
 
@@ -3029,7 +3031,7 @@ class PlayerInfo():
     GuildName: str
     GuildPeriodTotalFame: int
     IsBlock: bool
-    LastLoginTime: TimeSpan
+    LastLoginTime: timedelta
     LatestQuestId: int
     LatestTowerBattleQuestId: int
     LocalRaidBattlePower: int
@@ -4274,6 +4276,8 @@ class ErrorCode(Enum):
     DungeonBattleUpdatingMap = 122073
     # [Description("選択できないマスです。")]
     DungeonBattleCanNotSelectGrid = 122074
+    # [Description("バトル報酬が存在しません。")]
+    DungeonBattleNotFoundBattleReward = 122075
     # [Description("ユーザーのバトルリーグデータがありません")]
     BattlePvpUserBattlePvpDtoNotFound = 131000
     # [Description("ユーザーのステータスデータがありません")]
@@ -6012,6 +6016,8 @@ class NoticeInfo():
     GroupId: int
     # [Description("NoticeMBのId")]
     Id: int
+    # [Description("言語種別")]
+    LanguageType: LanguageType
     # [Description("本文")]
     MainText: str
     # [Description("本文上のタイトル")]
@@ -6990,7 +6996,7 @@ class AccountMessageInfo():
 # [MessagePackObject(True)]
 @dataclass
 class WarningMessageInfo():
-    ConfirmDateTime: DateTime
+    ConfirmDateTime: datetime
     DisplayOrder: int
     MessageInfo: AccountMessageInfo
     WarningId: int
@@ -7038,7 +7044,7 @@ class WorldInfo():
     # [Description("ワールドId")]
     Id: int
     # [Description("ワールド設立日")]
-    StartTime: DateTime
+    StartTime: datetime
 
 # [Description("メインテナンス突破ユーザー情報")]
 # [MessagePackObject(True)]
@@ -7076,7 +7082,7 @@ class MaintenanceInfo():
     # [Description("領域Idタイプ")]
     AreaIds: list[int]
     # [Description("終了日時")]
-    EndTimeFixJST: DateTime
+    EndTimeFixJST: datetime
     # [Description("領域タイプ")]
     MaintenanceAreaType: MaintenanceAreaType
     # [Description("メンテナンス対象機能種別リスト")]
@@ -7086,7 +7092,7 @@ class MaintenanceInfo():
     # [Description("対象サーバー種別")]
     MaintenanceServerType: MaintenanceServerType
     # [Description("開始日時")]
-    StartTimeFixJST: DateTime
+    StartTimeFixJST: datetime
 
 # [Description("新規ユーザー管理種別")]
 class ManagementNewUserType(Enum):
@@ -7100,21 +7106,26 @@ class ManagementNewUserType(Enum):
 @dataclass
 class ManagementNewUserInfo():
     # [Description("終了日時")]
-    EndTimeFixJST: DateTime
+    EndTimeFixJST: datetime
     # [Description("新規ユーザーの作成禁止するか")]
     IsUnableToCreateUser: bool
     # [Description("新規ユーザー管理種別")]
     ManagementNewUserType: ManagementNewUserType
     # [Description("開始日時")]
-    StartTimeFixJST: DateTime
+    StartTimeFixJST: datetime
     # [Description("ターゲットIdリスト")]
     TargetIds: list[int]
 
 # [MessagePackObject(True)]
 @dataclass
 class TitleInfo():
+    AnchorMaxX: float
+    AnchorMaxY: float
+    AnchorMinX: float
+    AnchorMinY: float
     BgmNumberJP: int
     BgmNumberUS: int
+    LogoNumber: int
     MovieNumber: int
     Scale: float
     X: float

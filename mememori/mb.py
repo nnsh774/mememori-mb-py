@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 from enum import Enum
 
 from .flags import Flags
@@ -1321,7 +1322,7 @@ class GuildRaidBossMB(MasterBookBase, IHasStartEndTime):
     # [PropertyOrder(17)]
     ActiveSkillIds: list[int]
     # [Description("バナーテキスト")]
-    # [PropertyOrder(23)]
+    # [PropertyOrder(24)]
     BannerText: str
     # [Description("ベースパラメータ")]
     # [Nest(True, 1)]
@@ -1334,6 +1335,9 @@ class GuildRaidBossMB(MasterBookBase, IHasStartEndTime):
     # [Description("戦闘力")]
     # [PropertyOrder(12)]
     BattlePower: int
+    # [Description("キャラクタースケール")]
+    # [PropertyOrder(23)]
+    CharacterImageScale: float
     # [Description("キャラクター座標X")]
     # [PropertyOrder(21)]
     CharacterImageX: float
@@ -1360,10 +1364,10 @@ class GuildRaidBossMB(MasterBookBase, IHasStartEndTime):
     # [PropertyOrder(3)]
     GuildRaidBossType: GuildRaidBossType
     # [Description("ギルドレイドボタン座標U")]
-    # [PropertyOrder(24)]
+    # [PropertyOrder(25)]
     GuildRaidButtonU: float
     # [Description("ギルドレイドボタン座標V")]
-    # [PropertyOrder(25)]
+    # [PropertyOrder(26)]
     GuildRaidButtonV: float
     # [Description("職業")]
     # [PropertyOrder(11)]
@@ -2439,26 +2443,6 @@ class TextLanguageMB(MasterBookBase):
     # [Description("言語")]
     # [PropertyOrder(1)]
     LanguageType: LanguageType
-
-# [Description("リソース")]
-# [MessagePackObject(True)]
-@dataclass
-class TextResourceMB(MasterBookBase):
-    # [Description("文字列キー")]
-    # [PropertyOrder(1)]
-    StringKey: str
-    # [Description("英語")]
-    # [PropertyOrder(2)]
-    enUS: str
-    # [Description("日本語")]
-    # [PropertyOrder(3)]
-    jaJP: str
-    # [Description("韓国語")]
-    # [PropertyOrder(4)]
-    koKR: str
-    # [Description("中国語(繁体字)")]
-    # [PropertyOrder(6)]
-    zhTW: str
 
 # [Description("日本語")]
 # [MessagePackObject(True)]
