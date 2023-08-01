@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
 
+from .array_packed import ArrayPacked
 from .flags import Flags
 
 @dataclass
@@ -382,15 +383,15 @@ class BountyQuestEventTargetQuestTypeInfo():
 # [Union(0, typeof)]
 @dataclass
 class IUserItem():
-    # [Description("アイテムの数")]
-    # [PropertyOrder(3)]
-    ItemCount: int
-    # [Description("アイテムのID")]
-    # [PropertyOrder(2)]
-    ItemId: int
     # [Description("アイテムの種類")]
     # [PropertyOrder(1)]
     ItemType: ItemType
+    # [Description("アイテムのID")]
+    # [PropertyOrder(2)]
+    ItemId: int
+    # [Description("アイテムの数")]
+    # [PropertyOrder(3)]
+    ItemCount: int
 
 # [MessagePackObject(True)]
 @dataclass
@@ -536,12 +537,12 @@ class TimelineType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class CharacterVoicePath():
-    # [Description("TimelineId")]
-    # [PropertyOrder(2)]
-    TimelineId: int
     # [Description("TimelineType")]
     # [PropertyOrder(1)]
     TimelineType: TimelineType
+    # [Description("TimelineId")]
+    # [PropertyOrder(2)]
+    TimelineId: int
 
 # [Description("視聴可能ボイスの解放条件")]
 class UnlockCharacterDetailVoiceType(Enum):
@@ -620,48 +621,48 @@ class CharacterBloodType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class TranslatedText():
-    # [Description("アラビア語")]
-    # [PropertyOrder(14)]
-    arEG: str
-    # [Description("ドイツ語")]
-    # [PropertyOrder(13)]
-    deDE: str
-    # [Description("英語")]
-    # [PropertyOrder(2)]
-    enUS: str
-    # [Description("スペイン語")]
-    # [PropertyOrder(7)]
-    esMX: str
-    # [Description("フランス語")]
-    # [PropertyOrder(6)]
-    frFR: str
-    # [Description("インドネシア語")]
-    # [PropertyOrder(10)]
-    idID: str
     # [Description("日本語")]
     # [PropertyOrder(1)]
     jaJP: str
-    # [Description("韓国語")]
-    # [PropertyOrder(3)]
-    koKR: str
-    # [Description("ポルトガル語")]
-    # [PropertyOrder(8)]
-    ptBR: str
-    # [Description("ロシア語")]
-    # [PropertyOrder(12)]
-    ruRU: str
-    # [Description("タイ語")]
-    # [PropertyOrder(9)]
-    thTH: str
+    # [Description("インドネシア語")]
+    # [PropertyOrder(10)]
+    idID: str
     # [Description("ベトナム語")]
     # [PropertyOrder(11)]
     viVN: str
-    # [Description("中国語(簡体字)")]
-    # [PropertyOrder(5)]
-    zhCN: str
+    # [Description("ロシア語")]
+    # [PropertyOrder(12)]
+    ruRU: str
+    # [Description("ドイツ語")]
+    # [PropertyOrder(13)]
+    deDE: str
+    # [Description("アラビア語")]
+    # [PropertyOrder(14)]
+    arEG: str
+    # [Description("英語")]
+    # [PropertyOrder(2)]
+    enUS: str
+    # [Description("韓国語")]
+    # [PropertyOrder(3)]
+    koKR: str
     # [Description("中国語(繁体字)")]
     # [PropertyOrder(4)]
     zhTW: str
+    # [Description("中国語(簡体字)")]
+    # [PropertyOrder(5)]
+    zhCN: str
+    # [Description("フランス語")]
+    # [PropertyOrder(6)]
+    frFR: str
+    # [Description("スペイン語")]
+    # [PropertyOrder(7)]
+    esMX: str
+    # [Description("ポルトガル語")]
+    # [PropertyOrder(8)]
+    ptBR: str
+    # [Description("タイ語")]
+    # [PropertyOrder(9)]
+    thTH: str
 
 # [Description("ランクアップ·タイプ")]
 class ElementClassificationType(Enum):
@@ -691,6 +692,26 @@ class CountryCodeType(Enum):
     Korea = 2
     # [Description("台湾")]
     Taiwan = 3
+    # [Description("フランス")]
+    France = 4
+    # [Description("中国")]
+    China = 5
+    # [Description("メキシコ")]
+    Mexico = 6
+    # [Description("ブラジル")]
+    Brazil = 7
+    # [Description("タイ")]
+    Thailand = 8
+    # [Description("インドネシア")]
+    Indonesia = 9
+    # [Description("ベトナム")]
+    Vietnam = 10
+    # [Description("ロシア")]
+    Russia = 11
+    # [Description("ドイツ")]
+    Germany = 12
+    # [Description("エジプト")]
+    Egypt = 13
 
 # [Description("ミッション達成条件タイプ")]
 class MissionAchievementType(Enum):
@@ -956,6 +977,9 @@ class TransferSpotType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class TransferDetailInfo():
+    # [Description("遷移タイプ")]
+    # [PropertyOrder(1)]
+    TransferSpotType: TransferSpotType
     # [Description("遷移先詳細１")]
     # [PropertyOrder(2)]
     NumberInfo1: int
@@ -965,9 +989,6 @@ class TransferDetailInfo():
     # [Description("遷移先詳細３")]
     # [PropertyOrder(4)]
     StringInfo: str
-    # [Description("遷移タイプ")]
-    # [PropertyOrder(1)]
-    TransferSpotType: TransferSpotType
 
 # [Description("時空の洞窟 マス種別")]
 class DungeonBattleGridType(Enum):
@@ -1061,6 +1082,15 @@ class EffectGroupIconType(Enum):
     # [Description("専属武器")]
     ExclusiveWeapon = 4
 
+# [Description("エフェクトグループ情報")]
+# [MessagePackObject(True)]
+@dataclass
+class EffectGroupInfo():
+    # [Description("エフェクトグループID")]
+    EffectGroupId: int
+    # [Description("優先度")]
+    OrderNumber: int
+
 # [Description("属性条件タイプ")]
 class ElementBonusConditionType(Enum):
     # [Description("4属性+天")]
@@ -1087,15 +1117,15 @@ class ElementBonusPhaseType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class EquipmentEvolutionInfo():
-    # [Description("進化後武具レベル")]
-    # [PropertyOrder(3)]
-    AfterEquipmentLv: int
-    # [Description("進化前武具レベル")]
-    # [PropertyOrder(2)]
-    BeforeEquipmentLv: int
     # [Description("レアリティ")]
     # [PropertyOrder(1)]
     RarityFlags: Flags[EquipmentRarityFlags]
+    # [Description("進化前武具レベル")]
+    # [PropertyOrder(2)]
+    BeforeEquipmentLv: int
+    # [Description("進化後武具レベル")]
+    # [PropertyOrder(3)]
+    AfterEquipmentLv: int
     # [Description("必要アイテムリスト")]
     # [Nest(True, 1)]
     # [PropertyOrder(4)]
@@ -1148,6 +1178,9 @@ class EquipmentReinforcementMaterialInfo():
 # [MessagePackObject(True)]
 @dataclass
 class EquipmentSetEffect():
+    # [Description("発動に必要な装備数")]
+    # [PropertyOrder(1)]
+    RequiredEquipmentCount: int
     # [Description("発動効果(BaseParameter)")]
     # [Nest(True, 1)]
     # [PropertyOrder(2)]
@@ -1156,9 +1189,6 @@ class EquipmentSetEffect():
     # [Nest(True, 1)]
     # [PropertyOrder(3)]
     BattleParameterChangeInfo: BattleParameterChangeInfo
-    # [Description("発動に必要な装備数")]
-    # [PropertyOrder(1)]
-    RequiredEquipmentCount: int
 
 class ErrorMessageType(Enum):
     None_ = 0
@@ -1332,62 +1362,62 @@ class CustomTextLayoutInfo():
 # [MessagePackObject(True)]
 @dataclass
 class CustomTextLayout():
-    # [Description("アラビア語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(14)]
-    arEG: CustomTextLayoutInfo
-    # [Description("ドイツ語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(13)]
-    deDE: CustomTextLayoutInfo
-    # [Description("英語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(2)]
-    enUS: CustomTextLayoutInfo
-    # [Description("スペイン語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(7)]
-    esMX: CustomTextLayoutInfo
-    # [Description("フランス語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(6)]
-    frFR: CustomTextLayoutInfo
-    # [Description("インドネシア語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(10)]
-    idID: CustomTextLayoutInfo
     # [Description("日本語")]
     # [Nest(True, 2)]
     # [PropertyOrder(1)]
     jaJP: CustomTextLayoutInfo
-    # [Description("韓国語")]
+    # [Description("インドネシア語")]
     # [Nest(True, 2)]
-    # [PropertyOrder(3)]
-    koKR: CustomTextLayoutInfo
-    # [Description("ポルトガル語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(8)]
-    ptBR: CustomTextLayoutInfo
-    # [Description("ロシア語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(12)]
-    ruRU: CustomTextLayoutInfo
-    # [Description("タイ語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(9)]
-    thTH: CustomTextLayoutInfo
+    # [PropertyOrder(10)]
+    idID: CustomTextLayoutInfo
     # [Description("ベトナム語")]
     # [Nest(True, 2)]
     # [PropertyOrder(11)]
     viVN: CustomTextLayoutInfo
-    # [Description("中国語(簡体字)")]
+    # [Description("ロシア語")]
     # [Nest(True, 2)]
-    # [PropertyOrder(5)]
-    zhCN: CustomTextLayoutInfo
+    # [PropertyOrder(12)]
+    ruRU: CustomTextLayoutInfo
+    # [Description("ドイツ語")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(13)]
+    deDE: CustomTextLayoutInfo
+    # [Description("アラビア語")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(14)]
+    arEG: CustomTextLayoutInfo
+    # [Description("英語")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(2)]
+    enUS: CustomTextLayoutInfo
+    # [Description("韓国語")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(3)]
+    koKR: CustomTextLayoutInfo
     # [Description("中国語(繁体字)")]
     # [Nest(True, 2)]
     # [PropertyOrder(4)]
     zhTW: CustomTextLayoutInfo
+    # [Description("中国語(簡体字)")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(5)]
+    zhCN: CustomTextLayoutInfo
+    # [Description("フランス語")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(6)]
+    frFR: CustomTextLayoutInfo
+    # [Description("スペイン語")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(7)]
+    esMX: CustomTextLayoutInfo
+    # [Description("ポルトガル語")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(8)]
+    ptBR: CustomTextLayoutInfo
+    # [Description("タイ語")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(9)]
+    thTH: CustomTextLayoutInfo
 
 # [Description("ガチャボーナスゲージ表示タイプ")]
 class GachaBonusGaugeType(Enum):
@@ -1507,12 +1537,12 @@ class HelpPartInfo():
     # [Description("見出し")]
     # [PropertyOrder(1)]
     HeadLine: str
-    # [Description("付加情報")]
-    # [PropertyOrder(3)]
-    HelpParameterType: HelpParameterType
     # [Description("本文")]
     # [PropertyOrder(2)]
     MainText: str
+    # [Description("付加情報")]
+    # [PropertyOrder(3)]
+    HelpParameterType: HelpParameterType
 
 # [Description("問い合わせボタンタイプ")]
 class InquiryButtonType(Enum):
@@ -1575,13 +1605,13 @@ class IUserCharacterItem():
 # [MessagePackObject(True)]
 @dataclass
 class DailyLimitedLoginBonusItem(IUserCharacterItem):
+    # [Description("日付")]
+    # [PropertyOrder(1)]
+    Date: int
     # [Description("報酬アイテム")]
     # [Nest(True, 1)]
     # [PropertyOrder(2)]
     DailyRewardItem: UserItem
-    # [Description("日付")]
-    # [PropertyOrder(1)]
-    Date: int
     # [Description("キャラレアリティ")]
     # [PropertyOrder(3)]
     RarityFlags: Flags[CharacterRarityFlags]
@@ -1605,13 +1635,13 @@ class SpecialLimitedLoginBonusItem(IUserCharacterItem):
     # [Description("日付")]
     # [PropertyOrder(1)]
     Date: int
-    # [Description("キャラレアリティ")]
-    # [PropertyOrder(3)]
-    RarityFlags: Flags[CharacterRarityFlags]
     # [Description("特別報酬アイテム")]
     # [Nest(True, 1)]
     # [PropertyOrder(2)]
     SpecialRewardItem: UserItem
+    # [Description("キャラレアリティ")]
+    # [PropertyOrder(3)]
+    RarityFlags: Flags[CharacterRarityFlags]
 
 # [Description("ローカル通知種別")]
 class LocalNotificationSendType(Enum):
@@ -1916,16 +1946,16 @@ class LoginCountRewardInfo():
     # [Description("合計ログイン日数")]
     # [PropertyOrder(1)]
     DayCount: int
+    # [Description("合計ログイン報酬リスト")]
+    # [Nest(True, 1)]
+    # [PropertyOrder(2)]
+    RewardItemList: list[UserItem]
     # [Description("画像パス")]
     # [PropertyOrder(3)]
     ImagePath: str
     # [Description("画像X座標")]
     # [PropertyOrder(4)]
     PositionX: int
-    # [Description("合計ログイン報酬リスト")]
-    # [Nest(True, 1)]
-    # [PropertyOrder(2)]
-    RewardItemList: list[UserItem]
 
 # [Description("コンテンツ開放タイプ")]
 class OpenContentType(Enum):
@@ -2000,6 +2030,8 @@ class PassiveTrigger(Enum):
     CheckReceiveDamageSelf = 41
     # [Description("被ダメージ量判定")]
     CheckReceiveDamage = 42
+    # [Description("特殊ダメージ死亡(毒、共鳴など)")]
+    SpecialDamageDead = 62
 
 # [MessagePackObject(True)]
 @dataclass
@@ -2069,13 +2101,13 @@ class ItemIconInfo():
 # [MessagePackObject(True)]
 @dataclass
 class TotalActivityMedalRewardBonus():
+    # [Description("累計貢献メダル報酬ID")]
+    # [PropertyOrder(1)]
+    TotalActivityMedalRewardId: int
     # [Description("ボーナス報酬リスト")]
     # [Nest(True, 1)]
     # [PropertyOrder(2)]
     BonusRewardList: list[MissionReward]
-    # [Description("累計貢献メダル報酬ID")]
-    # [PropertyOrder(1)]
-    TotalActivityMedalRewardId: int
 
 # [Description("Steam価格表情報")]
 # [MessagePackObject(True)]
@@ -2175,7 +2207,7 @@ class IHasEventStartEndTime():
 
 # [MessagePackObject(True)]
 @dataclass
-class EventMissionReward: # (IUserCharacterItem): # TODO fix
+class EventMissionReward: # TODO fix (IUserCharacterItem):
     # [Nest(True, 1)]
     # [PropertyOrder(1)]
     EventItem: UserItem
@@ -2297,12 +2329,12 @@ class ImagePositionFormatType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class TutorialDescriptionPageInfo():
-    # [Description("画像ID")]
-    # [PropertyOrder(2)]
-    ImageId: int
     # [Description("本文")]
     # [PropertyOrder(1)]
     MainTextKey: str
+    # [Description("画像ID")]
+    # [PropertyOrder(2)]
+    ImageId: int
 
 # [MessagePackObject(True)]
 @dataclass
@@ -2319,12 +2351,14 @@ class VipGiftInfo():
 # [MessagePackObject(True)]
 @dataclass
 class StartEndTime(IHasStartEndTime):
-    # [Description("終了日時")]
-    # [PropertyOrder(2)]
-    EndTime: str
+    # [DateTimeString]
     # [Description("開始日時")]
     # [PropertyOrder(1)]
     StartTime: str
+    # [DateTimeString]
+    # [Description("終了日時")]
+    # [PropertyOrder(2)]
+    EndTime: str
 
 @dataclass
 class ApiRequestBase():
@@ -2489,7 +2523,6 @@ class UserBattleBossDtoInfo():
 class UserBattleLegendLeagueDtoInfo():
     AttackSucceededNum: int
     DefenseSucceededNum: int
-    LegendLeagueConsecutiveVictoryCount: int
     LegendLeagueLastChallengeTime: int
     LegendLeagueTodayCount: int
     LegendLeagueTodayUseCurrencyCount: int
@@ -2772,6 +2805,7 @@ class TimeSpan(IComparable, IFormattable):
     Days: int
     Hours: int
     MaxValue: timedelta
+    Milliseconds: int
     MinValue: timedelta
     Minutes: int
     Seconds: int
@@ -2905,6 +2939,7 @@ class UserVipGiftDtoInfo():
 @dataclass
 class UserSyncData():
     BlockPlayerIdList: list[int]
+    CanJoinTodayLegendLeague: bool | None
     ClearedTutorialIdList: list[int]
     CreateUserIdTimestamp: int | None
     DataLinkageMap: dict[SnsType, bool]
@@ -3272,6 +3307,7 @@ class BattleFieldCharacter():
     ElementType: ElementType
     EquipmentDtoInfos: list[UserEquipmentDtoInfo]
     EquipmentMaxLevel: int
+    ExclusiveEquipmentRarityFlags: Flags[EquipmentRarityFlags]
     Guid: int
     JobFlags: Flags[JobFlags]
     NormalSkill: BattleActiveSkill
@@ -3294,6 +3330,19 @@ class BattleField():
     JoinPlayerIds: list[int]
     ReceiveTeamPassiveSkillIds: list[int]
     ReceiveTeamTotalKillCount: int
+
+# [Description("サブスキルリザルトの種類")]
+class SubSkillResultType(Enum):
+    # [Description("なし")]
+    None_ = 0
+    # [Description("ダメージ")]
+    Damage = 1
+    # [Description("効果")]
+    Effect = 2
+    # [Description("パッシブ")]
+    Passive = 3
+    # [Description("臨時処理")]
+    Temp = 4
 
 # [Description("スキル演出タイプ")]
 class SkillDisplayType(Enum):
@@ -3362,12 +3411,18 @@ class SkillCategory(Enum):
     Resurrection = 50
     # [Description("ステータス吸収")]
     StatusDrain = 100
+    # [Description("印の効果")]
+    SkillMark = 200
     # [Description("バフ効果削除")]
     RemoveBuffEffect = 500
     # [Description("デバフ効果削除")]
     RemoveDebuffEffect = 501
     # [Description("効果削除(エフェクトなし)")]
     RemoveOtherEffect = 502
+    # [Description("バフ移動")]
+    BuffTransfer = 600
+    # [Description("デバフ移動")]
+    DeBuffTransfer = 601
     # [Description("即時発動(バフ用)")]
     BurstBuffEffect = 1000
     # [Description("即時発動(デバフ用)")]
@@ -3672,9 +3727,9 @@ class EffectType(Enum):
     LockOnAttack3Ally = 7153
     # [Description("毒")]
     Poison = 8001
-    # [Description("流血")]
+    # [Description("出血")]
     Bleeding = 8002
-    # [Description("燃焼")]
+    # [Description("浸食")]
     Combustion = 8003
     # [Description("火傷")]
     Burn = 8004
@@ -3690,6 +3745,14 @@ class EffectType(Enum):
     DamageResonanceFromLowDefenseEnemy = 8124
     # [Description("ダメージ連携25")]
     DamageResonanceFromRandomEnemy = 8125
+    # [Description("ダメージ連携26")]
+    DamageResonanceFromHighBaseMaxHpEnemy = 8126
+    # [Description("ダメージ連携27")]
+    DamageResonanceFromLowBaseMaxHpEnemy = 8127
+    # [Description("ダメージ連携28")]
+    DamageResonanceFromHighBaseDefenseEnemy = 8128
+    # [Description("ダメージ連携29")]
+    DamageResonanceFromLowBaseDefenseEnemy = 8129
     # [Description("ダメージ連携31")]
     DamageResonanceFromAllEnemy = 8131
     # [Description("ダメージ連携41")]
@@ -3706,6 +3769,7 @@ class EffectType(Enum):
 class Effect():
     EffectCount: int
     EffectMaxCount: int
+    EffectSubValue: int
     EffectType: EffectType
     EffectValue: int
 
@@ -3723,6 +3787,7 @@ class EffectGroup():
     EffectGroupType: EffectGroupType
     EffectTurn: int
     Effects: list[Effect]
+    IsExtendEffectTurn: bool
     LinkTargetGuid: int
     RemoveEffectType: RemoveEffectType
     SkillCategory: SkillCategory
@@ -3760,6 +3825,7 @@ class SubSkillResult():
     RemoveEffectGroups: list[EffectGroup]
     SkillDisplayType: SkillDisplayType
     SubSkillIndex: int
+    SubSkillResultType: SubSkillResultType
     TargetRemainHp: int
     TargetUnitGuid: int
 
@@ -3812,6 +3878,7 @@ class SubSetSkillResult():
     EffectSubSkillResults: list[SubSkillResult]
     PassiveSubSkillResults: list[SubSkillResult]
     SubSetType: SubSetType
+    SubSkillResults: list[SubSkillResult]
     TempSubSkillResults: list[SubSkillResult]
 
 # [MessagePackObject(True)]
@@ -4136,6 +4203,8 @@ class ErrorCode(Enum):
     BattleCommonNotFoundStatusSubSubSkillEffectTurnFormula = 97007
     # [Description("効果系スキルの効果値データが存在しません。")]
     BattleCommonNotFoundStatusSubSubSkillEffectValueFormula = 97008
+    # [Description("アクティブスキルの条件データが存在しません。")]
+    BattleCommonNotFoundActiveSkillConditionFormula = 97009
     # [Description("ユーザーの放置バトルデータがありません")]
     BattleAutoUserBattleAutoDtoNotFound = 101000
     # [Description("ユーザーのボスバトルデータがありません")]
@@ -4316,6 +4385,12 @@ class ErrorCode(Enum):
     BattlePvpPlayerRankingNotFound = 132014
     # [Description("ランキングデータの更新に失敗しました。")]
     BattlePvpFailedToUpdateRankingData = 132015
+    # [Description("レジェンドリーグのランキングデータの更新に失敗しました。")]
+    BattlePvpFailedToUpdateLegendLeagueRankingData = 132016
+    # [Description("プレイヤー情報の取得に失敗しました。")]
+    BattlePvpFailedToGetPlayerInfo = 132017
+    # [Description("レジェンドリーグの開催期間外です。")]
+    BattlePvpNotBattleTimeLegendLeague = 132018
     # [Description("ユーザーのボスバトルデータがありません")]
     BattleBossUserBountyQuestDtoNotFound = 141000
     # [Description("ユーザーデータがありません")]
@@ -5730,15 +5805,15 @@ class GrowthPackBuffType(Enum):
 # [MessagePackObject(True)]
 @dataclass
 class ShopGrowthPackBuffInfo():
+    # [Description("バフの影響範囲")]
+    # [PropertyOrder(1)]
+    GrowthPackBuffType: GrowthPackBuffType
     # [Description("上昇するパラメータ")]
     # [PropertyOrder(2)]
     BattleParameterType: BattleParameterType
     # [Description("パラメータ増減タイプ")]
     # [PropertyOrder(3)]
     ChangeParameterType: ChangeParameterType
-    # [Description("バフの影響範囲")]
-    # [PropertyOrder(1)]
-    GrowthPackBuffType: GrowthPackBuffType
     # [Description("値")]
     # [PropertyOrder(4)]
     Value: int
@@ -5999,6 +6074,8 @@ class NoticeButtonImageType(Enum):
     Campaign = 7
     # [Description("その他")]
     Other = 8
+    # [Description("アンケート")]
+    Survey = 9
 
 # [Description("お知らせ情報")]
 # [MessagePackObject(True)]
@@ -6102,53 +6179,53 @@ class UserGvgCharacterInfo():
 
 # [MessagePackObject(False)]
 @dataclass
-class PartyInfo():
-    # [Key(4)]
-    AliveCharacterIdList: list[int]
+class PartyInfo(ArrayPacked):
     # [Key(0)]
     BattlePower: int
-    # [Key(6)]
-    GuildId: int
-    # [Key(5)]
-    IsNpc: bool
+    # [Key(1)]
+    UserGvgCharacterInfoList: list[UserGvgCharacterInfo]
     # [Key(2)]
     OwnerPlayerId: int
     # [Key(3)]
     OwnerPlayerRank: int
-    # [Key(1)]
-    UserGvgCharacterInfoList: list[UserGvgCharacterInfo]
+    # [Key(4)]
+    AliveCharacterIdList: list[int]
+    # [Key(5)]
+    IsNpc: bool
+    # [Key(6)]
+    GuildId: int
 
 # [MessagePackObject(False)]
 @dataclass
-class CastleBattleHistoryInfo_PartyInfoAndName():
-    # [Key(3)]
-    CharacterId: int
-    # [Key(2)]
-    OwnerPlayerGuildName: str
-    # [Key(1)]
-    OwnerPlayerName: str
+class CastleBattleHistoryInfo_PartyInfoAndName(ArrayPacked):
     # [Key(0)]
     PartyInfo: PartyInfo
+    # [Key(1)]
+    OwnerPlayerName: str
+    # [Key(2)]
+    OwnerPlayerGuildName: str
+    # [Key(3)]
+    CharacterId: int
 
 # [MessagePackObject(False)]
 @dataclass
-class CastleBattleHistoryInfo():
-    # [Key(2)]
-    AttackerParty: CastleBattleHistoryInfo_PartyInfoAndName
+class CastleBattleHistoryInfo(ArrayPacked):
     # [Key(0)]
     BattleToken: str
-    # [Key(7)]
-    IsCounter: bool
     # [Key(1)]
     LocalHoursAndMinutes: int
-    # [Key(5)]
-    LoserWinContinueCount: int
+    # [Key(2)]
+    AttackerParty: CastleBattleHistoryInfo_PartyInfoAndName
     # [Key(3)]
     ReceiverParty: CastleBattleHistoryInfo_PartyInfoAndName
     # [Key(4)]
     WinContinueCount: int
+    # [Key(5)]
+    LoserWinContinueCount: int
     # [Key(6)]
     WinGroupType: BattleFieldCharacterGroupType
+    # [Key(7)]
+    IsCounter: bool
 
 # [MessagePackObject(True)]
 @dataclass
@@ -6689,13 +6766,13 @@ class UserCharacter(IUserItem):
 
 # [MessagePackObject(False)]
 @dataclass
-class PrivateChatLogPlayerInfo():
+class PrivateChatLogPlayerInfo(ArrayPacked):
     # [Key(0)]
     ExistUnread: bool
-    # [Key(2)]
-    LocalTimestamp: int
     # [Key(1)]
     PlayerInfo: PlayerInfo
+    # [Key(2)]
+    LocalTimestamp: int
 
 class ChatType(Enum):
     SvS = 0
@@ -6726,29 +6803,29 @@ class SystemChatType(Enum):
 
 # [MessagePackObject(False)]
 @dataclass
-class ChatInfo():
+class ChatInfo(ArrayPacked):
     # [Key(0)]
     CharacterId: int
     # [Key(1)]
     ChatType: ChatType
-    # [Key(8)]
-    LegendLeagueClass: LegendLeagueClassType
-    # [Key(7)]
-    LocalTimeStamp: int
+    # [Key(10)]
+    SystemChatMessageArgs: str
     # [Key(2)]
     Message: str
     # [Key(3)]
     PlayerId: int
     # [Key(4)]
     PlayerName: str
-    # [Key(10)]
-    SystemChatMessageArgs: str
-    # [Key(9)]
-    SystemChatMessageIdType: SystemChatMessageIdType
     # [Key(5)]
     SystemChatMessageKey: str
     # [Key(6)]
     SystemChatType: SystemChatType
+    # [Key(7)]
+    LocalTimeStamp: int
+    # [Key(8)]
+    LegendLeagueClass: LegendLeagueClassType
+    # [Key(9)]
+    SystemChatMessageIdType: SystemChatMessageIdType
 
 # [MessagePackObject(True)]
 @dataclass
@@ -6917,6 +6994,9 @@ class LegendLeagueRankingPlayerInfo():
     CurrentPoint: int
     CurrentRank: int
     DefenseBattlePower: int
+    DefenseCharacterBaseParameterMap: dict[str, BaseParameter]
+    DefenseCharacterBattleParameterMap: dict[str, BattleParameter]
+    DefenseEquipmentDtoInfoListMap: dict[str, list[UserEquipmentDtoInfo]]
     PlayerInfo: PlayerInfo
     UserCharacterDtoInfoList: list[UserCharacterDtoInfo]
 

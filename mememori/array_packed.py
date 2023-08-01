@@ -1,0 +1,2 @@
+class ArrayPacked:
+    pass
