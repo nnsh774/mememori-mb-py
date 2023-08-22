@@ -1188,7 +1188,7 @@ class GachaCaseMB(MasterBookBase, IHasJstStartEndTime):
     # [Description("聖遺物(聖天使の信託ガチャ用)")]
     # [PropertyOrder(6)]
     GachaRelicType: GachaRelicType
-    # [Description("運命(運命ガチャ用)")]
+    # [Description("運命(運命ガチャ、星の導きガチャ用)")]
     # [PropertyOrder(7)]
     GachaDestinyType: GachaDestinyType
     # [Description("セレクトリストタイプ")]
@@ -1820,6 +1820,24 @@ class LocalRaidBannerMB(MasterBookBase):
     # [PropertyOrder(3)]
     DecorationColor: str
 
+# [Description("幻影の神殿ボーナススケジュール")]
+# [MessagePackObject(True)]
+@dataclass
+class LocalRaidBonusScheduleMB(MasterBookBase, IHasStartEndTime):
+    # [Description("報酬増加時間リスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(1)]
+    LocalRaidStartEndTimes: list[LocalRaidStartEndTime]
+    # [Description("報酬増加倍率(100%=10000)")]
+    # [PropertyOrder(2)]
+    RewardBonusRate: int
+    # [Description("開始日時")]
+    # [PropertyOrder(3)]
+    StartTime: str
+    # [Description("終了日時")]
+    # [PropertyOrder(4)]
+    EndTime: str
+
 # [Description("幻影の神殿敵データ")]
 # [MessagePackObject(True)]
 @dataclass
@@ -1902,24 +1920,21 @@ class LocalRaidEventScheduleMB(MasterBookBase, IHasStartEndTime):
     # [Description("LocalRaidEventQuestGroupMBのIdリスト")]
     # [PropertyOrder(1)]
     LocalRaidEventQuestGroupIds: list[int]
-    # [Description("イベントタイプ")]
-    # [PropertyOrder(2)]
-    LocalRaidEventType: LocalRaidEventType
     # [Description("報酬増加時間リスト")]
     # [Nest(False, 0)]
-    # [PropertyOrder(3)]
+    # [PropertyOrder(2)]
     LocalRaidStartEndTimes: list[LocalRaidStartEndTime]
     # [Description("報酬増加倍率(100%=10000)")]
-    # [PropertyOrder(4)]
+    # [PropertyOrder(3)]
     RewardBonusRate: int
     # [Description("開始日時")]
-    # [PropertyOrder(5)]
+    # [PropertyOrder(4)]
     StartTime: str
     # [Description("終了日時")]
-    # [PropertyOrder(6)]
+    # [PropertyOrder(5)]
     EndTime: str
     # [Description("イベントチュートリアルダイアログのID")]
-    # [PropertyOrder(7)]
+    # [PropertyOrder(6)]
     LocalRaidEventTutorialId: int
 
 # [Description("幻影の神殿クエストグループ")]
@@ -3027,26 +3042,32 @@ class VipMB(MasterBookBase):
     # [Description("運命ガチャのログが見れるか否か")]
     # [PropertyOrder(20)]
     IsDestinyGachaLogAvailable: bool
-    # [Description("ボス/無窮の塔掃討が可能か否か")]
+    # [Description("星の導きガチャが可能か否か")]
     # [PropertyOrder(21)]
+    IsStarsGuidanceGachaAvailable: bool
+    # [Description("星の導きガチャのログが見れるか否か")]
+    # [PropertyOrder(22)]
+    IsStarsGuidanceGachaLogAvailable: bool
+    # [Description("ボス/無窮の塔掃討が可能か否か")]
+    # [PropertyOrder(23)]
     IsQuickBossBattleAvailable: bool
     # [Description("神装強化の装備返還が可能か否か​")]
-    # [PropertyOrder(22)]
+    # [PropertyOrder(24)]
     IsRefundEquipmentMergeAvailable: bool
     # [Description("研磨時にロックが可能か否か​")]
-    # [PropertyOrder(23)]
+    # [PropertyOrder(25)]
     IsLockEquipmentTrainingAvailable: bool
     # [Description("VIP到達時報酬リスト")]
     # [Nest(False, 0)]
-    # [PropertyOrder(24)]
+    # [PropertyOrder(26)]
     ReachRewardItemList: list[UserItem]
     # [Description("VIPギフトリスト")]
     # [Nest(True, 0)]
-    # [PropertyOrder(25)]
+    # [PropertyOrder(27)]
     VipGiftInfoList: list[VipGiftInfo]
     # [Description("VIPデイリー報酬リスト")]
     # [Nest(False, 0)]
-    # [PropertyOrder(26)]
+    # [PropertyOrder(28)]
     DailyRewardItemList: list[UserItem]
     # [Description("放置バトル経験値ボーナス(%)")]
     # [PropertyOrder(3)]

@@ -1332,6 +1332,8 @@ class GachaSelectListType(Enum):
     Default = 1
     # [Description("運命")]
     Destiny = 2
+    # [Description("星の導き")]
+    StarsGuidance = 3
 
 # [Description("ガチャ表示用フラグ")]
 # [Flags]
@@ -1594,6 +1596,8 @@ class LimitedEventType(Enum):
     SerialCode = 2
     # [Description("古い課金システムの使用")]
     ApplyOldPurchaseSystem = 100
+    # [Description("ギルドレイドoffset設定")]
+    GuildRaidCharacterPositionByMB = 101
 
 # [Description("キャラクターレアリティを持つ可能性があるアイテムが実装するインターフェース")]
 @dataclass
@@ -1660,16 +1664,6 @@ class LocalNotificationType(Enum):
     LocalRaid = 2
     # [Description("バトルリーグ報酬受け取り")]
     BattleLeagueReward = 3
-    # [Description("幻影の神殿イベント報酬増加")]
-    LocalRaidRewardIncrease = 4
-
-class LocalRaidEventType(Enum):
-    # [Description("なし")]
-    None_ = 0
-    # [Description("クエスト追加イベント")]
-    PlusQuest = 1
-    # [Description("全日開催イベント")]
-    FullOpen = 2
 
 # [MessagePackObject(True)]
 @dataclass
@@ -1922,6 +1916,8 @@ class OpenCommandType(Enum):
     LimitedLoginBonus = 121
     # [Description("第二大陸")]
     SecondContinent = 140
+    # [Description("星の導きガチャ")]
+    GachaStarsGuidance = 160
     # [Description("フレンドコード")]
     FriendCode = 200
     # [Description("武具固定")]
@@ -4629,6 +4625,10 @@ class ErrorCode(Enum):
     GachaInvalidGachaTicketPeriod = 200209
     # [Description("運命のガチャのセレクトリスト対象外のキャラクターが選択されています。")]
     GachaOtherCharacterDestinySelectList = 200210
+    # [Description("運命のガチャのセレクトリスト対象外のキャラクターが選択されています。")]
+    GachaOtherCharacterStarsGuidanceSelectList = 200211
+    # [Description("星の導きガチャの解放条件を満たしていません。")]
+    GachaNotEnoughVipLevelOrMaxQuestIdStarsGuidanceGacha = 200212
     # [Description("ユーザーのステータスデータが存在しません。")]
     GachaUserStatusDtoNotFound = 200500
     # [Description("ユーザーの放置バトルデータが存在しません。")]
@@ -6555,6 +6555,12 @@ class GachaDestinyLogInfo():
 
 # [MessagePackObject(True)]
 @dataclass
+class GachaStarsGuidanceLogInfo():
+    Name: str
+    UserItem: UserItem
+
+# [MessagePackObject(True)]
+@dataclass
 class GachaElementInfo():
     EndTimeOpenBlue: int
     EndTimeOpenGreen: int
@@ -6595,6 +6601,8 @@ class FriendInfoType(Enum):
     Applying = 3
     # [Description("ブロック")]
     Block = 4
+    # [Description("おすすめ検索")]
+    Recommend = 5
 
 # [MessagePackObject(True)]
 @dataclass
