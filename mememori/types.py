@@ -2377,6 +2377,21 @@ class LockEquipmentDeckType(Enum):
     None_ = 0
     League = 1
 
+# [Description("装備固定誘導ダイアログタイプ")]
+class LeadLockEquipmentDialogType(Enum):
+    # [Description("ダイアログ表示無し")]
+    None_ = 0
+    # [Description("新キャラ入手")]
+    NewCharacter = 1
+    # [Description("最後の更新から7日経過")]
+    PassedDays = 2
+
+# [MessagePackObject(True)]
+@dataclass
+class LeadLockEquipmentDialogInfo():
+    DialogType: LeadLockEquipmentDialogType
+    PassedDays: int
+
 @dataclass
 class IReadOnlyEquipment():
     # [Description("付与パラメータ(技力)")]
@@ -2801,7 +2816,6 @@ class TimeSpan(IComparable, IFormattable):
     Days: int
     Hours: int
     MaxValue: timedelta
-    Milliseconds: int
     MinValue: timedelta
     Minutes: int
     Seconds: int
@@ -2949,6 +2963,7 @@ class UserSyncData():
     IsJoinedLocalGvg: bool | None
     IsReceivedSnsShareReward: bool | None
     IsValidContractPrivilege: bool | None
+    LeadLockEquipmentDialogInfoMap: dict[LockEquipmentDeckType, LeadLockEquipmentDialogInfo]
     LegendLeagueClassType: LegendLeagueClassType | None
     LocalRaidChallengeCount: int | None
     LockedEquipmentCharacterGuidListMap: dict[LockEquipmentDeckType, list[str]]
@@ -4739,6 +4754,8 @@ class ErrorCode(Enum):
     EquipmentLockEquipmentDtoNotFound = 232043
     # [Description("装備固定されたキャラクターが存在しません。")]
     EquipmentNotFoundLockCharacter = 232044
+    # [Description("無効な装備固定誘導ダイアログ種別です。")]
+    EquipmentInvalidLeadLockEquipmentDialogType = 232045
     # [Description("ユーザのフレンドデータが存在しません。")]
     FriendUserFriendDtoNotFound = 241000
     # [Description("ユーザのステータスデータが存在しません。")]

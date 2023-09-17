@@ -1469,53 +1469,6 @@ class GuildRaidRewardMB(MasterBookBase):
     # [PropertyOrder(8)]
     HideWorldDamage: int
 
-# [Description("GvG修練レベル")]
-# [MessagePackObject(True)]
-@dataclass
-class GvGServerLvMB(MasterBookBase):
-    # [Description("修練レベル")]
-    # [PropertyOrder(1)]
-    Lv: int
-    # [Description("グランドバトル教会中位最小配置数")]
-    # [PropertyOrder(10)]
-    MinCharacterNumGrandBattleMediumSilver: int
-    # [Description("グランドバトル城中位最小配置数")]
-    # [PropertyOrder(11)]
-    MinCharacterNumGrandBattleSmallSilver: int
-    # [Description("グランドバトル神殿下位最小配置数")]
-    # [PropertyOrder(12)]
-    MinCharacterNumGrandBattleLargeBronze: int
-    # [Description("グランドバトル教会下位最小配置数")]
-    # [PropertyOrder(13)]
-    MinCharacterNumGrandBattleMediumBronze: int
-    # [Description("グランドバトル城下位最小配置数")]
-    # [PropertyOrder(14)]
-    MinCharacterNumGrandBattleSmallBronze: int
-    # [Description("経過日数")]
-    # [PropertyOrder(2)]
-    ElapsedDays: int
-    # [Description("ギルドバトル神殿最小配置数")]
-    # [PropertyOrder(3)]
-    MinCharacterNumGuildBattleLarge: int
-    # [Description("ギルドバトル教会最小配置数")]
-    # [PropertyOrder(4)]
-    MinCharacterNumGuildBattleMedium: int
-    # [Description("ギルドバトル城最小配置数")]
-    # [PropertyOrder(5)]
-    MinCharacterNumGuildBattleSmall: int
-    # [Description("グランドバトル神殿上位最小配置数")]
-    # [PropertyOrder(6)]
-    MinCharacterNumGrandBattleLargeGolden: int
-    # [Description("グランドバトル教会上位最小配置数")]
-    # [PropertyOrder(7)]
-    MinCharacterNumGrandBattleMediumGolden: int
-    # [Description("グランドバトル城上位最小配置数")]
-    # [PropertyOrder(8)]
-    MinCharacterNumGrandBattleSmallGolden: int
-    # [Description("グランドバトル神殿中位最小配置数")]
-    # [PropertyOrder(9)]
-    MinCharacterNumGrandBattleLargeSilver: int
-
 # [Description("ヘルプ")]
 # [MessagePackObject(True)]
 @dataclass
@@ -2479,6 +2432,10 @@ class TermsMB(MasterBookBase):
     # [Nest(False, 0)]
     # [PropertyOrder(6)]
     TermsButtonInfos: list[TermsButtonInfo]
+    # [DateTimeString]
+    # [Description("開始日時")]
+    # [PropertyOrder(7)]
+    StartTime: str
 
 # [Description("テキスト言語")]
 # [MessagePackObject(True)]
