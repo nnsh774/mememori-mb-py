@@ -673,6 +673,23 @@ class CharacterStoryMB(MasterBookBase):
     # [PropertyOrder(7)]
     RarityFlags: Flags[CharacterRarityFlags]
 
+# [Description("チャット演出キーワード")]
+# [MessagePackObject(True)]
+@dataclass
+class ChatEffectKeywordMB(MasterBookBase, IHasJstStartEndTime):
+    # [Description("キーワード")]
+    # [PropertyOrder(1)]
+    Keyword: str
+    # [Description("演出ID")]
+    # [PropertyOrder(2)]
+    EffectId: int
+    # [Description("開始時間（JST）")]
+    # [PropertyOrder(3)]
+    StartTimeFixJST: str
+    # [Description("終了時間（JST）")]
+    # [PropertyOrder(4)]
+    EndTimeFixJST: str
+
 # [Description("コミュニティ")]
 # [MessagePackObject(True)]
 @dataclass
@@ -693,6 +710,23 @@ class DeepLinkMB(MasterBookBase):
     # [Nest(False, 0)]
     # [PropertyOrder(1)]
     TransferDetailInfo: TransferDetailInfo
+
+# [Description("ダウンロードファイル")]
+# [MessagePackObject(True)]
+@dataclass
+class DownloadRawDataMB(MasterBookBase):
+    # [Description("ファイルパス")]
+    # [PropertyOrder(1)]
+    FilePath: str
+    # [Description("ファイルサイズ")]
+    # [PropertyOrder(2)]
+    FileSize: int
+    # [Description("ダウンロードタイプ")]
+    # [PropertyOrder(3)]
+    RawDataDownloadType: RawDataDownloadType
+    # [Description("Etag")]
+    # [PropertyOrder(4)]
+    Etag: str
 
 # [Description("時空の洞窟 マス詳細")]
 # [MessagePackObject(True)]
@@ -1417,6 +1451,15 @@ class GuildRaidBossMB(MasterBookBase, IHasStartEndTime):
     # [Description("ギルドレイドボタン座標V")]
     # [PropertyOrder(26)]
     GuildRaidButtonV: float
+    # [Description("ワールド報酬キャラ画像座標X")]
+    # [PropertyOrder(27)]
+    WorldDamageBarRewardCharacterImageX: float
+    # [Description("ワールド報酬キャラ画像座標Y")]
+    # [PropertyOrder(28)]
+    WorldDamageBarRewardCharacterImageY: float
+    # [Description("ワールド報酬キャラ画像サイズ")]
+    # [PropertyOrder(29)]
+    WorldDamageBarRewardCharacterImageSize: float
     # [Description("ボス種別")]
     # [PropertyOrder(3)]
     GuildRaidBossType: GuildRaidBossType
@@ -2062,6 +2105,36 @@ class MonthlyLoginBonusRewardListMB(MasterBookBase):
     # [PropertyOrder(2)]
     LoginCountRewardList: list[LoginCountRewardInfo]
 
+# [Description("楽曲")]
+# [MessagePackObject(True)]
+@dataclass
+class MusicMB(MasterBookBase):
+    # [DateTimeString]
+    # [Description("公開日時")]
+    # [PropertyOrder(1)]
+    StartTime: str
+    # [Description("並び順")]
+    # [PropertyOrder(2)]
+    Order: int
+    # [Description("曲名キー")]
+    # [PropertyOrder(3)]
+    NameKey: str
+    # [Description("歌手名キー")]
+    # [PropertyOrder(4)]
+    SingerKey: str
+    # [Description("歌詞キー")]
+    # [PropertyOrder(5)]
+    LyricsKey: str
+    # [Description("楽曲パス")]
+    # [PropertyOrder(6)]
+    MusicPath: str
+    # [Description("サムネイルパス")]
+    # [PropertyOrder(7)]
+    ThumbnailPath: str
+    # [Description("専用消費アイテム個数")]
+    # [PropertyOrder(8)]
+    ConsumeMusicTicketCount: int
+
 # [Description("新キャラミッション")]
 # [MessagePackObject(True)]
 @dataclass
@@ -2135,6 +2208,75 @@ class OpenContentMB(MasterBookBase):
     # [Description("トースト")]
     # [PropertyOrder(9)]
     ToastKey: str
+
+# [Description("パネル図鑑")]
+# [MessagePackObject(True)]
+@dataclass
+class PanelMB(MasterBookBase):
+    # [DateTimeString]
+    # [Description("開始日時")]
+    # [PropertyOrder(1)]
+    StartTime: str
+    # [Description("解放判定アイテムID")]
+    # [PropertyOrder(10)]
+    PanelGetJudgmentItemId: int
+    # [Description("無条件解放フラグ")]
+    # [PropertyOrder(11)]
+    IsFree: bool
+    # [Description("解放時消費解放専用アイテム個数")]
+    # [PropertyOrder(12)]
+    ConsumeUnlockItemCount: int
+    # [Description("解放時消費ダイヤ個数")]
+    # [PropertyOrder(13)]
+    ConsumeCurrencyCount: int
+    # [Description("タブタイプ")]
+    # [PropertyOrder(2)]
+    TabType: PanelTabType
+    # [Description("パネル静止画ID")]
+    # [PropertyOrder(3)]
+    PanelImageId: int
+    # [Description("パネル動画ID")]
+    # [PropertyOrder(4)]
+    PanelMovieId: int
+    # [Description("並び順")]
+    # [PropertyOrder(5)]
+    SortOrder: int
+    # [Description("イベントグループID")]
+    # [PropertyOrder(6)]
+    EventGroupId: int
+    # [Description("グループタイトル")]
+    # [PropertyOrder(7)]
+    GroupTitleKey: str
+    # [Description("シナリオタイトル")]
+    # [PropertyOrder(8)]
+    ScenarioTitleKey: str
+    # [Description("シナリオテキスト")]
+    # [PropertyOrder(9)]
+    ScenarioTextKey: str
+
+# [Description("パネルミッション")]
+# [MessagePackObject(True)]
+@dataclass
+class PanelMissionMB(MasterBookBase, IHasJstStartEndTime):
+    # [Description("キャンペーンタイトルキー")]
+    # [PropertyOrder(1)]
+    CampaignTitleKey: str
+    # [Description("シート情報")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(2)]
+    PanelMissionSheetInfoList: list[PanelMissionSheetInfo]
+    # [Description("開始時刻(JST)")]
+    # [PropertyOrder(3)]
+    StartTimeFixJST: str
+    # [Description("終了時刻(JST)")]
+    # [PropertyOrder(4)]
+    EndTimeFixJST: str
+    # [Description("強制開始時刻(現地時間)")]
+    # [PropertyOrder(5)]
+    ForceStartTime: str
+    # [Description("猶予日数")]
+    # [PropertyOrder(6)]
+    DelayDays: int
 
 # [Description("パッシブスキル")]
 # [MessagePackObject(True)]
@@ -2272,6 +2414,28 @@ class QuestMB(MasterBookBase):
     # [Description("最低獲得プレイヤー経験値")]
     # [PropertyOrder(9)]
     MinPlayerExp: int
+
+# [Description("朗読")]
+# [MessagePackObject(True)]
+@dataclass
+class RecitationMB(MasterBookBase):
+    # [Description("CharacterDteailVoiceMBのID")]
+    # [PropertyOrder(1)]
+    CharacterDetailVoiceId: int
+    # [Description("キャラクターID")]
+    # [PropertyOrder(2)]
+    CharacterId: int
+    # [Description("朗読設定_JP")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(3)]
+    RecitationSettingDatasJP: list[RecitationSettingData]
+    # [Description("朗読設定_US")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(4)]
+    RecitationSettingDatasUS: list[RecitationSettingData]
+    # [Description("表示開始日時")]
+    # [PropertyOrder(5)]
+    StartTimeFixJST: str
 
 # [Description("必要仮想通貨")]
 # [MessagePackObject(True)]

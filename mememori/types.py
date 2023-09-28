@@ -365,6 +365,12 @@ class ItemType(Enum):
     ActivityMedal = 28
     # [Description("VIP経験値")]
     VipExp = 29
+    # [Description("パネル図鑑解放判定アイテム")]
+    PanelGetJudgmentItem = 30
+    # [Description("パネルミッション マス解放アイテム")]
+    UnlockPanelGridItem = 31
+    # [Description("パネル図鑑解放アイテム")]
+    PanelUnlockItem = 32
     # [Description("イベント交換所アイテム")]
     EventExchangePlaceItem = 50
 
@@ -957,6 +963,8 @@ class TransferSpotType(Enum):
     EventMission = 133
     # [Description("友達招待")]
     FriendCampaign = 134
+    # [Description("パネルミッション")]
+    PanelMission = 135
     # [Description("ゲリラパック")]
     GuerrillaPack = 140
     # [Description("格納アイコン")]
@@ -989,6 +997,13 @@ class TransferDetailInfo():
     # [Description("遷移先詳細３")]
     # [PropertyOrder(4)]
     StringInfo: str
+
+# [Description("RawDataダウンロードタイプ")]
+class RawDataDownloadType(Enum):
+    # [Description("なし")]
+    None_ = 0
+    # [Description("タイトルダウンロード")]
+    Title = 1
 
 # [Description("時空の洞窟 マス種別")]
 class DungeonBattleGridType(Enum):
@@ -1598,6 +1613,8 @@ class LimitedEventType(Enum):
     ApplyOldPurchaseSystem = 100
     # [Description("ギルドレイドoffset設定")]
     GuildRaidCharacterPositionByMB = 101
+    # [Description("GvGでキャラクターのキャッシュが存在しない場合に例外を投げる")]
+    ThrowExceptionInGvgWhenCharacterCacheNotExists = 102
 
 # [Description("キャラクターレアリティを持つ可能性があるアイテムが実装するインターフェース")]
 @dataclass
@@ -1724,6 +1741,8 @@ class MissionGroupType(Enum):
     NewCharacter = 5
     # [Description("イベント")]
     Limited = 6
+    # [Description("パネル")]
+    Panel = 9
 
 # [MessagePackObject(True)]
 @dataclass
@@ -1799,6 +1818,9 @@ class MissionType(Enum):
     LimitedSeventhDayTab2 = 672
     LimitedSeventhDayTab3 = 673
     LimitedSeventhDayTab4 = 674
+    PanelSheet1 = 901
+    PanelSheet2 = 902
+    PanelSheet3 = 903
 
 # [Description("解放されるコマンドの種類")]
 class OpenCommandType(Enum):
@@ -1960,6 +1982,58 @@ class OpenContentType(Enum):
     # [Description("クエストクリア")]
     QuestClear = 1
 
+# [Description("パネル図鑑のタブタイプ")]
+class PanelTabType(Enum):
+    # [Description("イベント")]
+    Event = 1
+    # [Description("タイトル")]
+    Title = 2
+
+# [Description("ビンゴ種別")]
+class BingoType(Enum):
+    # [Description("不明")]
+    None_ = 0
+    # [Description("上段")]
+    UpperRow = 1
+    # [Description("中段")]
+    CenterRow = 2
+    # [Description("下段")]
+    LowerRow = 3
+    # [Description("左列")]
+    LeftColumn = 4
+    # [Description("中列")]
+    CenterColumn = 5
+    # [Description("右列")]
+    RightColumn = 6
+
+# [Description("ビンゴ報酬情報")]
+# [MessagePackObject(True)]
+@dataclass
+class BingoRewardInfo():
+    # [Description("ビンゴ種別")]
+    BingoType: BingoType
+    # [Description("報酬アイテムリスト")]
+    # [Nest(True, 2)]
+    RewardItemList: list[UserItem]
+
+# [Description("パネルミッションのシート情報")]
+# [MessagePackObject(True)]
+@dataclass
+class PanelMissionSheetInfo():
+    # [Description("ビンゴ報酬情報リスト")]
+    # [Nest(True, 1)]
+    BingoRewardInfoList: list[BingoRewardInfo]
+    # [Description("対象ミッションIDリスト")]
+    MissionIdList: list[int]
+    # [Description("パネル図鑑MBのID")]
+    PanelMBId: int
+    # [Description("シート番号")]
+    SheetNo: int
+    # [Description("X座標")]
+    X: float
+    # [Description("Y座標")]
+    Y: float
+
 # [Description("パッシブスキルトリガー")]
 class PassiveTrigger(Enum):
     # [Description("なし")]
@@ -2075,6 +2149,24 @@ class QuestDifficultyType(Enum):
     Easy = 0
     # [Description("Hard")]
     Hard = 1
+
+class RecitationTextType(Enum):
+    None_ = 0
+    SongLyrics = 1
+    Recitation = 2
+
+# [MessagePackObject(True)]
+@dataclass
+class RecitationSettingData():
+    # [Description("歌詞開始時間（秒）")]
+    # [PropertyOrder(1)]
+    SongLyricsStartTime: float
+    # [Description("歌詞テキストキー")]
+    # [PropertyOrder(2)]
+    SongLyricsKey: str
+    # [Description("朗読テキストタイプ")]
+    # [PropertyOrder(3)]
+    RecitationTextType: RecitationTextType
 
 class SphereType(Enum):
     EquipmentIcon = 0
@@ -2320,6 +2412,8 @@ class ImagePositionFormatType(Enum):
     DungeonBattleEvent = 1
     # [Description("神殿イベント")]
     LocalRaidEvent = 2
+    # [Description("ギルドレイドイベント")]
+    GuildRaidEvent = 3
 
 # [Description("ページ情報")]
 # [MessagePackObject(True)]
@@ -6128,10 +6222,17 @@ class NoticeAccessType(Enum):
 
 # [MessagePackObject(True)]
 @dataclass
+class UserPanelMissionDtoInfo():
+    ReceivedBingoTypeList: list[BingoType]
+    SheetNo: int
+
+# [MessagePackObject(True)]
+@dataclass
 class MissionInfo():
     MissionExpirationTimeStamp: int
     UserMissionActivityDtoInfo: UserMissionActivityDtoInfo
     UserMissionDtoInfoDict: dict[MissionType, list[UserMissionDtoInfo]]
+    UserPanelMissionDtoInfoList: list[UserPanelMissionDtoInfo]
 
 # [MessagePackObject(True)]
 @dataclass
@@ -6788,6 +6889,14 @@ class UserCharacter(IUserItem):
     ItemCount: int
     ItemId: int
     ItemType: ItemType
+
+# [MessagePackObject(True)]
+@dataclass
+class DebugCharacterInfo():
+    # [Description("キャラクターGuid")]
+    CharacterGuid: str
+    # [Description("StatusSubGroupSkillMBのIdリスト")]
+    StatusSubGroupSkillIds: list[int]
 
 # [MessagePackObject(False)]
 @dataclass
