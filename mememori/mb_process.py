@@ -41,7 +41,10 @@ def expand_cls(obj, cls):
     return cls(**params)
 
 def expand_enum(obj, enum):
-    return enum(obj)
+    try:
+        return enum(obj)
+    except ValueError:
+        return obj
 
 def expand_obj(obj, cls_or_enum):
     if obj == None:
