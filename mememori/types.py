@@ -178,17 +178,17 @@ class CharacterRarityFlags(Enum):
 class ElementType(Enum):
     # [Description("なし")]
     None_ = 0
-    # [Description("愁（しゅう）")]
+    # [Description("藍")]
     Blue = 1
-    # [Description("業（ごう）")]
+    # [Description("紅")]
     Red = 2
-    # [Description("心（しん）")]
+    # [Description("翠")]
     Green = 3
-    # [Description("渇（かつ）")]
+    # [Description("黄")]
     Yellow = 4
-    # [Description("天（てん） ")]
+    # [Description("天")]
     Light = 5
-    # [Description("冥（めい） ")]
+    # [Description("冥")]
     Dark = 6
 
 # [Description("職業")]
@@ -223,6 +223,7 @@ class IBattleEnemy():
     EnemyAdjustId: int
     EnemyEquipmentId: int
     EnemyRank: int
+    ExclusiveEquipmentRarityFlags: Flags[EquipmentRarityFlags]
     JobFlags: Flags[JobFlags]
     NameKey: str
     NormalSkillId: int
@@ -371,6 +372,8 @@ class ItemType(Enum):
     UnlockPanelGridItem = 31
     # [Description("パネル図鑑解放アイテム")]
     PanelUnlockItem = 32
+    # [Description("楽曲チケット")]
+    MusicTicket = 33
     # [Description("イベント交換所アイテム")]
     EventExchangePlaceItem = 50
 
@@ -531,6 +534,8 @@ class CharacterVoiceCategory(Enum):
     BattleWin = 8
     # [Description("バトル敗北")]
     BattleLose = 9
+    # [Description("朗読")]
+    Recitation = 10
 
 class TimelineType(Enum):
     MyPage = 0
@@ -539,6 +544,7 @@ class TimelineType(Enum):
     SkillQlipha = 3
     Memory = 4
     MyPageQlipha = 5
+    Recitation = 6
 
 # [MessagePackObject(True)]
 @dataclass
@@ -737,6 +743,8 @@ class MissionAchievementType(Enum):
     MissionTotalActivityAtNewCharacterMission = 1010200
     # [Description("期間限定ミッション中に貢献メダルを獲得した時")]
     MissionTotalActivityAtEvent = 1010300
+    # [Description("パネルミッション中に貢献メダルを獲得した時")]
+    MissionTotalActivityAtPanelMission = 1010400
     # [Description("マイページで自己紹介文を変更した時")]
     PlayerInfoEditComment = 2010100
     # [Description("フレンドになった最大の人数")]
@@ -885,6 +893,78 @@ class MissionAchievementType(Enum):
     BattleLeagueMaxRanking = 12010200
     # [Description("幻影の神殿勝利回数")]
     LocalRaidVictoryCount = 13010100
+    # [Description("幻影の神殿で〇人以上の○属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictoryUnitElementTypeBase = 13010200
+    # [Description("幻影の神殿で1人以上の天属性か冥属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory1UnitLightAndDarkType = 13010210
+    # [Description("幻影の神殿で1人以上の藍属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory1UnitBlueType = 13010211
+    # [Description("幻影の神殿で1人以上の紅属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory1UnitRedType = 13010212
+    # [Description("幻影の神殿で1人以上の翠属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory1UnitGreenType = 13010213
+    # [Description("幻影の神殿で1人以上の黄属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory1UnitYellowType = 13010214
+    # [Description("幻影の神殿で1人以上の天属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory1UnitLightType = 13010215
+    # [Description("幻影の神殿で1人以上の冥属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory1UnitDarkType = 13010216
+    # [Description("幻影の神殿で2人以上の天属性か冥属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory2UnitLightAndDarkType = 13010220
+    # [Description("幻影の神殿で2人以上の藍属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory2UnitBlueType = 13010221
+    # [Description("幻影の神殿で2人以上の紅属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory2UnitRedType = 13010222
+    # [Description("幻影の神殿で2人以上の翠属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory2UnitGreenType = 13010223
+    # [Description("幻影の神殿で2人以上の黄属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory2UnitYellowType = 13010224
+    # [Description("幻影の神殿で2人以上の天属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory2UnitLightType = 13010225
+    # [Description("幻影の神殿で2人以上の冥属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory2UnitDarkType = 13010226
+    # [Description("幻影の神殿で3人以上の天属性か冥属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory3UnitLightAndDarkType = 13010230
+    # [Description("幻影の神殿で3人以上の藍属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory3UnitBlueType = 13010231
+    # [Description("幻影の神殿で3人以上の紅属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory3UnitRedType = 13010232
+    # [Description("幻影の神殿で3人以上の翠属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory3UnitGreenType = 13010233
+    # [Description("幻影の神殿で3人以上の黄属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory3UnitYellowType = 13010234
+    # [Description("幻影の神殿で3人以上の天属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory3UnitLightType = 13010235
+    # [Description("幻影の神殿で3人以上の冥属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory3UnitDarkType = 13010236
+    # [Description("幻影の神殿で4人以上の天属性か冥属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory4UnitLightAndDarkType = 13010240
+    # [Description("幻影の神殿で4人以上の藍属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory4UnitBlueType = 13010241
+    # [Description("幻影の神殿で4人以上の紅属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory4UnitRedType = 13010242
+    # [Description("幻影の神殿で4人以上の翠属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory4UnitGreenType = 13010243
+    # [Description("幻影の神殿で4人以上の黄属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory4UnitYellowType = 13010244
+    # [Description("幻影の神殿で4人以上の天属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory4UnitLightType = 13010245
+    # [Description("幻影の神殿で4人以上の冥属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory4UnitDarkType = 13010246
+    # [Description("幻影の神殿で5人以上の天属性か冥属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory5UnitLightAndDarkType = 13010250
+    # [Description("幻影の神殿で5人以上の藍属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory5UnitBlueType = 13010251
+    # [Description("幻影の神殿で5人以上の紅属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory5UnitRedType = 13010252
+    # [Description("幻影の神殿で5人以上の翠属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory5UnitGreenType = 13010253
+    # [Description("幻影の神殿で5人以上の黄属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory5UnitYellowType = 13010254
+    # [Description("幻影の神殿で5人以上の天属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory5UnitLightType = 13010255
+    # [Description("幻影の神殿で5人以上の冥属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+    LocalRaidVictory5UnitDarkType = 13010256
     # [Description("祈りの泉クエスト受領回数")]
     BountyQuestAllStartQuestCount = 14010100
     # [Description("祈りの泉新キャラミッション")]
@@ -907,6 +987,10 @@ class MissionAchievementType(Enum):
     ChatSayWorldChatCount = 17010100
     # [Description("アップデート回数")]
     OsStoreUpdateCount = 18010100
+    # [Description("パネル図鑑遷移")]
+    PictureBookTransitionPanel = 21010100
+    # [Description("楽曲再生画面遷移回数")]
+    MusicPlayerTransitionCount = 22010100
 
 # [Description("SNS情報")]
 # [MessagePackObject(True)]
@@ -1292,6 +1376,10 @@ class MissionTransitionDestinationType(Enum):
     CharacterDetail = 1901
     # [Description("マイページお気に入り設定ダイアログ")]
     FavoriteCharacter = 2001
+    # [Description("パネル図鑑")]
+    PanelPictureBook = 2101
+    # [Description("楽曲再生")]
+    MusicPlayer = 2201
 
 # [Description("ガチャカテゴリータイプ")]
 class GachaCategoryType(Enum):
@@ -1940,6 +2028,8 @@ class OpenCommandType(Enum):
     SecondContinent = 140
     # [Description("星の導きガチャ")]
     GachaStarsGuidance = 160
+    # [Description("楽曲再生")]
+    MusicPlayer = 180
     # [Description("フレンドコード")]
     FriendCode = 200
     # [Description("武具固定")]
@@ -2295,7 +2385,7 @@ class IHasEventStartEndTime():
 
 # [MessagePackObject(True)]
 @dataclass
-class EventMissionReward: # TODO fix (IUserCharacterItem):
+class EventMissionReward: # TODO (IUserCharacterItem):
     # [Nest(True, 1)]
     # [PropertyOrder(1)]
     EventItem: UserItem
@@ -3052,6 +3142,7 @@ class UserSyncData():
     ExistVipDailyGift: bool | None
     GivenItemCountInfoList: list[IUserItem]
     GuildJoinLimitCount: int | None
+    HasTransitionedPanelPictureBook: bool | None
     IsDataLinkage: bool | None
     IsJoinedGlobalGvg: bool | None
     IsJoinedLocalGvg: bool | None
@@ -5190,6 +5281,8 @@ class ErrorCode(Enum):
     MissionUserBattleAutoDtoNotFound = 351002
     # [Description("ユーザーのチュートリアルデータが存在しません。")]
     MissionUserTutorialDtoNotFound = 351003
+    # [Description("ユーザーのミッション履歴データが存在しません。")]
+    MissionUserMissionOccurrenceHistoryDtoNotFound = 351004
     # [Description("未解放のミッションです。")]
     MissionNotOpenMission = 352000
     # [Description("報酬が受け取れません。")]
@@ -5208,6 +5301,18 @@ class ErrorCode(Enum):
     MissionActivityMBNotFoundOrAlreadyAchieved = 352007
     # [Description("受取出来ません。")]
     MissionActivityRewardNotReceived = 352008
+    # [Description("存在しないシート番号です。")]
+    MissionNotExistSheetNo = 352021
+    # [Description("存在しないビンゴ種別です。")]
+    MissionNotExistBingoType = 352022
+    # [Description("受け取り済みのビンゴ報酬です。")]
+    MissionAlreadyReceivedBingoReward = 352023
+    # [Description("ビンゴが達成出来ていません。")]
+    MissionNotCompletedBingo = 352024
+    # [Description("ビンゴ報酬が存在しません。")]
+    MissionNotFoundBingoReward = 352025
+    # [Description("前のシートをクリアしていません。")]
+    MissionNotClearedPrevSheetMission = 352026
     # [Description("ユーザーの放置バトルデータが存在しません。")]
     TradeShopUserBattleAutoDtoNotFound = 361000
     # [Description("ユーザーの放置バトルデータが存在しません。")]
@@ -5228,6 +5333,32 @@ class ErrorCode(Enum):
     TradeShopNotOpen = 362005
     # [Description("ランキングが解放されていません。")]
     RankingNotOpenRankingContent = 372000
+    # [Description("パネル図鑑表示期間外です。")]
+    PanelNotStarted = 382000
+    # [Description("無条件で解放されているパネルです。")]
+    PanelUnlockFreePanel = 382001
+    # [Description("既に解放しているパネルです。")]
+    PanelAlreadyUnlocked = 382002
+    # [Description("ユーザーの楽曲データが存在しません。")]
+    MusicUserMusicDtoNotFound = 391000
+    # [Description("ユーザーのプレイリストデータが存在しません。")]
+    MusicUserPlaylistDtoNotFound = 391001
+    # [Description("楽曲再生が解放されていません。")]
+    MusicNotOpenMusicContent = 392000
+    # [Description("プレイリストの上限を超えています。")]
+    MusicOverMaxPlaylistCount = 392001
+    # [Description("プレイリスト名が入力されていません。")]
+    MusicEmptyPlaylistName = 392002
+    # [Description("プレイリストは15文字まで入力できます。")]
+    MusicOverMaxLengthPlaylistName = 392003
+    # [Description("使用できない単語が含まれています。")]
+    MusicExistNgWordInPlaylistName = 392004
+    # [Description("購入済みです。")]
+    MusicAlreadyBuyMusic = 392005
+    # [Description("不正な楽曲IDです。")]
+    MusicInvalidMusicId = 392006
+    # [Description("プレイリストの曲数上限を超えています。")]
+    MusicOverMaxPlaylistMusicCount = 392007
     # [Description("ユーザーのアカウント情報が存在しません")]
     TutorialAccountDtoNotFound = 401000
     # [Description("ユーザーのステータス情報が存在しません")]
@@ -6219,6 +6350,19 @@ class NoticeAccessType(Enum):
     Title = 1
     # [Description("マイページ")]
     MyPage = 2
+
+# [MessagePackObject(True)]
+@dataclass
+class UserPlaylistMusicInfo():
+    Guid: str
+    MusicId: int
+
+# [MessagePackObject(True)]
+@dataclass
+class UserPlaylistInfo():
+    Guid: str
+    MusicList: list[UserPlaylistMusicInfo]
+    PlaylistName: str
 
 # [MessagePackObject(True)]
 @dataclass

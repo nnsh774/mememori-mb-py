@@ -77,8 +77,11 @@ class AutoBattleEnemyMB(MasterBookBase, IBattleEnemy):
     # [Description("敵武具ID")]
     # [PropertyOrder(17)]
     EnemyEquipmentId: int
-    # [Description("敵調整ID")]
+    # [Description("専用武器レアリティ")]
     # [PropertyOrder(18)]
+    ExclusiveEquipmentRarityFlags: Flags[EquipmentRarityFlags]
+    # [Description("敵調整ID")]
+    # [PropertyOrder(19)]
     EnemyAdjustId: int
     # [Description("ユニットアイコンID")]
     # [PropertyOrder(2)]
@@ -229,8 +232,11 @@ class BossBattleEnemyMB(MasterBookBase, IBattleEnemy):
     # [Description("敵武具ID")]
     # [PropertyOrder(15)]
     EnemyEquipmentId: int
-    # [Description("敵調整ID")]
+    # [Description("専用武器レアリティ")]
     # [PropertyOrder(16)]
+    ExclusiveEquipmentRarityFlags: Flags[EquipmentRarityFlags]
+    # [Description("敵調整ID")]
+    # [PropertyOrder(17)]
     EnemyAdjustId: int
     # [Description("ユニットアイコンID")]
     # [PropertyOrder(2)]
@@ -1860,8 +1866,11 @@ class LocalRaidEnemyMB(MasterBookBase, IBattleEnemy):
     # [Description("敵武具ID")]
     # [PropertyOrder(15)]
     EnemyEquipmentId: int
-    # [Description("敵調整ID")]
+    # [Description("専用武器レアリティ")]
     # [PropertyOrder(16)]
+    ExclusiveEquipmentRarityFlags: Flags[EquipmentRarityFlags]
+    # [Description("敵調整ID")]
+    # [PropertyOrder(17)]
     EnemyAdjustId: int
     # [Description("ユニットアイコンID")]
     # [PropertyOrder(2)]
@@ -2533,29 +2542,32 @@ class StateBonusMB(MasterBookBase):
 # [MessagePackObject(True)]
 @dataclass
 class StateMB(MasterBookBase):
-    # [Description("名称キー")]
+    # [Description("大陸ID")]
     # [PropertyOrder(1)]
+    ContinentId: int
+    # [Description("名称キー")]
+    # [PropertyOrder(2)]
     NameKey: str
     # [Description("サブ名称キー")]
-    # [PropertyOrder(2)]
+    # [PropertyOrder(3)]
     SubNameKey: str
     # [Description("テキストキー")]
-    # [PropertyOrder(3)]
+    # [PropertyOrder(4)]
     TextKey: str
     # [Description("クリファテキストキー")]
-    # [PropertyOrder(4)]
+    # [PropertyOrder(5)]
     AppearQliphaKey: str
     # [Description("クリファテキストキー")]
-    # [PropertyOrder(5)]
+    # [PropertyOrder(6)]
     AppearQliphaId: int
     # [Description("国ボーナスID")]
-    # [PropertyOrder(6)]
+    # [PropertyOrder(7)]
     StateBonusId: int
     # [Description("開始時間(JP)")]
-    # [PropertyOrder(7)]
+    # [PropertyOrder(8)]
     BgmStartTimeJP: float
     # [Description("開始時間(US)")]
-    # [PropertyOrder(8)]
+    # [PropertyOrder(9)]
     BgmStartTimeUS: float
 
 # [Description("Steam商品価格表")]
@@ -2841,56 +2853,59 @@ class TotalActivityMedalRewardMB(MasterBookBase, IHasEventStartEndTime):
 # [MessagePackObject(True)]
 @dataclass
 class TowerBattleEnemyMB(MasterBookBase, IBattleEnemy):
-    # [Description("敵キャラクターID")]
-    # [PropertyOrder(1)]
-    BattleEnemyCharacterId: int
-    # [Description("職業")]
-    # [PropertyOrder(10)]
-    JobFlags: Flags[JobFlags]
-    # [Description("属性")]
-    # [PropertyOrder(11)]
-    ElementType: ElementType
     # [Description("ユニットアイコンタイプ")]
-    # [PropertyOrder(12)]
+    # [PropertyOrder(1)]
     UnitIconType: UnitIconType
-    # [Description("ユニットアイコンID")]
-    # [PropertyOrder(13)]
-    UnitIconId: int
+    # [Description("バトルパラメータ")]
+    # [Nest(True, 1)]
+    # [PropertyOrder(10)]
+    BattleParameter: BattleParameter
     # [Description("通常攻撃として使ってくるスキルID")]
-    # [PropertyOrder(14)]
+    # [PropertyOrder(11)]
     NormalSkillId: int
     # [Description("アクティブスキルIDのリスト")]
-    # [PropertyOrder(15)]
+    # [PropertyOrder(12)]
     ActiveSkillIds: list[int]
     # [Description("パッシブスキルIDのリスト")]
-    # [PropertyOrder(16)]
+    # [PropertyOrder(13)]
     PassiveSkillIds: list[int]
+    # [Description("敵キャラクターID")]
+    # [PropertyOrder(14)]
+    BattleEnemyCharacterId: int
     # [Description("敵武具ID")]
-    # [PropertyOrder(2)]
+    # [PropertyOrder(15)]
     EnemyEquipmentId: int
-    # [Description("敵のランク")]
+    # [Description("専用武器レアリティ")]
+    # [PropertyOrder(16)]
+    ExclusiveEquipmentRarityFlags: Flags[EquipmentRarityFlags]
+    # [Description("敵調整値ID")]
+    # [PropertyOrder(17)]
+    EnemyAdjustId: int
+    # [Description("ユニットアイコンID")]
+    # [PropertyOrder(2)]
+    UnitIconId: int
+    # [Description("名称キー")]
     # [PropertyOrder(3)]
-    EnemyRank: int
-    # [Description("レアリティ")]
+    NameKey: str
+    # [Description("敵のランク")]
     # [PropertyOrder(4)]
+    EnemyRank: int
+    # [Description("戦闘力")]
+    # [PropertyOrder(5)]
+    BattlePower: int
+    # [Description("職業")]
+    # [PropertyOrder(6)]
+    JobFlags: Flags[JobFlags]
+    # [Description("属性")]
+    # [PropertyOrder(7)]
+    ElementType: ElementType
+    # [Description("レアリティ")]
+    # [PropertyOrder(8)]
     CharacterRarityFlags: Flags[CharacterRarityFlags]
     # [Description("ベースパラメータ")]
     # [Nest(True, 1)]
-    # [PropertyOrder(5)]
-    BaseParameter: BaseParameter
-    # [Description("バトルパラメータ")]
-    # [Nest(True, 1)]
-    # [PropertyOrder(6)]
-    BattleParameter: BattleParameter
-    # [Description("戦闘力")]
-    # [PropertyOrder(7)]
-    BattlePower: int
-    # [Description("敵調整値ID")]
-    # [PropertyOrder(8)]
-    EnemyAdjustId: int
-    # [Description("名称キー")]
     # [PropertyOrder(9)]
-    NameKey: str
+    BaseParameter: BaseParameter
 
 # [Description("無窮の塔　階層情報")]
 # [MessagePackObject(True)]
