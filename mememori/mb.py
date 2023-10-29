@@ -1439,32 +1439,23 @@ class GuildRaidBossMB(MasterBookBase, IHasStartEndTime):
     # [Nest(False, 0)]
     # [PropertyOrder(20)]
     GuildDamageBar: list[GuildRaidDamageBar]
-    # [Description("キャラクター座標X")]
-    # [PropertyOrder(21)]
-    CharacterImageX: float
-    # [Description("キャラクター座標Y")]
-    # [PropertyOrder(22)]
-    CharacterImageY: float
-    # [Description("キャラクタースケール")]
-    # [PropertyOrder(23)]
-    CharacterImageScale: float
     # [Description("バナーテキスト")]
-    # [PropertyOrder(24)]
+    # [PropertyOrder(21)]
     BannerText: str
     # [Description("ギルドレイドボタン座標U")]
-    # [PropertyOrder(25)]
+    # [PropertyOrder(22)]
     GuildRaidButtonU: float
     # [Description("ギルドレイドボタン座標V")]
-    # [PropertyOrder(26)]
+    # [PropertyOrder(23)]
     GuildRaidButtonV: float
     # [Description("ワールド報酬キャラ画像座標X")]
-    # [PropertyOrder(27)]
+    # [PropertyOrder(24)]
     WorldDamageBarRewardCharacterImageX: float
     # [Description("ワールド報酬キャラ画像座標Y")]
-    # [PropertyOrder(28)]
+    # [PropertyOrder(25)]
     WorldDamageBarRewardCharacterImageY: float
     # [Description("ワールド報酬キャラ画像サイズ")]
-    # [PropertyOrder(29)]
+    # [PropertyOrder(26)]
     WorldDamageBarRewardCharacterImageSize: float
     # [Description("ボス種別")]
     # [PropertyOrder(3)]

@@ -1063,6 +1063,8 @@ class TransferSpotType(Enum):
     GuildRaid = 181
     # [Description("ギルドレイドワールドダメージ報酬ダイアログ")]
     GuildRaidWorldReward = 182
+    # [Description("アイテム自動回収ダイアログ")]
+    RetrieveItem = 190
     # [Description("フレンド")]
     Friend = 4
 
@@ -1697,12 +1699,6 @@ class LimitedEventType(Enum):
     ElementTowerAllRelease = 1
     # [Description("シリアルコード入力")]
     SerialCode = 2
-    # [Description("古い課金システムの使用")]
-    ApplyOldPurchaseSystem = 100
-    # [Description("ギルドレイドoffset設定")]
-    GuildRaidCharacterPositionByMB = 101
-    # [Description("GvGでキャラクターのキャッシュが存在しない場合に例外を投げる")]
-    ThrowExceptionInGvgWhenCharacterCacheNotExists = 102
 
 # [Description("キャラクターレアリティを持つ可能性があるアイテムが実装するインターフェース")]
 @dataclass
@@ -2186,10 +2182,14 @@ class PassiveTrigger(Enum):
     TargetAttack = 29
     # [Description("被回復時")]
     ReceiveHeal = 30
+    # [Description("被連携ダメージ時")]
+    ReceiveResonanceDamage = 31
     # [Description("被ダメージ量判定(自分の情報だけ参照)")]
     CheckReceiveDamageSelf = 41
     # [Description("被ダメージ量判定")]
     CheckReceiveDamage = 42
+    # [Description("被致命的ダメージ時回復")]
+    RecoveryFromInstantDeathDamage = 52
     # [Description("特殊ダメージ死亡(毒、共鳴など)")]
     SpecialDamageDead = 62
 
@@ -2385,7 +2385,7 @@ class IHasEventStartEndTime():
 
 # [MessagePackObject(True)]
 @dataclass
-class EventMissionReward: # TODO (IUserCharacterItem):
+class EventMissionReward: # TODO fix (IUserCharacterItem):
     # [Nest(True, 1)]
     # [PropertyOrder(1)]
     EventItem: UserItem
@@ -2922,6 +2922,8 @@ class NotificationType(Enum):
     LocalGvgReward = 8
     # [Description("Global GVG 受け取り可能なギルドバトル報酬がある場合")]
     GlobalGvgReward = 9
+    # [Description("新しく登録された回収アイテムがある場合")]
+    NewRetrieveItem = 10
 
 # [MessagePackObject(True)]
 @dataclass
@@ -3139,6 +3141,7 @@ class UserSyncData():
     DataLinkageMap: dict[SnsType, bool]
     DeletedCharacterGuidList: list[str]
     DeletedEquipmentGuidList: list[str]
+    ExistUnconfirmedRetrieveItemHistory: bool | None
     ExistVipDailyGift: bool | None
     GivenItemCountInfoList: list[IUserItem]
     GuildJoinLimitCount: int | None
@@ -3147,6 +3150,7 @@ class UserSyncData():
     IsJoinedGlobalGvg: bool | None
     IsJoinedLocalGvg: bool | None
     IsReceivedSnsShareReward: bool | None
+    IsRetrievedItem: bool | None
     IsValidContractPrivilege: bool | None
     LeadLockEquipmentDialogInfoMap: dict[LockEquipmentDeckType, LeadLockEquipmentDialogInfo]
     LegendLeagueClassType: LegendLeagueClassType | None
@@ -6211,6 +6215,29 @@ class ShopProductSubInfo():
     ProductId: str
     # [Description("商品値段")]
     ShopProductPrice: int
+
+# [MessagePackObject(True)]
+@dataclass
+class RetrieveItemData(IUserCharacterItem):
+    # [Description("回収アイテム")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(1)]
+    Item: UserItem
+    # [Description("キャラクターのレアリティ")]
+    # [PropertyOrder(2)]
+    RarityFlags: Flags[CharacterRarityFlags]
+
+# [MessagePackObject(True)]
+@dataclass
+class RetrieveItemInfo():
+    RetrieveItemData: RetrieveItemData
+    RetrievedItemCount: int
+
+# [MessagePackObject(True)]
+@dataclass
+class RetrieveItemHistory():
+    RetrieveItemInfoList: list[RetrieveItemInfo]
+    RetrieveLocalTime: int
 
 # [MessagePackObject(True)]
 @dataclass
