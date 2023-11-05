@@ -2385,7 +2385,7 @@ class IHasEventStartEndTime():
 
 # [MessagePackObject(True)]
 @dataclass
-class EventMissionReward: # TODO fix (IUserCharacterItem):
+class EventMissionReward():
     # [Nest(True, 1)]
     # [PropertyOrder(1)]
     EventItem: UserItem
@@ -7113,8 +7113,6 @@ class ChatInfo(ArrayPacked):
     CharacterId: int
     # [Key(1)]
     ChatType: ChatType
-    # [Key(10)]
-    SystemChatMessageArgs: str
     # [Key(2)]
     Message: str
     # [Key(3)]
@@ -7131,6 +7129,8 @@ class ChatInfo(ArrayPacked):
     LegendLeagueClass: LegendLeagueClassType
     # [Key(9)]
     SystemChatMessageIdType: SystemChatMessageIdType
+    # [Key(10)]
+    SystemChatMessageArgs: str
 
 # [MessagePackObject(True)]
 @dataclass
