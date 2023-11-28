@@ -14,6 +14,125 @@ class MasterBookBase():
     IsIgnore: bool | None
     Memo: str
 
+# [Description("ランキング種別")]
+class RankingDataType(Enum):
+    # [Description("不明")]
+    None_ = 0
+    # [Description("プレイヤー戦闘力")]
+    PlayerBattlePower = 1
+    # [Description("プレイヤーランク")]
+    PlayerRank = 2
+    # [Description("プレイヤーメインクエスト")]
+    PlayerMainQuest = 3
+    # [Description("プレイヤー無窮の塔")]
+    PlayerTower = 4
+    # [Description("属性の塔 蒼")]
+    TowerBlue = 5
+    # [Description("属性の塔 紅")]
+    TowerRed = 6
+    # [Description("属性の塔 翠")]
+    TowerGreen = 7
+    # [Description("属性の塔 黄")]
+    TowerYellow = 8
+
+# [Description("アイテムの種類")]
+class ItemType(Enum):
+    # [Description("なし")]
+    None_ = 0
+    # [Description("無償仮想通貨")]
+    CurrencyFree = 1
+    # [Description("有償仮想通貨")]
+    CurrencyPaid = 2
+    # [Description("ゲーム内通貨")]
+    Gold = 3
+    # [Description("武具")]
+    Equipment = 4
+    # [Description("武具の欠片")]
+    EquipmentFragment = 5
+    # [Description("キャラクター")]
+    Character = 6
+    # [Description("キャラクターの絆")]
+    CharacterFragment = 7
+    # [Description("洞窟の加護")]
+    DungeonBattleRelic = 8
+    # [Description("アダマンタイト")]
+    EquipmentSetMaterial = 9
+    # [Description("n時間分アイテム")]
+    QuestQuickTicket = 10
+    # [Description("キャラ育成素材")]
+    CharacterTrainingMaterial = 11
+    # [Description("武具強化アイテム")]
+    EquipmentReinforcementItem = 12
+    # [Description("交換所アイテム")]
+    ExchangePlaceItem = 13
+    # [Description("スフィア")]
+    Sphere = 14
+    # [Description("魔装強化アイテム")]
+    MatchlessSacredTreasureExpItem = 15
+    # [Description("ガチャチケット")]
+    GachaTicket = 16
+    # [Description("宝箱、未鑑定スフィアなど")]
+    TreasureChest = 17
+    # [Description("宝箱の鍵")]
+    TreasureChestKey = 18
+    # [Description("ボスチケット")]
+    BossChallengeTicket = 19
+    # [Description("無窮の塔チケット")]
+    TowerBattleTicket = 20
+    # [Description("回復の果実")]
+    DungeonRecoveryItem = 21
+    # [Description("プレイヤー経験値")]
+    PlayerExp = 22
+    # [Description("フレンドポイント")]
+    FriendPoint = 23
+    # [Description("生命樹の雫")]
+    EquipmentRarityCrystal = 24
+    # [Description("レベルリンク経験値")]
+    LevelLinkExp = 25
+    # [Description("ギルドストック")]
+    GuildFame = 26
+    # [Description("ギルド経験値")]
+    GuildExp = 27
+    # [Description("貢献メダル")]
+    ActivityMedal = 28
+    # [Description("VIP経験値")]
+    VipExp = 29
+    # [Description("パネル図鑑解放判定アイテム")]
+    PanelGetJudgmentItem = 30
+    # [Description("パネルミッション マス解放アイテム")]
+    UnlockPanelGridItem = 31
+    # [Description("パネル図鑑解放アイテム")]
+    PanelUnlockItem = 32
+    # [Description("楽曲チケット")]
+    MusicTicket = 33
+    # [Description("アイコンアイテム")]
+    SpecialIcon = 34
+    # [Description("アイコンの断片")]
+    IconFragment = 35
+    # [Description("イベント交換所アイテム")]
+    EventExchangePlaceItem = 50
+
+# [Description("全てのアイテムが実装するインターフェース")]
+# [Union(0, typeof)]
+@dataclass
+class IUserItem():
+    # [Description("アイテムの種類")]
+    # [PropertyOrder(1)]
+    ItemType: ItemType
+    # [Description("アイテムのID")]
+    # [PropertyOrder(2)]
+    ItemId: int
+    # [Description("アイテムの数")]
+    # [PropertyOrder(3)]
+    ItemCount: int
+
+# [MessagePackObject(True)]
+@dataclass
+class UserItem(IUserItem):
+    ItemCount: int
+    ItemId: int
+    ItemType: ItemType
+
 # [Description("武具のレアリティ")]
 # [Flags]
 class EquipmentRarityFlags(Enum):
@@ -304,79 +423,6 @@ class IHasStartEndTime():
     # [DateTimeString]
     StartTime: str
 
-# [Description("アイテムの種類")]
-class ItemType(Enum):
-    # [Description("なし")]
-    None_ = 0
-    # [Description("無償仮想通貨")]
-    CurrencyFree = 1
-    # [Description("有償仮想通貨")]
-    CurrencyPaid = 2
-    # [Description("ゲーム内通貨")]
-    Gold = 3
-    # [Description("武具")]
-    Equipment = 4
-    # [Description("武具の欠片")]
-    EquipmentFragment = 5
-    # [Description("キャラクター")]
-    Character = 6
-    # [Description("キャラクターの絆")]
-    CharacterFragment = 7
-    # [Description("洞窟の加護")]
-    DungeonBattleRelic = 8
-    # [Description("アダマンタイト")]
-    EquipmentSetMaterial = 9
-    # [Description("n時間分アイテム")]
-    QuestQuickTicket = 10
-    # [Description("キャラ育成素材")]
-    CharacterTrainingMaterial = 11
-    # [Description("武具強化アイテム")]
-    EquipmentReinforcementItem = 12
-    # [Description("交換所アイテム")]
-    ExchangePlaceItem = 13
-    # [Description("スフィア")]
-    Sphere = 14
-    # [Description("魔装強化アイテム")]
-    MatchlessSacredTreasureExpItem = 15
-    # [Description("ガチャチケット")]
-    GachaTicket = 16
-    # [Description("宝箱、未鑑定スフィアなど")]
-    TreasureChest = 17
-    # [Description("宝箱の鍵")]
-    TreasureChestKey = 18
-    # [Description("ボスチケット")]
-    BossChallengeTicket = 19
-    # [Description("無窮の塔チケット")]
-    TowerBattleTicket = 20
-    # [Description("回復の果実")]
-    DungeonRecoveryItem = 21
-    # [Description("プレイヤー経験値")]
-    PlayerExp = 22
-    # [Description("フレンドポイント")]
-    FriendPoint = 23
-    # [Description("生命樹の雫")]
-    EquipmentRarityCrystal = 24
-    # [Description("レベルリンク経験値")]
-    LevelLinkExp = 25
-    # [Description("ギルドストック")]
-    GuildFame = 26
-    # [Description("ギルド経験値")]
-    GuildExp = 27
-    # [Description("貢献メダル")]
-    ActivityMedal = 28
-    # [Description("VIP経験値")]
-    VipExp = 29
-    # [Description("パネル図鑑解放判定アイテム")]
-    PanelGetJudgmentItem = 30
-    # [Description("パネルミッション マス解放アイテム")]
-    UnlockPanelGridItem = 31
-    # [Description("パネル図鑑解放アイテム")]
-    PanelUnlockItem = 32
-    # [Description("楽曲チケット")]
-    MusicTicket = 33
-    # [Description("イベント交換所アイテム")]
-    EventExchangePlaceItem = 50
-
 # [MessagePackObject(True)]
 @dataclass
 class BountyQuestEventTargetItemInfo():
@@ -387,27 +433,6 @@ class BountyQuestEventTargetItemInfo():
 @dataclass
 class BountyQuestEventTargetQuestTypeInfo():
     BountyQuestType: BountyQuestType
-
-# [Description("全てのアイテムが実装するインターフェース")]
-# [Union(0, typeof)]
-@dataclass
-class IUserItem():
-    # [Description("アイテムの種類")]
-    # [PropertyOrder(1)]
-    ItemType: ItemType
-    # [Description("アイテムのID")]
-    # [PropertyOrder(2)]
-    ItemId: int
-    # [Description("アイテムの数")]
-    # [PropertyOrder(3)]
-    ItemCount: int
-
-# [MessagePackObject(True)]
-@dataclass
-class UserItem(IUserItem):
-    ItemCount: int
-    ItemId: int
-    ItemType: ItemType
 
 # [Description("アイテム変換タイプ")]
 class ChangeItemType(Enum):
@@ -535,7 +560,7 @@ class CharacterVoiceCategory(Enum):
     # [Description("バトル敗北")]
     BattleLose = 9
     # [Description("朗読")]
-    Recitation = 10
+    Monologue = 10
 
 class TimelineType(Enum):
     MyPage = 0
@@ -544,7 +569,7 @@ class TimelineType(Enum):
     SkillQlipha = 3
     Memory = 4
     MyPageQlipha = 5
-    Recitation = 6
+    Monologue = 6
 
 # [MessagePackObject(True)]
 @dataclass
@@ -1090,6 +1115,32 @@ class RawDataDownloadType(Enum):
     None_ = 0
     # [Description("タイトルダウンロード")]
     Title = 1
+    # [Description("タイトルダウンロード(JP)")]
+    TitleLanguageJP = 2
+    # [Description("タイトルダウンロード(US)")]
+    TitleLanguageUS = 3
+    # [Description("タイトルダウンロード(KR)")]
+    TitleLanguageKR = 4
+    # [Description("タイトルダウンロード(TW)")]
+    TitleLanguageTW = 5
+    # [Description("タイトルダウンロード(FR)")]
+    TitleLanguageFR = 6
+    # [Description("タイトルダウンロード(CN)")]
+    TitleLanguageCN = 7
+    # [Description("タイトルダウンロード(ES)")]
+    TitleLanguageES = 8
+    # [Description("タイトルダウンロード(PT)")]
+    TitleLanguagePT = 9
+    # [Description("タイトルダウンロード(TH)")]
+    TitleLanguageTH = 10
+    # [Description("タイトルダウンロード(ID)")]
+    TitleLanguageID = 11
+    # [Description("タイトルダウンロード(VN)")]
+    TitleLanguageVN = 12
+    # [Description("タイトルダウンロード(RU)")]
+    TitleLanguageRU = 13
+    # [Description("タイトルダウンロード(DE)")]
+    TitleLanguageDE = 14
 
 # [Description("時空の洞窟 マス種別")]
 class DungeonBattleGridType(Enum):
@@ -1699,6 +1750,8 @@ class LimitedEventType(Enum):
     ElementTowerAllRelease = 1
     # [Description("シリアルコード入力")]
     SerialCode = 2
+    # [Description("レジェンドリーグアイコン報酬")]
+    LegendLeagueIconReward = 3
 
 # [Description("キャラクターレアリティを持つ可能性があるアイテムが実装するインターフェース")]
 @dataclass
@@ -2028,8 +2081,28 @@ class OpenCommandType(Enum):
     MusicPlayer = 180
     # [Description("フレンドコード")]
     FriendCode = 200
+    # [Description("ランキング到達報酬")]
+    AchieveRanking = 220
     # [Description("武具固定")]
     LockEquipment = 1000
+
+class MonologueTextType(Enum):
+    None_ = 0
+    SongLyrics = 1
+    Monologue = 2
+
+# [MessagePackObject(True)]
+@dataclass
+class MonologueSettingData():
+    # [Description("歌詞開始時間（秒）")]
+    # [PropertyOrder(1)]
+    SongLyricsStartTime: float
+    # [Description("歌詞テキストキー")]
+    # [PropertyOrder(2)]
+    SongLyricsKey: str
+    # [Description("朗読テキストタイプ")]
+    # [PropertyOrder(3)]
+    RecitationTextType: MonologueTextType
 
 # [Description("日別ログイン報酬情報")]
 # [MessagePackObject(True)]
@@ -2232,6 +2305,8 @@ class PvpRankingRewardType(Enum):
     LegendLeagueDailyRankingReward = 1
     # [Description("レジェンドリーグシーズンランキング報酬")]
     LegendLeagueSeasonRankingReward = 2
+    # [Description("レジェンドリーグアイコンランキング報酬")]
+    LegendLeagueIconRankingReward = 3
 
 # [Description("クエスト難易度")]
 class QuestDifficultyType(Enum):
@@ -2239,24 +2314,6 @@ class QuestDifficultyType(Enum):
     Easy = 0
     # [Description("Hard")]
     Hard = 1
-
-class RecitationTextType(Enum):
-    None_ = 0
-    SongLyrics = 1
-    Recitation = 2
-
-# [MessagePackObject(True)]
-@dataclass
-class RecitationSettingData():
-    # [Description("歌詞開始時間（秒）")]
-    # [PropertyOrder(1)]
-    SongLyricsStartTime: float
-    # [Description("歌詞テキストキー")]
-    # [PropertyOrder(2)]
-    SongLyricsKey: str
-    # [Description("朗読テキストタイプ")]
-    # [PropertyOrder(3)]
-    RecitationTextType: RecitationTextType
 
 class SphereType(Enum):
     EquipmentIcon = 0
@@ -2819,6 +2876,25 @@ class UserDeckDtoInfo():
     UserCharacterGuid4: str
     UserCharacterGuid5: str
 
+# [Description("ミッション状態種別")]
+class MissionStatusType(Enum):
+    # [Description("未解放")]
+    Locked = 0
+    # [Description("進行中")]
+    Progress = 1
+    # [Description("未受取")]
+    NotReceived = 2
+    # [Description("獲得済")]
+    Received = 3
+
+# [MessagePackObject(True)]
+@dataclass
+class UserFriendMissionDtoInfo():
+    AchievementType: MissionAchievementType
+    FriendCampaignId: int
+    MissionStatusHistory: dict[MissionStatusType, list[int]]
+    ProgressCount: int
+
 # [MessagePackObject(True)]
 @dataclass
 class UserItemDtoInfo(IUserItem):
@@ -2862,17 +2938,6 @@ class UserMissionActivityDtoInfo():
     ProgressCount: int
     RewardStatusDict: dict[int, MissionActivityRewardStatusType]
 
-# [Description("ミッション状態種別")]
-class MissionStatusType(Enum):
-    # [Description("未解放")]
-    Locked = 0
-    # [Description("進行中")]
-    Progress = 1
-    # [Description("未受取")]
-    NotReceived = 2
-    # [Description("獲得済")]
-    Received = 3
-
 # [MessagePackObject(True)]
 @dataclass
 class UserMissionDtoInfo():
@@ -2892,14 +2957,6 @@ class UserMissionOccurrenceHistoryDtoInfo():
     LimitedStartTime: int
     NewCharacterMissionMBId: int
     WeeklyStartTime: int
-
-# [MessagePackObject(True)]
-@dataclass
-class UserFriendMissionDtoInfo():
-    AchievementType: MissionAchievementType
-    FriendCampaignId: int
-    MissionStatusHistory: dict[MissionStatusType, list[int]]
-    ProgressCount: int
 
 # [Description("通知タイプ")]
 class NotificationType(Enum):
@@ -3138,6 +3195,7 @@ class UserSyncData():
     CanJoinTodayLegendLeague: bool | None
     ClearedTutorialIdList: list[int]
     CreateUserIdTimestamp: int | None
+    CreateWorldLocalTimeStamp: int | None
     DataLinkageMap: dict[SnsType, bool]
     DeletedCharacterGuidList: list[str]
     DeletedEquipmentGuidList: list[str]
@@ -3159,6 +3217,8 @@ class UserSyncData():
     LockedUserEquipmentDtoInfoListMap: dict[LockEquipmentDeckType, list[UserEquipmentDtoInfo]]
     PresentCount: int | None
     PrivacySettingsType: PrivacySettingsType | None
+    ReceivableAchieveRankingRewardIdMap: dict[RankingDataType, int]
+    ReceivedAchieveRankingRewardIdList: list[int]
     ReceivedAutoBattleRewardLastTime: int | None
     ReleaseLockEquipmentCooldownTimeStampMap: dict[LockEquipmentDeckType, int]
     ShopCurrencyMissionProgressMap: dict[str, int]
@@ -3316,6 +3376,7 @@ class GuildInfo():
 @dataclass
 class GuildSyncData():
     ApplyPlayerInfoList: list[PlayerInfo]
+    CreateGuildLocalTime: int
     GlobalGvgGroupType: GlobalGvgGroupType
     GuildAnnouncement: str
     GuildAnnouncementUpdateTime: int
@@ -4345,6 +4406,8 @@ class ErrorCode(Enum):
     ItemEditorNotEnoughPaidCurrency = 80003
     # [Description("消費できないアイテムです。")]
     ItemEditorNotConsumableItem = 80004
+    # [Description("付与できないアイテムです。")]
+    ItemEditorCanNotGiveItem = 80005
     # [Description("ユーザのボックスデータが存在しません。")]
     ItemEditorUserBoxSizeDtoNotFound = 82000
     # [Description("ユーザーのステータスデータが存在しません。")]
@@ -4553,6 +4616,8 @@ class ErrorCode(Enum):
     BattlePvpUserStatusDtoNotFound = 131001
     # [Description("ユーザーのレジェンドリーグデータがありません")]
     BattlePvpUserBattleLegendLeagueDtoNotFound = 131002
+    # [Description("ユーザーのレジェンドリーグアイコン報酬データがありません")]
+    BattlePvpUserLegendLeagueIconRewardDtoNotFound = 131003
     # [Description("石でPVP挑戦券を購入できません")]
     BattlePvpInvalidBuyPvpTicket = 132000
     # [Description("PVP挑戦最大回数を超えました")]
@@ -4591,6 +4656,12 @@ class ErrorCode(Enum):
     BattlePvpFailedToGetPlayerInfo = 132017
     # [Description("レジェンドリーグの開催期間外です。")]
     BattlePvpNotBattleTimeLegendLeague = 132018
+    # [Description("アイコン報酬は解放されていません。")]
+    BattlePvpLegendLeagueIconRewardNotOpen = 132019
+    # [Description("アイコン報酬購入可能な時間が過ぎました。")]
+    BattlePvpLegendLeagueIconRewardLimitTimeOver = 132020
+    # [Description("アイコン報酬購入済みです")]
+    BattlePvpLegendLeagueIconRewardAlreadyBuy = 132021
     # [Description("ユーザーのボスバトルデータがありません")]
     BattleBossUserBountyQuestDtoNotFound = 141000
     # [Description("ユーザーデータがありません")]
@@ -5335,8 +5406,16 @@ class ErrorCode(Enum):
     TradeShopIsHideTab = 362004
     # [Description("有効期間ではありません。")]
     TradeShopNotOpen = 362005
+    # [Description("受け取り可能なランキング到達報酬データが存在しません。")]
+    RankingWorldReceivableRankingRewardDtoNotFound = 371000
     # [Description("ランキングが解放されていません。")]
     RankingNotOpenRankingContent = 372000
+    # [Description("受け取り出来ないランキング到達報酬です。")]
+    RankingCanNotReceiveReward = 372001
+    # [Description("既に受け取り済みのランキング到達報酬です。")]
+    RankingAlreadyReceivedRankingReward = 372002
+    # [Description("ランキング到達報酬が解放されていません。")]
+    RankingNotOpenAchieveRankingReward = 372003
     # [Description("パネル図鑑表示期間外です。")]
     PanelNotStarted = 382000
     # [Description("無条件で解放されているパネルです。")]
@@ -5411,6 +5490,8 @@ class ErrorCode(Enum):
     ItemOpenTreasureChestStaticItemIsNull = 602018
     # [Description("天井対象のアイテムが存在しません。")]
     ItemOpenTreasureChestCeilingTargetItemNotFound = 602019
+    # [Description("特別アイコンアイテムが存在しません。")]
+    ItemSpecialIconItemNotFound = 602020
     # [Description("LocalRaidで解散に失敗した")]
     MagicOnionLocalRaidDisbandRoomFailed = 900102
     # [Description("LocalRaidで他の部屋に参加しているので参加に失敗した")]
@@ -6230,6 +6311,8 @@ class RetrieveItemData(IUserCharacterItem):
 # [MessagePackObject(True)]
 @dataclass
 class RetrieveItemInfo():
+    EndTimeFixJST: int
+    IsDisplayBadge: bool
     RetrieveItemData: RetrieveItemData
     RetrievedItemCount: int
 
@@ -6238,6 +6321,13 @@ class RetrieveItemInfo():
 class RetrieveItemHistory():
     RetrieveItemInfoList: list[RetrieveItemInfo]
     RetrieveLocalTime: int
+
+# [MessagePackObject(True)]
+@dataclass
+class AchieveRankingPlayerInfo():
+    AchieveLocalTimeStamp: int
+    PlayerInfo: PlayerInfo
+    Rank: int
 
 # [MessagePackObject(True)]
 @dataclass
@@ -6549,6 +6639,17 @@ class CharacterSortType(Enum):
     Favorite = 8
     # [Description("ソートしない")]
     None_ = 9
+
+# [MessagePackObject(True)]
+@dataclass
+class LegendLeagueIconReward():
+    ConsumeItemCount: int
+    EndLocalTime: int
+    GiveItem: UserItem
+    Id: int
+    LimitTradeCount: int
+    Order: int
+    StartLocalTime: int
 
 # [Description("高速周回チケット")]
 class QuestQuickTicketType(Enum):
@@ -7542,4 +7643,82 @@ class UserSettingsType(Enum):
     VoiceLanguage = 2
     # [Description("オプトイン/アウト")]
     PrivacySettings = 3
+
+# [Description("GvGのダイアログタイプ")]
+class GvgDialogType(Enum):
+    # [Description("不明")]
+    None_ = 0
+    # [Description("バトルダイアログ")]
+    Battle = 1
+    # [Description("編成ダイアログ")]
+    Deploy = 2
+
+# [MessagePackObject(False)]
+@dataclass
+class UserGvgCharacterInfoSlim(ArrayPacked):
+    # [Key(0)]
+    BattlePower: int
+    # [Key(1)]
+    CharacterId: int
+    # [Key(2)]
+    IsSettingLevelLink: bool
+    # [Key(3)]
+    Level: int
+    # [Key(4)]
+    RarityFlags: Flags[CharacterRarityFlags]
+
+# [MessagePackObject(False)]
+@dataclass
+class PartyInfoSlim(ArrayPacked):
+    # [Key(0)]
+    AliveCharacterIdList: list[int]
+    # [Key(1)]
+    BattlePower: int
+    # [Key(2)]
+    OwnerPlayerId: int
+    # [Key(3)]
+    OwnerPlayerRank: int
+    # [Key(4)]
+    UserGvgCharacterInfoSlimList: list[UserGvgCharacterInfoSlim]
+
+# [Description("LocalGvGの、城の状態")]
+class GvgCastleState(Enum):
+    # [Description("通常時")]
+    None_ = 0
+    # [Description("宣戦され、交戦中")]
+    InBattle = 1
+    # [Description("陥落した")]
+    Fallen = 2
+    # [Description("反撃")]
+    InCounter = 3
+    # [Description("反撃に成功した")]
+    CounterSuccess = 4
+
+# [MessagePackObject(False)]
+@dataclass
+class CastleInfo(ArrayPacked):
+    # [Key(0)]
+    CastleId: int
+    # [Key(1)]
+    GuildId: int
+    # [Key(2)]
+    AttackerGuildId: int
+    # [Key(3)]
+    AttackPartyCount: int
+    # [Key(4)]
+    DefensePartyCount: int
+    # [Key(5)]
+    GvgCastleState: GvgCastleState
+    # [Key(6)]
+    UtcFallenTimeStamp: int
+
+# [MessagePackObject(False)]
+@dataclass
+class PartyCharacterInfo(ArrayPacked):
+    # [Key(0)]
+    UserGvgCharacterInfo: UserGvgCharacterInfo
+    # [Key(1)]
+    CurrentActionPoint: int
+    # [Key(2)]
+    IsDeployed: bool
 

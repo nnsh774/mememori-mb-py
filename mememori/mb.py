@@ -8,7 +8,25 @@ from enum import Enum
 from .array_packed import ArrayPacked
 from .flags import Flags
 
-from .types import *
+from .common_types import *
+
+# [Description("ランキング到達報酬")]
+# [MessagePackObject(True)]
+@dataclass
+class AchieveRankingRewardMB(MasterBookBase):
+    # [Description("到達目標説明キー")]
+    # [PropertyOrder(1)]
+    AchieveTargetDescriptionKey: str
+    # [Description("ランキング種別")]
+    # [PropertyOrder(2)]
+    RankingDataType: RankingDataType
+    # [Description("達成に必要な値")]
+    # [PropertyOrder(3)]
+    RequireValue: int
+    # [Description("報酬アイテムリスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(4)]
+    RewardItemList: list[UserItem]
 
 # [Description("アクティブスキル")]
 # [MessagePackObject(True)]
@@ -1797,6 +1815,7 @@ class LocalPushNotificationMB(MasterBookBase, IHasStartEndTime):
     LocalNotificationSendType: LocalNotificationSendType
     # [Description("送信時刻")]
     # [PropertyOrder(9)]
+    # [TimeSpanString]
     SendTime: str
 
 # [Description("幻影の神殿バナー")]
@@ -2077,6 +2096,28 @@ class MissionTabNameMB(MasterBookBase):
     # [Description("ミッションタブ名")]
     # [PropertyOrder(2)]
     TabNameKey: str
+
+# [Description("朗読")]
+# [MessagePackObject(True)]
+@dataclass
+class MonologueMB(MasterBookBase):
+    # [Description("CharacterDteailVoiceMBのID")]
+    # [PropertyOrder(1)]
+    CharacterDetailVoiceId: int
+    # [Description("キャラクターID")]
+    # [PropertyOrder(2)]
+    CharacterId: int
+    # [Description("朗読設定_JP")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(3)]
+    MonologueSettingDatasJP: list[MonologueSettingData]
+    # [Description("朗読設定_US")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(4)]
+    MonologueSettingDatasUS: list[MonologueSettingData]
+    # [Description("表示開始日時")]
+    # [PropertyOrder(5)]
+    StartTimeFixJST: str
 
 # [Description("月間ログインボーナス")]
 # [MessagePackObject(True)]
@@ -2428,11 +2469,11 @@ class RecitationMB(MasterBookBase):
     # [Description("朗読設定_JP")]
     # [Nest(False, 0)]
     # [PropertyOrder(3)]
-    RecitationSettingDatasJP: list[RecitationSettingData]
+    RecitationSettingDatasJP: list[MonologueSettingData]
     # [Description("朗読設定_US")]
     # [Nest(False, 0)]
     # [PropertyOrder(4)]
-    RecitationSettingDatasUS: list[RecitationSettingData]
+    RecitationSettingDatasUS: list[MonologueSettingData]
     # [Description("表示開始日時")]
     # [PropertyOrder(5)]
     StartTimeFixJST: str
@@ -2462,6 +2503,29 @@ class RequiredCurrencyMB(MasterBookBase):
     # [Description("レベルリンク枠開放に必要な仮想通貨")]
     # [PropertyOrder(7)]
     LevelLinkMember: int
+
+# [Description("特別アイコンアイテム")]
+# [MessagePackObject(True)]
+@dataclass
+class SpecialIconItemMB(MasterBookBase):
+    # [Description("名称キー")]
+    # [PropertyOrder(1)]
+    NameKey: str
+    # [Description("表示名キー")]
+    # [PropertyOrder(2)]
+    DisplayNameKey: str
+    # [Description("説明文キー")]
+    # [PropertyOrder(3)]
+    DescriptionKey: str
+    # [Description("アイコンID")]
+    # [PropertyOrder(4)]
+    IconId: int
+    # [Description("レアリティ")]
+    # [PropertyOrder(5)]
+    ItemRarityFlags: Flags[ItemRarityFlags]
+    # [Description("キャラクターID")]
+    # [PropertyOrder(6)]
+    CharacterId: int
 
 # [Description("スフィア")]
 # [MessagePackObject(True)]
@@ -2784,6 +2848,7 @@ class TimeServerMB(MasterBookBase):
     Name: str
     # [Description("UTCとの時差(例 01:00:00)")]
     # [PropertyOrder(2)]
+    # [TimeSpanString]
     DifferenceDateTimeFromUtc: str
     # [Description("時差グループタイプ")]
     # [PropertyOrder(2)]
@@ -2964,24 +3029,28 @@ class TradeShopTabMB(MasterBookBase, IHasStartEndTime):
     # [Description("手動更新に必要なダイヤ数")]
     # [PropertyOrder(16)]
     ManualUpdateCurrencyCount: int
+    # [DateTimeString]
+    # [Description("強制更新日時(JST)")]
+    # [PropertyOrder(17)]
+    ForceResetTimeFixJST: str
     # [Description("消費アイテムリスト(表示用)")]
     # [Nest(False, 0)]
-    # [PropertyOrder(17)]
+    # [PropertyOrder(18)]
     ConsumeItemInfos: list[ConsumeItemInfo]
     # [Description("店舗景品数")]
-    # [PropertyOrder(17)]
+    # [PropertyOrder(18)]
     TradeShopItemCount: int
     # [Description("コンテンツ実行タイプ")]
-    # [PropertyOrder(18)]
-    OpenCommandType: OpenCommandType
-    # [Description("開始日時")]
     # [PropertyOrder(19)]
-    StartTime: str
+    OpenCommandType: OpenCommandType
     # [Description("アイコンId")]
     # [PropertyOrder(2)]
     IconId: int
-    # [Description("終了日時")]
+    # [Description("開始日時")]
     # [PropertyOrder(20)]
+    StartTime: str
+    # [Description("終了日時")]
+    # [PropertyOrder(21)]
     EndTime: str
     # [Description("デコレーションId")]
     # [PropertyOrder(3)]

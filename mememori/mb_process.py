@@ -2,7 +2,7 @@ from enum import Enum
 import json
 
 from .flags import Flags
-from . import types
+from . import common_types
 from . import mb
 
 def get_type(name):
@@ -16,8 +16,8 @@ def get_type(name):
         return float
     if name == 'bool':
         return bool
-    if hasattr(types, name):
-        return getattr(types, name)
+    if hasattr(common_types, name):
+        return getattr(common_types, name)
     return getattr(mb, name)
 
 def expand_cls(obj, cls):
