@@ -16,6 +16,8 @@ def get_type(name):
         return float
     if name == 'bool':
         return bool
+    if name.startswith('_'):
+        name = name[1:]
     if hasattr(common_types, name):
         return getattr(common_types, name)
     return getattr(mb, name)
@@ -26,8 +28,8 @@ def expand_cls(obj, cls):
         if field.type.startswith('list['):
             inner_type = get_type(field.type[5:-1])
             params[field.name] = [expand_obj(value, inner_type) for value in obj[field.name] or []]
-        elif field.type.startswith('Flags['):
-            inner_type = get_type(field.type[6:-1])
+        elif field.type.startswith('_Flags['):
+            inner_type = get_type(field.type[7:-1])
             params[field.name] = Flags([
                 m for m in inner_type.__members__.values()
                 if obj[field.name] & m.value
