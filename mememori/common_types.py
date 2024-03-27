@@ -107,7 +107,7 @@ class ItemType(_Enum):
     PanelUnlockItem = 32
     # [Description("楽曲チケット")]
     MusicTicket = 33
-    # [Description("アイコンアイテム")]
+    # [Description("特別プレイヤーアイコン")]
     SpecialIcon = 34
     # [Description("アイコンの断片")]
     IconFragment = 35
@@ -1953,7 +1953,7 @@ class MissionGroupType(_Enum):
     Panel = 9
     # [Description("ギルドミッション")]
     Guild = 10
-    # [Description("ギルドタワー")]
+    # [Description("ギルドツリー")]
     GuildTower = 11
 
 # [MessagePackObject(True)]
@@ -2182,11 +2182,14 @@ class MonologueSettingData():
     # [Description("歌詞開始時間（秒）")]
     # [PropertyOrder(1)]
     SongLyricsStartTime: float = 0.0
-    # [Description("歌詞テキストキー")]
+    # [Description("歌詞終了時間（秒）")]
     # [PropertyOrder(2)]
+    SongLyricsEndTime: float = 0.0
+    # [Description("歌詞テキストキー")]
+    # [PropertyOrder(3)]
     SongLyricsKey: str = ""
     # [Description("朗読テキストタイプ")]
-    # [PropertyOrder(3)]
+    # [PropertyOrder(4)]
     RecitationTextType: MonologueTextType = _field(default_factory=lambda: MonologueTextType())
 
 # [Description("日別ログイン報酬情報")]
@@ -2565,7 +2568,7 @@ class BattleType(_Enum):
     DungeonBattle = 9
     # [Description("ギルドレイド")]
     GuildRaid = 11
-    # [Description("ギルドタワー")]
+    # [Description("ギルドツリー")]
     GuildTower = 12
 
 class IHasEventStartEndTime(_Protocol):
@@ -3125,7 +3128,7 @@ class NotificationType(_Enum):
     ReceivableGuildMission = 11
     # [Description("新しいギルドメンバー勧誘がある場合")]
     NewRecruitGuildMember = 12
-    # [Description("ギルドタワーミッションの受取可能な報酬がある場合")]
+    # [Description("ギルドツリーミッションの受取可能な報酬がある場合")]
     ReceivableGuildTowerMission = 13
 
 # [MessagePackObject(True)]
@@ -3588,6 +3591,7 @@ _TransferDetailInfo = TransferDetailInfo
 class MypageBannerInfo():
     DisplayPriority: int = 0
     ImageId: int = 0
+    MBId: int = 0
     SortOrder: int = 0
     TransferDetailInfo: _TransferDetailInfo = _field(default_factory=lambda: _TransferDetailInfo())
 
@@ -3630,6 +3634,21 @@ class UserFriendDtoInfo():
     IsReceived: bool = False
     OtherPlayerId: int = 0
     RegistrationDate: int = 0
+
+class ErrorLogType(_Enum):
+    None_ = 0
+    ErrorCode = 1
+    ClientErrorCode = 2
+
+# [MessagePackObject(True)]
+_ErrorLogType = ErrorLogType
+@_dataclass(slots=True)
+class ErrorLogInfo():
+    ApiName: str = ""
+    ErrorCode: int = 0
+    ErrorLogType: _ErrorLogType = _field(default_factory=lambda: _ErrorLogType())
+    LocalTimeStamp: int = 0
+    Message: str = ""
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -3684,7 +3703,7 @@ class UnitType(_Enum):
     TowerBattleEnemy = 5
     # [Description("幻影の神殿の敵")]
     LocalRaidEnemy = 6
-    # [Description("ギルドタワーの敵")]
+    # [Description("ギルドツリーの敵")]
     GuildTowerEnemy = 7
 
 # [MessagePackObject(True)]
@@ -4431,10 +4450,16 @@ class TradeShopItem():
     ConsumeItem1: UserItem = _field(default_factory=lambda: UserItem())
     # [Description("消費アイテム2")]
     ConsumeItem2: UserItem = _field(default_factory=lambda: UserItem())
+    # [Description("購入不可フラグ")]
+    Disabled: bool = False
+    # [Description("終了日時")]
+    ExpirationTimeStamp: int = 0
     # [Description("獲得アイテム")]
     GiveItem: UserItem = _field(default_factory=lambda: UserItem())
     # [Description("交換制限回数(0:無制限s)")]
     LimitTradeCount: int = 0
+    # [Description("条件キャラID")]
+    RequiredCharacterId: int = 0
     # [Description("神器タイプ")]
     SacredTreasureType: _SacredTreasureType = _field(default_factory=lambda: _SacredTreasureType())
     # [Description("割引率")]
@@ -5633,7 +5658,7 @@ class ErrorCode(_Enum):
     MissionNotFoundBingoReward = 352025
     # [Description("前のシートをクリアしていません。")]
     MissionNotClearedPrevSheetMission = 352026
-    # [Description("ギルドタワーイベント終了後にギルドに加入したためミッションを開けません。")]
+    # [Description("ギルドツリーイベント終了後にギルドに加入したためミッションを開けません。")]
     MissionJoinGuildAfterEndEvent = 352030
     # [Description("ユーザーの放置バトルデータが存在しません。")]
     TradeShopUserBattleAutoDtoNotFound = 361000
@@ -5709,7 +5734,7 @@ class ErrorCode(_Enum):
     TutorialSkipTutorialIdIsNullOrEmpty = 402004
     # [Description("スキップの条件を満たしていません")]
     TutorialNotEnoughSkipCondition = 402005
-    # [Description("ユーザーのギルドタワー情報が存在しません。")]
+    # [Description("ユーザーのギルドツリー情報が存在しません。")]
     GuildTowerUserGuildTowerDtoNotFound = 410000
     # [Description("ユーザーのキャラ情報が存在しません。")]
     GuildTowerUserCharacterDtoNotFound = 410001
@@ -5717,17 +5742,17 @@ class ErrorCode(_Enum):
     GuildTowerUserGuildDtoNotFound = 410002
     # [Description("ユーザー情報が存在しません。")]
     GuildTowerUserStatusDtoNotFound = 410003
-    # [Description("ギルドタワー情報が存在しません。")]
+    # [Description("ギルドツリー情報が存在しません。")]
     GuildTowerGuildTowerDtoNotFound = 410004
-    # [Description("ギルドタワー前勝利データが存在しません。")]
+    # [Description("ギルドツリー前勝利データが存在しません。")]
     GuildTowerUserGuildTowerPreviousEntryInfoDtoNotFound = 410005
-    # [Description("ギルドタワーギルドデータが存在しません。")]
+    # [Description("ギルドツリーギルドデータが存在しません。")]
     GuildTowerGuildDtoNotFound = 410006
     # [Description("ギルドツリーイベントが開催されていません。")]
     GuildTowerNotOpenEvent = 412000
     # [Description("ユーザーがギルドに所属していません。")]
     GuildTowerNotBelongToGuild = 412001
-    # [Description("ギルドタワーの挑戦回数が足りません。")]
+    # [Description("ギルドツリーの挑戦回数が足りません。")]
     GuildTowerNotEnoughChallengeCount = 412002
     # [Description("存在しないキャラが含まれています。")]
     GuildTowerNotFoundCharacter = 412003
@@ -5757,7 +5782,7 @@ class ErrorCode(_Enum):
     GuildTowerInvalidEntryCharacter = 412105
     # [Description("ほかのギルドメンバーのバトルが終わっていません。")]
     GuildTowerNotYetEndBattle = 412106
-    # [Description("ギルドタワーのギルド全体の挑戦回数が足りません。")]
+    # [Description("ギルドツリーのギルド全体の挑戦回数が足りません。")]
     GuildTowerNotEnoughGuildChallengeCount = 412107
     # [Description("ギルドに参加した日は挑戦できません。")]
     GuildTowerCannotChallengeOnJoinGuildDate = 412108
