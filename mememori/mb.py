@@ -1177,12 +1177,15 @@ class FriendCampaignMB(MasterBookBase):
     # [Description("開始時刻")]
     # [PropertyOrder(1)]
     StartTime: str = ""
-    # [Description("招待コード入力上限数")]
+    # [Description("キャンペーンタイトル")]
     # [PropertyOrder(10)]
+    Title: str = ""
+    # [Description("招待コード入力上限数")]
+    # [PropertyOrder(11)]
     CodeLimitCount: int = 0
     # [Description("招待コード入力報酬リスト")]
     # [Nest(False, 0)]
-    # [PropertyOrder(11)]
+    # [PropertyOrder(12)]
     RewardItemList: list[UserItem] = _field(default_factory=list["UserItem"])
     # [Description("終了時刻")]
     # [PropertyOrder(2)]
@@ -1190,24 +1193,25 @@ class FriendCampaignMB(MasterBookBase):
     # [Description("コード入力有効期間")]
     # [PropertyOrder(3)]
     CodeExpirationPeriod: int = 0
-    # [Description("キャラ画像Id")]
+    # [DateTimeString]
+    # [Description("コード入力開始時間")]
     # [PropertyOrder(4)]
+    CodeStartTime: str = ""
+    # [Description("キャラ画像Id")]
+    # [PropertyOrder(5)]
     CharacterImageId: int = 0
     # [Description("キャラ画像座標X")]
-    # [PropertyOrder(5)]
+    # [PropertyOrder(6)]
     CharacterImageX: float = 0.0
     # [Description("キャラ画像座標Y")]
-    # [PropertyOrder(6)]
+    # [PropertyOrder(7)]
     CharacterImageY: float = 0.0
     # [Description("キャラ画像サイズ")]
-    # [PropertyOrder(7)]
+    # [PropertyOrder(8)]
     CharacterImageSize: float = 0.0
     # [Description("対象フレンドミッションリスト")]
-    # [PropertyOrder(8)]
-    FriendMissionIdList: list[int] = _field(default_factory=list["int"])
-    # [Description("キャンペーンタイトル")]
     # [PropertyOrder(9)]
-    Title: str = ""
+    FriendMissionIdList: list[int] = _field(default_factory=list["int"])
 
 # [Description("フレンドミッション")]
 # [MessagePackObject(True)]
@@ -1975,6 +1979,36 @@ class LimitedLoginBonusRewardListMB(MasterBookBase):
     # [Nest(False, 0)]
     # [PropertyOrder(5)]
     SpecialRewardItem: SpecialLimitedLoginBonusItem = _field(default_factory=lambda: SpecialLimitedLoginBonusItem())
+
+# [Description("期間限定ログインボーナス日別報酬出し分け情報")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class LimitedLoginBonusSwitchingDailyRewardMB(MasterBookBase):
+    # [Description("期間限定ログインボーナス報酬リストID")]
+    # [PropertyOrder(1)]
+    LimitedLoginBonusRewardListId: int = 0
+    # [Description("日付")]
+    # [PropertyOrder(2)]
+    Date: int = 0
+    # [Description("開放ステージ")]
+    # [PropertyOrder(3)]
+    MinQuestId: int = 0
+    # [Description("終了ステージ")]
+    # [PropertyOrder(4)]
+    MaxQuestId: int = 0
+    # [Description("開放VIP")]
+    # [PropertyOrder(5)]
+    MinVip: int = 0
+    # [Description("終了VIP")]
+    # [PropertyOrder(6)]
+    MaxVip: int = 0
+    # [Description("日別報酬アイテム")]
+    # [Nest(True, 1)]
+    # [PropertyOrder(7)]
+    DailyRewardItem: UserItem = _field(default_factory=lambda: UserItem())
+    # [Description("キャラレアリティ")]
+    # [PropertyOrder(8)]
+    RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
 
 # [Description("期間限定ミッション")]
 # [MessagePackObject(True)]
@@ -3491,26 +3525,29 @@ class VipMB(MasterBookBase):
     # [Description("星の導きガチャのログが見れるか否か")]
     # [PropertyOrder(22)]
     IsStarsGuidanceGachaLogAvailable: bool = False
-    # [Description("ボス/無窮の塔掃討が可能か否か")]
+    # [Description("星導交換が可能か否か")]
     # [PropertyOrder(23)]
+    IsStarsGuidanceTradeShopAvailable: bool = False
+    # [Description("ボス/無窮の塔掃討が可能か否か")]
+    # [PropertyOrder(24)]
     IsQuickBossBattleAvailable: bool = False
     # [Description("神装強化の装備返還が可能か否か​")]
-    # [PropertyOrder(24)]
+    # [PropertyOrder(25)]
     IsRefundEquipmentMergeAvailable: bool = False
     # [Description("研磨時にロックが可能か否か​")]
-    # [PropertyOrder(25)]
+    # [PropertyOrder(26)]
     IsLockEquipmentTrainingAvailable: bool = False
     # [Description("VIP到達時報酬リスト")]
     # [Nest(False, 0)]
-    # [PropertyOrder(26)]
+    # [PropertyOrder(27)]
     ReachRewardItemList: list[UserItem] = _field(default_factory=list["UserItem"])
     # [Description("VIPギフトリスト")]
     # [Nest(True, 0)]
-    # [PropertyOrder(27)]
+    # [PropertyOrder(28)]
     VipGiftInfoList: list[VipGiftInfo] = _field(default_factory=list["VipGiftInfo"])
     # [Description("VIPデイリー報酬リスト")]
     # [Nest(False, 0)]
-    # [PropertyOrder(28)]
+    # [PropertyOrder(29)]
     DailyRewardItemList: list[UserItem] = _field(default_factory=list["UserItem"])
     # [Description("放置バトル経験値ボーナス(%)")]
     # [PropertyOrder(3)]

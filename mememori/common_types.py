@@ -1127,6 +1127,8 @@ class TransferSpotType(_Enum):
     GuildMemberRecruit = 200
     # [Description("個別通知ダイアログ")]
     IndividualNotification = 210
+    # [Description("星導交換所")]
+    StarsGuidanceTradeShop = 220
     # [Description("フレンド")]
     Friend = 4
 
@@ -2168,6 +2170,8 @@ class OpenCommandType(_Enum):
     ReceiveAllActivityMedalReward = 241
     # [Description("ゴールド交換")]
     GoldExchange = 260
+    # [Description("星導交換所")]
+    StarsGuidanceTradeShop = 280
     # [Description("武具固定")]
     LockEquipment = 1000
 
@@ -2364,6 +2368,10 @@ class PassiveTrigger(_Enum):
     ActionStart = 32
     # [Description("行動終了時")]
     ActionEnd = 33
+    # [Description("被自傷ダメージ時")]
+    SelfInjury = 34
+    # [Description("自分以外の味方の被自傷ダメージ時")]
+    AllySelfInjury = 35
     # [Description("被ダメージ量判定(自分の情報だけ参照)")]
     CheckReceiveDamageSelf = 41
     # [Description("被ダメージ量判定")]
@@ -3823,6 +3831,8 @@ class SkillDisplayType(_Enum):
     RemoveEffect = 13
     # [Description("即時発動")]
     BurstEffect = 14
+    # [Description("自傷ダメージ")]
+    SelfInjuryDamage = 15
     # [Description("復活")]
     Resurrection = 20
 
@@ -3854,6 +3864,8 @@ class SkillCategory(_Enum):
     PhysicalFixDamage = 16
     # [Description("魔法 (固定攻撃)")]
     MagicFixDamage = 17
+    # [Description("自傷ダメージ")]
+    SelfInjuryDamage = 18
     # [Description("復活")]
     Resurrection = 50
     # [Description("ステータス吸収")]
@@ -4184,12 +4196,12 @@ class EffectType(_Enum):
     Combustion = 8003
     # [Description("火傷")]
     Burn = 8004
-    # [Description("毒（特殊）")]
-    SpecialPoison = 8101
-    # [Description("出血（特殊）")]
-    SpecialBleeding = 8102
-    # [Description("浸食（特殊）")]
-    SpecialCombustion = 8103
+    # [Description("毒（自傷）")]
+    SelfInjuryPoison = 8101
+    # [Description("出血（自傷）")]
+    SelfInjuryBleeding = 8102
+    # [Description("浸食（自傷）")]
+    SelfInjuryCombustion = 8103
     # [Description("ダメージ連携11")]
     DamageResonanceFromSelfAndDamageReduction = 8111
     # [Description("ダメージ連携21")]
@@ -5800,6 +5812,16 @@ class ErrorCode(_Enum):
     IndividualNotificationCacheDtoNotFound = 421000
     # [Description("ユーザーの個別通知情報が存在しません")]
     IndividualNotificationDtoNotFound = 421001
+    # [Description("星導交換所情報が存在しません")]
+    StarsGuidanceTradeShopDtoNotFound = 431000
+    # [Description("星導交換所が開催されていません。")]
+    StarsGuidanceTradeShopNotOpen = 432000
+    # [Description("星導交換所機能は使えません。")]
+    StarsGuidanceTradeShopUnavailable = 432001
+    # [Description("交換元アイテム情報が不正です。")]
+    StarsGuidanceTradeShopConsumeItemInvalid = 432002
+    # [Description("交換制限を超えました。")]
+    StarsGuidanceTradeShopOverLimitTradeCount = 432003
     # [Description("存在しないTreasureChestです。")]
     ItemOpenTreasureChestIdNotFound = 602004
     # [Description("存在しないTreasureChestです。")]
@@ -5974,6 +5996,8 @@ class ErrorCode(_Enum):
     MagicOnionGlobalGvgCheckCanJoinBattleAndNoticeNotLeaderAndNotSubLeader = 900316
     # [Description("GlobalGvgが開放されていない")]
     MagicOnionGlobalGvgNotOpen = 900317
+    # [Description("GlobalGvgでキャラクターのキャッシュデータが存在しないためパーティ追加に失敗しました。")]
+    MagicOnionGlobalGvgAddCastlePartyNotFoundCharacterCache = 900318
     # [Description("認証に失敗しました。")]
     MagicOnionAuthenticationFail = 1000000
     # [Description("プレイヤーの情報を見つけません。")]
@@ -6024,6 +6048,8 @@ class ErrorCode(_Enum):
     MagicOnionBeforeDeclarationTime = 1002015
     # [Description("ギルドバトルが開催されていません。")]
     MagicOnionNotOpenGuildBattle = 1002016
+    # [Description("キャラクターのキャッシュデータが存在しないためパーティの配置に失敗しました。")]
+    MagicOnionLocalGvgAddPartyNotFoundCharacterCache = 1002017
     # [Description("プッシュ通知対象外の端末です。")]
     PushNotificationNotSupportedDeviceType = 4000000
     # [Description("プッシュ通知の登録に必要な情報が取得できません。")]
@@ -6135,6 +6161,23 @@ class BattleRewardResult():
     FixedItemList: list[UserItem] = _field(default_factory=list["UserItem"])
     PlayerExp: int = 0
     RankUp: int = 0
+
+# [Description("交換元アイテム情報")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class StarsGuidanceConsumeItemInfo():
+    # [Description("交換元アイテム種別")]
+    # [PropertyOrder(1)]
+    ConsumeItemType: ItemType = _field(default_factory=lambda: ItemType())
+    # [Description("交換元アイテムID")]
+    # [PropertyOrder(2)]
+    ConsumeItemId: int = 0
+    # [Description("交換元アイテム個数")]
+    # [PropertyOrder(3)]
+    ConsumeItemCount: int = 0
+    # [Description("交換先アイテム個数")]
+    # [PropertyOrder(4)]
+    GiveItemCount: int = 0
 
 class IHasSteamTicketApiRequest(_Protocol):
     SteamTicket: str
