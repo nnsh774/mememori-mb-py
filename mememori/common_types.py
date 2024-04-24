@@ -3620,7 +3620,10 @@ class MypageIconInfo():
     IconNameKey: str = ""
     Id: int = 0
     ImageId: int = 0
+    IsBlackout: bool = False
     IsDisplayBadge: bool = False
+    NotOpenEventStoreIconId: int = 0
+    OpenContentLocalTimestamp: int = 0
     SortOrder: int = 0
     StoreIconId: int = 0
     StoredIconInfoList: list[MypageIconInfo] = _field(default_factory=list["MypageIconInfo"])
@@ -4260,6 +4263,7 @@ class EffectGroup():
     EffectGroupType: _EffectGroupType = _field(default_factory=lambda: _EffectGroupType())
     EffectTurn: int = 0
     Effects: list[Effect] = _field(default_factory=list["Effect"])
+    GranterGuid: int = 0
     IsExtendEffectTurn: bool = False
     LinkTargetGuid: int = 0
     RemoveEffectType: _RemoveEffectType = _field(default_factory=lambda: _RemoveEffectType())
@@ -5488,6 +5492,8 @@ class ErrorCode(_Enum):
     ShopInvalidDisplayPeriodType = 262035
     # [Description("IOS側の一時的な問題で復元処理を利用してください。")]
     ShopIosVerifyReceiptProblem = 262036
+    # [Description("レシートデータが見つかりません。")]
+    ShopNotFoundReceipt = 262037
     # [Description("ユーザーのステータスデータが見つかりません。")]
     ChatUserStatusDtoNotFound = 271000
     # [Description("ユーザーのアカウントデータが見つかりません。")]
