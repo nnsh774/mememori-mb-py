@@ -69,7 +69,9 @@ class AppVersionMB(MasterBookBase):
 
 # [Description("放置バトル敵データ")]
 # [MessagePackObject(True)]
+# [NotUseOnAuth]
 # [NotUseOnBatch]
+# [NotUseOnSerialCodeInput]
 _BaseParameter = BaseParameter
 _BattleParameter = BattleParameter
 _CharacterRarityFlags = CharacterRarityFlags
@@ -170,9 +172,9 @@ class BattleSkillCharacterSettingMB(MasterBookBase):
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class BattleSkillNameSettingMB(MasterBookBase):
-    # [Description("アクティブスキルID(ActiveSkillMB)")]
+    # [Description("ルートスキルID")]
     # [PropertyOrder(1)]
-    ActiveSkillId: int = 0
+    RootActiveSkillId: int = 0
     # [Description("改行位置設定 JP")]
     # [PropertyOrder(2)]
     NewLineIndexJP: int = 0
@@ -1162,7 +1164,11 @@ class ErrorCodeMB(MasterBookBase):
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class FaqListMB(MasterBookBase):
-    # [Description("質問項目タイトルKey")]
+    # [Description("質問項目タイトル")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(1)]
+    QuestionTitle: TranslatedText = _field(default_factory=lambda: TranslatedText())
+    # [Description("質問項目タイトルKey 2.15.0削除予定")]
     # [PropertyOrder(1)]
     QuestionTitleKey: str = ""
     # [Description("遷移先URL")]
@@ -1787,6 +1793,9 @@ class HelpMB(MasterBookBase):
     # [Description("表示フラグ")]
     # [PropertyOrder(4)]
     IsDisplayed: bool = False
+    # [Description("表示デバイスタイプ")]
+    # [PropertyOrder(5)]
+    DisplayDeviceTypeList: list[DeviceType] = _field(default_factory=list["DeviceType"])
 
 # [Description("お問い合わせボタン")]
 # [MessagePackObject(True)]
@@ -1811,6 +1820,9 @@ class InquiryButtonMB(MasterBookBase):
     # [Description("タイムサーバーID")]
     # [PropertyOrder(6)]
     TimeServerIds: list[int] = _field(default_factory=list["int"])
+    # [Description("デバイスタイプリスト(空いている場合に全体)")]
+    # [PropertyOrder(7)]
+    DeviceTypes: list[int] = _field(default_factory=list["int"])
 
 # [Description("アイテムの表示情報")]
 # [MessagePackObject(True)]
@@ -2017,30 +2029,36 @@ class LimitedMissionMB(MasterBookBase):
     # [Description("開始日時")]
     # [PropertyOrder(1)]
     StartTime: str = ""
+    # [Description("訴求文言")]
+    # [PropertyOrder(10)]
+    AppealTextKey: str = ""
+    # [Description("対象ミッションID")]
+    # [PropertyOrder(11)]
+    TargetMissionIdList: list[int] = _field(default_factory=list["int"])
     # [Description("終了日時")]
     # [PropertyOrder(2)]
     EndTime: str = ""
-    # [Description("キャラ画像Id")]
+    # [Description("強制開始日時")]
     # [PropertyOrder(3)]
+    ForceStartTime: str = ""
+    # [Description("猶予日数")]
+    # [PropertyOrder(4)]
+    DelayDays: int = 0
+    # [Description("キャラ画像Id")]
+    # [PropertyOrder(5)]
     CharacterImageId: int = 0
     # [Description("キャラ画像座標X")]
-    # [PropertyOrder(4)]
+    # [PropertyOrder(6)]
     CharacterImageX: float = 0.0
     # [Description("キャラ画像座標Y")]
-    # [PropertyOrder(5)]
+    # [PropertyOrder(7)]
     CharacterImageY: float = 0.0
     # [Description("キャラ画像サイズ")]
-    # [PropertyOrder(6)]
+    # [PropertyOrder(8)]
     CharacterImageSize: float = 0.0
     # [Description("タイトル")]
-    # [PropertyOrder(7)]
-    TitleTextKey: str = ""
-    # [Description("訴求文言")]
-    # [PropertyOrder(8)]
-    AppealTextKey: str = ""
-    # [Description("対象ミッションID")]
     # [PropertyOrder(9)]
-    TargetMissionIdList: list[int] = _field(default_factory=list["int"])
+    TitleTextKey: str = ""
 
 # [Description("ギルドバトル城")]
 # [MessagePackObject(True)]
@@ -2132,7 +2150,9 @@ class LocalRaidBonusScheduleMB(MasterBookBase):
 
 # [Description("幻影の神殿敵データ")]
 # [MessagePackObject(True)]
+# [NotUseOnAuth]
 # [NotUseOnBatch]
+# [NotUseOnSerialCodeInput]
 @_dataclass(slots=True)
 class LocalRaidEnemyMB(MasterBookBase):
     # [Description("ユニットアイコンタイプ")]
@@ -2909,6 +2929,31 @@ class SteamProductPriceListMB(MasterBookBase):
     # [PropertyOrder(2)]
     ProductPriceInfoList: list[SteamProductPriceInfo] = _field(default_factory=list["SteamProductPriceInfo"])
 
+# [Description("Stripeクーポン")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class StripePointMB(MasterBookBase):
+    # [Description("貯めるクーポン額")]
+    # [PropertyOrder(1)]
+    SavePointPercent: int = 0
+    # [Description("クーポンの開始時間(JST)")]
+    # [PropertyOrder(2)]
+    StartTimeFixJST: str = ""
+    # [Description("クーポンの終了時間(JST)")]
+    # [PropertyOrder(3)]
+    EndTimeFixJST: str = ""
+
+# [Description("Stripe国料金コード")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class StripePriceCurrencyCodeMB(MasterBookBase):
+    # [Description("国料金コード")]
+    # [PropertyOrder(1)]
+    CurrencyCode: str = ""
+    # [Description("説明")]
+    # [PropertyOrder(1)]
+    Discription: str = ""
+
 # [Description("利用規約")]
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -3181,7 +3226,9 @@ class TotalActivityMedalRewardMB(MasterBookBase):
 
 # [Description("無窮の塔　敵データ")]
 # [MessagePackObject(True)]
+# [NotUseOnAuth]
 # [NotUseOnBatch]
+# [NotUseOnSerialCodeInput]
 @_dataclass(slots=True)
 class TowerBattleEnemyMB(MasterBookBase):
     # [Description("ユニットアイコンタイプ")]

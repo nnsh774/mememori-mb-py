@@ -115,6 +115,8 @@ class ItemType(_Enum):
     GuildTowerJobReinforcementMaterial = 36
     # [Description("イベント交換所アイテム")]
     EventExchangePlaceItem = 50
+    # [Description("Stripeクーポン")]
+    StripeCoupon = 1001
 
 # [Description("全てのアイテムが実装するインターフェース")]
 # [Union(0, typeof)]
@@ -1740,13 +1742,15 @@ class GuildTowerCharacterConditionType(_Enum):
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class GuildTowerDebuffParameter():
-    AttackPower: int = 0
+    AttackPowerAddition: int = 0
+    AttackPowerMultiplier: int = 0
     CharacterConditionType: GuildTowerCharacterConditionType = _field(default_factory=lambda: GuildTowerCharacterConditionType())
     Critical: int = 0
     CriticalDamageEnhance: int = 0
     DebuffCount: int = 0
     DebuffHit: int = 0
-    HP: int = 0
+    HPAddition: int = 0
+    HPMultiplier: int = 0
     Hit: int = 0
     Speed: int = 0
 
@@ -3400,6 +3404,7 @@ class UserSyncData():
     ReleaseLockEquipmentCooldownTimeStampMap: dict[LockEquipmentDeckType, int] = _field(default_factory=dict["LockEquipmentDeckType", "int"])
     ShopCurrencyMissionProgressMap: dict[str, int] = _field(default_factory=dict["str", "int"])
     ShopProductGuerrillaPackList: list[ShopProductGuerrillaPack] = _field(default_factory=list["ShopProductGuerrillaPack"])
+    StripePoint: int = 0
     TimeServerId: int | None = None
     TreasureChestCeilingCountMap: dict[int, int] = _field(default_factory=dict["int", "int"])
     UserBattleBossDtoInfo: _UserBattleBossDtoInfo = _field(default_factory=lambda: _UserBattleBossDtoInfo())
@@ -4582,6 +4587,8 @@ class ErrorCode(_Enum):
     AuthInvalidCountryCode = 10301
     # [Description("国情報の識別に失敗しました。")]
     AuthTimeServerDecisionFailed = 10302
+    # [Description("野良APK版で利用できない国コードが含まれています。")]
+    AuthInvalidCountryCodeOnApk = 10310
     # [Description("リクエストが不正です")]
     AuthLoginInvalidRequest = 10401
     # [Description("ログインしようとしているアカウントは既に削除されました。")]
@@ -5494,6 +5501,14 @@ class ErrorCode(_Enum):
     ShopIosVerifyReceiptProblem = 262036
     # [Description("レシートデータが見つかりません。")]
     ShopNotFoundReceipt = 262037
+    # [Description("課金処理セッションが切れました。")]
+    ShopNotFoundSession = 262038
+    # [Description("支払いが完了されてないです。")]
+    ShopNotPaid = 262039
+    # [Description("使用可能なクーポンデータが存在しません。")]
+    ShopNotFoundCouponData = 262040
+    # [Description("使用済みのクーポンです。")]
+    ShopAlreadyUsedCoupon = 262041
     # [Description("ユーザーのステータスデータが見つかりません。")]
     ChatUserStatusDtoNotFound = 271000
     # [Description("ユーザーのアカウントデータが見つかりません。")]
@@ -6096,6 +6111,34 @@ class ErrorCode(_Enum):
     DmmApiRequestNotFoundDmmSubscription = 5000201
     # [Description("DMMのデバイスではありません。")]
     DmmApiRequestNotDmmDeviceType = 5000202
+    # [Description("Stripe プレイヤーIDが存在しません。")]
+    StripeNotFoundGivePlayerId = 5010000
+    # [Description("Stripe MbIDが存在しません。")]
+    StripeNotFoundMbId = 5010001
+    # [Description("Stripe ProductIdが存在しません。")]
+    StripeNotFoundProductId = 5010002
+    # [Description("Stripe ShopProductTypeが存在しません。")]
+    StripeNotFoundShopProductType = 5010003
+    # [Description("Stripe DeviceTypeが存在しません。")]
+    StripeNotFoundDeviceType = 5010004
+    # [Description("Stripe InvoiceIdが存在しません。")]
+    StripeNotFoundInvoiceId = 5010005
+    # [Description("Stripe 決済されてないです。")]
+    StripeNotPaidPaymentStatus = 5010006
+    # [Description("Stripe 課金処理に問題が発生しました。")]
+    StripeNotFoundCurrencyDataBase = 5010007
+    # [Description("Stripe 課金処理情報が存在しません。")]
+    StripeNotFoundPaymentInfo = 5010008
+    # [Description("Stripe 存在しない国課金コードです。")]
+    StripeNotFoundCurrencyCode = 5010009
+    # [Description("Stripe 決済できない金額です。")]
+    StripeInvalidPrice = 5010010
+    # [Description("Stripe 顧客情報が存在しません。")]
+    StripeNotFoundCustomerInfo = 5010011
+    # [Description("Stripe ポイントが足りません。")]
+    StripeNotEnoughPoint = 5010012
+    # [Description("Stripe セッションデータがありません。")]
+    StripeNotFoundSession = 5010013
 
 # [MessagePackObject(True)]
 _ErrorCode = ErrorCode
@@ -6663,6 +6706,45 @@ class ShopProductInfo():
     # [Description("商品種別タイプ")]
     ShopProductType: _ShopProductType = _field(default_factory=lambda: _ShopProductType())
 
+# [Description("Stripeポイント増減タイプ")]
+class StripePointType(_Enum):
+    # [Description("商品購入")]
+    BuyProduct = 0
+    # [Description("補填")]
+    Present = 1
+    # [Description("回収")]
+    Retrieve = 2
+
+# [Description("Stripe支払いタイプ")]
+class StripePaidType(_Enum):
+    # [Description("クレジットカード")]
+    Card = 0
+    # [Description("アップルペイ")]
+    ApplePay = 1
+    # [Description("グーグルペイ")]
+    GooglePay = 2
+
+# [MessagePackObject(True)]
+_StripePaidType = StripePaidType
+_StripePointType = StripePointType
+@_dataclass(slots=True)
+class UserStripePointHistoryInfo():
+    AfterPoint: int = 0
+    BeforePoint: int = 0
+    BuyDateTime: _datetime = _datetime.min
+    CardSubInfo: str = ""
+    ChargeBackDateTime: str = ""
+    DiscountPrice: int = 0
+    PlayerId: int = 0
+    Price: int = 0
+    ProductNameKey: str = ""
+    RefundDateTime: str = ""
+    SavePoint: int = 0
+    StripePaidType: _StripePaidType = _field(default_factory=lambda: _StripePaidType())
+    StripePointType: _StripePointType = _field(default_factory=lambda: _StripePointType())
+    TransactionId: str = ""
+    UsePoint: int = 0
+
 # [Description("装飾データ")]
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -6709,6 +6791,17 @@ class ShopProductSubInfo():
     ProductId: str = ""
     # [Description("商品値段")]
     ShopProductPrice: int = 0
+
+# [Description("Stripe商品情報")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class StripeShopProductInfo():
+    GivePlayerId: int = 0
+    IsStripePaidStatus: bool = False
+    MbId: int = 0
+    ProductId: str = ""
+    SessionId: str = ""
+    ShopProductType: _ShopProductType = _field(default_factory=lambda: _ShopProductType())
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
