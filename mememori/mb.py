@@ -1168,9 +1168,6 @@ class FaqListMB(MasterBookBase):
     # [Nest(False, 0)]
     # [PropertyOrder(1)]
     QuestionTitle: TranslatedText = _field(default_factory=lambda: TranslatedText())
-    # [Description("質問項目タイトルKey 2.15.0削除予定")]
-    # [PropertyOrder(1)]
-    QuestionTitleKey: str = ""
     # [Description("遷移先URL")]
     # [Nest(False, 0)]
     # [PropertyOrder(2)]
@@ -1397,20 +1394,23 @@ class GachaSelectListMB(MasterBookBase):
     # [Description("ガチャセレクトリストタイプ")]
     # [PropertyOrder(1)]
     GachaSelectListType: _GachaSelectListType = _field(default_factory=lambda: _GachaSelectListType())
-    # [Description("開始時間(JST)")]
+    # [Description("設定キャラリセット有無")]
     # [PropertyOrder(2)]
+    IsResetSelectedCharacter: bool = False
+    # [Description("開始時間(JST)")]
+    # [PropertyOrder(3)]
     StartTimeFixJST: str = ""
     # [Description("終了時間(JST)")]
-    # [PropertyOrder(3)]
+    # [PropertyOrder(4)]
     EndTimeFixJST: str = ""
     # [Description("優先度")]
-    # [PropertyOrder(4)]
+    # [PropertyOrder(5)]
     OrderNumber: int = 0
     # [Description("設定可能キャラクターIDリスト")]
-    # [PropertyOrder(5)]
+    # [PropertyOrder(6)]
     CharacterIdList: list[int] = _field(default_factory=list["int"])
     # [Description("新規キャラクターIDリスト")]
-    # [PropertyOrder(6)]
+    # [PropertyOrder(7)]
     NewCharacterIdList: list[int] = _field(default_factory=list["int"])
 
 # [Description("グランドバトル城")]
@@ -1793,9 +1793,12 @@ class HelpMB(MasterBookBase):
     # [Description("表示フラグ")]
     # [PropertyOrder(4)]
     IsDisplayed: bool = False
-    # [Description("表示デバイスタイプ")]
+    # [Description("表示デバイスタイプ Old")]
     # [PropertyOrder(5)]
     DisplayDeviceTypeList: list[DeviceType] = _field(default_factory=list["DeviceType"])
+    # [Description("表示デバイスタイプ")]
+    # [PropertyOrder(5)]
+    DisplayDeviceTypes: list[int] = _field(default_factory=list["int"])
 
 # [Description("お問い合わせボタン")]
 # [MessagePackObject(True)]
@@ -2209,40 +2212,20 @@ class LocalRaidEnemyMB(MasterBookBase):
     # [PropertyOrder(9)]
     BaseParameter: _BaseParameter = _field(default_factory=lambda: _BaseParameter())
 
-# [Description("幻影の神殿イベントクエストグループ")]
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class LocalRaidEventQuestGroupMB(MasterBookBase):
-    # [Description("LocalRaidQuestMBのIdリスト")]
-    # [PropertyOrder(1)]
-    LocalRaidQuestIds: list[int] = _field(default_factory=list["int"])
-    # [Description("イベント経過日数")]
-    # [PropertyOrder(2)]
-    OverDayFromStartEventTime: int = 0
-    # [Description("修練レベル")]
-    # [PropertyOrder(3)]
-    LocalRaidLevel: int = 0
-    # [Description("イベント追加挑戦回数")]
-    # [PropertyOrder(4)]
-    EventBattleCount: int = 0
-    # [Description("ワールド生成経過日数")]
-    # [PropertyOrder(5)]
-    OverDayFromCreateWorldTime: int = 0
-
 # [Description("幻影の神殿イベントスケジュール")]
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class LocalRaidEventScheduleMB(MasterBookBase):
-    # [Description("LocalRaidEventQuestGroupMBのIdリスト")]
-    # [PropertyOrder(1)]
-    LocalRaidEventQuestGroupIds: list[int] = _field(default_factory=list["int"])
     # [Description("報酬増加時間リスト")]
     # [Nest(False, 0)]
-    # [PropertyOrder(2)]
+    # [PropertyOrder(1)]
     LocalRaidStartEndTimes: list[LocalRaidStartEndTime] = _field(default_factory=list["LocalRaidStartEndTime"])
     # [Description("報酬増加倍率(100%=10000)")]
-    # [PropertyOrder(3)]
+    # [PropertyOrder(2)]
     RewardBonusRate: int = 0
+    # [Description("イベント追加挑戦回数")]
+    # [PropertyOrder(3)]
+    EventBattleCount: int = 0
     # [Description("開始日時")]
     # [PropertyOrder(4)]
     StartTime: str = ""
@@ -2278,22 +2261,31 @@ class LocalRaidQuestMB(MasterBookBase):
     # [Description("クエスト名キー")]
     # [PropertyOrder(1)]
     LocalRaidBannerId: int = 0
-    # [Description("レベル")]
+    # [Description("LocalRaidEventScheduleMBのId")]
     # [PropertyOrder(2)]
+    LocalRaidEventScheduleId: int = 0
+    # [Description("修練レベル(イベント時のクエスト参照用)")]
+    # [PropertyOrder(3)]
+    LocalRaidLevel: int = 0
+    # [Description("イベント経過日数")]
+    # [PropertyOrder(4)]
+    OverDayFromStartEventTime: int = 0
+    # [Description("レベル")]
+    # [PropertyOrder(5)]
     Level: int = 0
     # [Description("個人戦力目安")]
-    # [PropertyOrder(3)]
+    # [PropertyOrder(6)]
     RecommendedBattlePower: int = 0
     # [Description("初回報酬")]
     # [Nest(False, 0)]
-    # [PropertyOrder(4)]
+    # [PropertyOrder(7)]
     FirstBattleRewards: list[UserItem] = _field(default_factory=list["UserItem"])
     # [Description("通常報酬")]
     # [Nest(False, 0)]
-    # [PropertyOrder(5)]
+    # [PropertyOrder(8)]
     FixedBattleRewards: list[UserItem] = _field(default_factory=list["UserItem"])
     # [Description("敵Idリスト")]
-    # [PropertyOrder(6)]
+    # [PropertyOrder(9)]
     LocalRaidEnemyIds: list[int] = _field(default_factory=list["int"])
 
 # [Description("ミッションクリア個数報酬")]
@@ -2942,17 +2934,6 @@ class StripePointMB(MasterBookBase):
     # [Description("クーポンの終了時間(JST)")]
     # [PropertyOrder(3)]
     EndTimeFixJST: str = ""
-
-# [Description("Stripe国料金コード")]
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class StripePriceCurrencyCodeMB(MasterBookBase):
-    # [Description("国料金コード")]
-    # [PropertyOrder(1)]
-    CurrencyCode: str = ""
-    # [Description("説明")]
-    # [PropertyOrder(1)]
-    Discription: str = ""
 
 # [Description("利用規約")]
 # [MessagePackObject(True)]

@@ -2887,7 +2887,27 @@ class ShopGuerrillaPackRankType(_Enum):
     # [Description("12000")]
     Rank7 = 7
 
+# [Description("ゲリラパック解放タイプ")]
+class ShopGuerrillaPackOpenType(_Enum):
+    # [Description("メインステージ")]
+    AutoBattle = 1
+    # [Description("プレイヤーランク")]
+    PlayerRank = 2
+    # [Description("無窮の塔")]
+    TowerBattle = 3
+    # [Description("藍の塔")]
+    TowerBattleBlue = 4
+    # [Description("紅の塔")]
+    TowerBattleRed = 5
+    # [Description("翠の塔")]
+    TowerBattleGreen = 6
+    # [Description("黄の塔")]
+    TowerBattleYellow = 7
+    # [Description("属性の塔の最低クリア階層")]
+    TowerBattleMinClearElementTower = 8
+
 # [MessagePackObject(True)]
+_ShopGuerrillaPackOpenType = ShopGuerrillaPackOpenType
 _ShopGuerrillaPackRankType = ShopGuerrillaPackRankType
 @_dataclass(slots=True)
 class ShopProductGuerrillaPack():
@@ -2903,6 +2923,10 @@ class ShopProductGuerrillaPack():
     ProductIdDict: dict[DeviceType, str] = _field(default_factory=dict["DeviceType", "str"])
     # [Description("ゲリラパックID")]
     ShopGuerrillaPackId: int = 0
+    # [Description("ゲリラパック解放タイプ")]
+    ShopGuerrillaPackOpenType: _ShopGuerrillaPackOpenType = _field(default_factory=lambda: _ShopGuerrillaPackOpenType())
+    # [Description("ゲリラパック解放値")]
+    ShopGuerrillaPackOpenValue: int = 0
     # [Description("ランク種別")]
     ShopGuerrillaPackRankType: _ShopGuerrillaPackRankType = _field(default_factory=lambda: _ShopGuerrillaPackRankType())
     # [Description("商品値段")]
