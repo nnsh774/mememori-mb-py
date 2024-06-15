@@ -1793,9 +1793,6 @@ class HelpMB(MasterBookBase):
     # [Description("表示フラグ")]
     # [PropertyOrder(4)]
     IsDisplayed: bool = False
-    # [Description("表示デバイスタイプ Old")]
-    # [PropertyOrder(5)]
-    DisplayDeviceTypeList: list[DeviceType] = _field(default_factory=list["DeviceType"])
     # [Description("表示デバイスタイプ")]
     # [PropertyOrder(5)]
     DisplayDeviceTypes: list[int] = _field(default_factory=list["int"])
@@ -2807,6 +2804,9 @@ class SpecialIconItemMB(MasterBookBase):
     # [Description("キャラクターID")]
     # [PropertyOrder(6)]
     CharacterId: int = 0
+    # [Description("バッジ表示フラグ")]
+    # [PropertyOrder(7)]
+    DisplayBadge: bool = False
 
 # [Description("スフィア")]
 # [MessagePackObject(True)]

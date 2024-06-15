@@ -1538,6 +1538,8 @@ class GachaSelectListType(_Enum):
     Destiny = 2
     # [Description("星の導き")]
     StarsGuidance = 3
+    # [Description("選択ピックアップ")]
+    SelectablePickUp = 4
 
 # [Description("ガチャ表示用フラグ")]
 # [Flags]
@@ -1828,8 +1830,6 @@ class LimitedEventType(_Enum):
     ElementTowerAllRelease = 1
     # [Description("シリアルコード入力")]
     SerialCode = 2
-    # [Description("課金で古いシステムを使用する")]
-    InAppPurchaseOldSystem = 9999
 
 # [Description("キャラクターレアリティを持つ可能性があるアイテムが実装するインターフェース")]
 class IUserCharacterItem(_Protocol):
@@ -2176,6 +2176,8 @@ class OpenCommandType(_Enum):
     GoldExchange = 260
     # [Description("星導交換所")]
     StarsGuidanceTradeShop = 280
+    # [Description("神装強化(一括選択機能)")]
+    BulkEquipmentAscend = 300
     # [Description("武具固定")]
     LockEquipment = 1000
 
@@ -4040,6 +4042,14 @@ class EffectType(_Enum):
     DamageReflectEnhance13 = 2113
     # [Description("カウンタ変更14")]
     DamageReflectEnhance14 = 2114
+    # [Description("カウンタ変更15")]
+    DamageReflectEnhance15 = 2115
+    # [Description("カウンタ変更16")]
+    DamageReflectEnhance16 = 2116
+    # [Description("カウンタ変更17")]
+    DamageReflectEnhance17 = 2117
+    # [Description("カウンタ変更18")]
+    DamageReflectEnhance18 = 2118
     # [Description("カウンタ変更21")]
     DamageReflectEnhance21 = 2121
     # [Description("カウンタ変更22")]
@@ -4048,6 +4058,14 @@ class EffectType(_Enum):
     DamageReflectEnhance23 = 2123
     # [Description("カウンタ変更24")]
     DamageReflectEnhance24 = 2124
+    # [Description("カウンタ変更25")]
+    DamageReflectEnhance25 = 2125
+    # [Description("カウンタ変更26")]
+    DamageReflectEnhance26 = 2126
+    # [Description("カウンタ変更27")]
+    DamageReflectEnhance27 = 2127
+    # [Description("カウンタ変更28")]
+    DamageReflectEnhance28 = 2128
     # [Description("カウンタ変更31")]
     DamageReflectEnhance31 = 2131
     # [Description("カウンタ変更32")]
@@ -4056,6 +4074,14 @@ class EffectType(_Enum):
     DamageReflectEnhance33 = 2133
     # [Description("カウンタ変更34")]
     DamageReflectEnhance34 = 2134
+    # [Description("カウンタ変更35")]
+    DamageReflectEnhance35 = 2135
+    # [Description("カウンタ変更36")]
+    DamageReflectEnhance36 = 2136
+    # [Description("カウンタ変更37")]
+    DamageReflectEnhance37 = 2137
+    # [Description("カウンタ変更38")]
+    DamageReflectEnhance38 = 2138
     # [Description("全てのスキルのクールタイムを回復")]
     AllSkillCoolTimeRecovery = 3001
     # [Description("スキル1のクールタイムを回復")]
@@ -5179,12 +5205,20 @@ class ErrorCode(_Enum):
     GachaOtherCharacterStarsGuidanceSelectList = 200211
     # [Description("星の導きガチャの解放条件を満たしていません。")]
     GachaNotEnoughVipLevelOrMaxQuestIdStarsGuidanceGacha = 200212
+    # [Description("選択ピックアップの対象外のキャラクターが選択されています。")]
+    GachaOtherCharacterPickupSelectList = 200213
+    # [Description("ピックアップの対象のキャラクターが選択されていません。")]
+    GachaNotSelectedPickupCharacter = 200214
+    # [Description("不正なセレクトリスト種別です。")]
+    GachaInvalidSelectListType = 200215
     # [Description("ユーザーのステータスデータが存在しません。")]
     GachaUserStatusDtoNotFound = 200500
     # [Description("ユーザーの放置バトルデータが存在しません。")]
     GachaUserBattleAutoDtoNotFound = 200501
     # [Description("ユーザーのチュートリアルデータが存在しません。")]
     GachaUserTutorialDtoNotFound = 200502
+    # [Description("ユーザーのセレクトリストデータが存在しません。")]
+    GachaUserGachaSelectListDtoNotFound = 200503
     # [Description("バトルログが見つかりません。")]
     BattleCommonBattleLogNotFound = 220000
     # [Description("ユーザの装備データが存在しません。")]
@@ -7112,6 +7146,8 @@ class PartyInfo(_ArrayPacked):
     IsNpc: bool = False
     # [Key(6)]
     GuildId: int = 0
+    # [Key(7)]
+    PartyGuid: str = ""
 
 # [MessagePackObject(False)]
 _PartyInfo = PartyInfo
@@ -8287,6 +8323,10 @@ class TitleInfo():
     AnchorMinY: float = 0.0
     BgmNumberJP: int = 0
     BgmNumberUS: int = 0
+    CharacterId: int = 0
+    IsCharacterLiveMode: bool = False
+    LamentStartTimeJP: float = 0.0
+    LamentStartTimeUS: float = 0.0
     LogoNumber: int = 0
     MovieNumber: int = 0
     Scale: float = 0.0
