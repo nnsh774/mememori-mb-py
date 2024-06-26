@@ -1131,6 +1131,8 @@ class TransferSpotType(_Enum):
     IndividualNotification = 210
     # [Description("星導交換所")]
     StarsGuidanceTradeShop = 220
+    # [Description("初回インストール時のワールド指定")]
+    TitleWorld = 230
     # [Description("フレンド")]
     Friend = 4
 
@@ -5535,10 +5537,6 @@ class ErrorCode(_Enum):
     ShopCurrencyNotEnough = 262024
     # [Description("既に受取済みです。")]
     ShopCurrencyMissionRewardAlreadyReceived = 262025
-    # [Description("無効な数値です。")]
-    ShopInvalidBirthYear = 262026
-    # [Description("無効な数値です。")]
-    ShopInvalidBirthMonth = 262027
     # [Description("既に登録済です。")]
     ShopConfirmAgeAlreadyRegister = 262028
     # [Description("無料ではありません。")]
