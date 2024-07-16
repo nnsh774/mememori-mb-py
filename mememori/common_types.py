@@ -2189,6 +2189,7 @@ class MonologueTextType(_Enum):
     Monologue = 2
 
 # [MessagePackObject(True)]
+_MonologueTextType = MonologueTextType
 @_dataclass(slots=True)
 class MonologueSettingData():
     # [Description("歌詞開始時間（秒）")]
@@ -2202,7 +2203,7 @@ class MonologueSettingData():
     SongLyricsKey: str = ""
     # [Description("朗読テキストタイプ")]
     # [PropertyOrder(4)]
-    RecitationTextType: MonologueTextType = _field(default_factory=lambda: MonologueTextType())
+    MonologueTextType: _MonologueTextType = _field(default_factory=lambda: _MonologueTextType())
 
 # [Description("日別ログイン報酬情報")]
 # [MessagePackObject(True)]
@@ -2380,6 +2381,14 @@ class PassiveTrigger(_Enum):
     SelfInjury = 34
     # [Description("自分以外の味方の被自傷ダメージ時")]
     AllySelfInjury = 35
+    # [Description("被行動阻害時")]
+    ReceiveConfuseActionDebuff = 36
+    # [Description("与行動阻害時")]
+    GiveConfuseActionDebuff = 37
+    # [Description("第三者味方の被行動阻害時")]
+    AllyReceiveConfuseActionDebuff = 38
+    # [Description("ターン開始時B")]
+    TurnStartBType = 39
     # [Description("被ダメージ量判定(自分の情報だけ参照)")]
     CheckReceiveDamageSelf = 41
     # [Description("被ダメージ量判定")]
@@ -3076,6 +3085,17 @@ class UserFriendMissionDtoInfo():
     MissionStatusHistory: dict[MissionStatusType, list[int]] = _field(default_factory=dict["MissionStatusType", "list[int]"])
     ProgressCount: int = 0
 
+# [Description("誘導タイプ")]
+class GuidanceType(_Enum):
+    # [Description("なし")]
+    None_ = 0
+    # [Description("勧誘設定")]
+    RecruitSetting = 1
+    # [Description("ギルド加入")]
+    GuildJoining = 2
+    # [Description("ギルド移籍")]
+    GuildMove = 3
+
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class UserItemDtoInfo():
@@ -3183,12 +3203,55 @@ class UserNotificationDtoInfo():
 class UserOpenContentDtoInfo():
     OpenContentId: int = 0
 
+class PlayerRecruitType(_Enum):
+    # [Description("希望しない")]
+    None_ = 0
+    # [Description("希望する")]
+    Desire = 1
+    # [Description("興味がある")]
+    Interested = 2
+
+class PlayerCommunicationPolicyType(_Enum):
+    # [Description("指定なし")]
+    None_ = 0
+    # [Description("無言")]
+    Silence = 1
+    # [Description("たまに雑談")]
+    SmallTalk = 2
+    # [Description("おしゃべり")]
+    Conversationalist = 3
+
+class PlayerEventPolicyType(_Enum):
+    # [Description("指定なし")]
+    None_ = 0
+    # [Description("マイペース")]
+    Freely = 1
+    # [Description("毎日参加")]
+    Daily = 2
+    # [Description("上位を狙う")]
+    Seriously = 3
+
+class PlayerGuildBattlePolicyType(_Enum):
+    # [Description("指定なし")]
+    None_ = 0
+    # [Description("リアル優先")]
+    Freely = 1
+    # [Description("そこそこ貢献")]
+    Leisurely = 2
+    # [Description("上位を狙う")]
+    Seriously = 3
+
 # [MessagePackObject(True)]
+_PlayerRecruitType = PlayerRecruitType
 @_dataclass(slots=True)
 class UserRecruitGuildMemberSettingDtoInfo():
+    CommunicationPolicyType: PlayerCommunicationPolicyType = _field(default_factory=lambda: PlayerCommunicationPolicyType())
+    EventPolicyType: PlayerEventPolicyType = _field(default_factory=lambda: PlayerEventPolicyType())
+    GuildBattlePolicyType: PlayerGuildBattlePolicyType = _field(default_factory=lambda: PlayerGuildBattlePolicyType())
     GuildLvLowerLimit: int = 0
     GuildPowerLowerLimit: int = 0
-    IsRecruit: bool = False
+    PlayerRecruitType: _PlayerRecruitType = _field(default_factory=lambda: _PlayerRecruitType())
+    UpdateLocalTime: int = 0
 
 # [Description("ユーザー設定データ")]
 class PlayerSettingsType(_Enum):
@@ -3328,6 +3391,7 @@ class IUserStatusDtoInfo(_Protocol):
     IsAlreadyChangedName: bool
     IsFirstVisitGuildAtDay: bool
     IsReachBattleLeagueTop50: bool
+    LastLeaveGuildTime: int
     LastLoginTime: int
     LastLvUpTime: int
     MainCharacterIconId: int
@@ -3354,6 +3418,7 @@ class UserStatusDtoInfo():
     IsAlreadyChangedName: bool = False
     IsFirstVisitGuildAtDay: bool = False
     IsReachBattleLeagueTop50: bool = False
+    LastLeaveGuildTime: int = 0
     LastLoginTime: int = 0
     LastLvUpTime: int = 0
     MainCharacterIconId: int = 0
@@ -3445,6 +3510,7 @@ class UserSyncData():
     UserDeckDtoInfos: list[UserDeckDtoInfo] = _field(default_factory=list["UserDeckDtoInfo"])
     UserEquipmentDtoInfos: list[UserEquipmentDtoInfo] = _field(default_factory=list["UserEquipmentDtoInfo"])
     UserFriendMissionDtoInfoList: list[UserFriendMissionDtoInfo] = _field(default_factory=list["UserFriendMissionDtoInfo"])
+    UserGuidanceTimeMap: dict[GuidanceType, int] = _field(default_factory=dict["GuidanceType", "int"])
     UserItemDtoInfo: list[_UserItemDtoInfo] = _field(default_factory=list["_UserItemDtoInfo"])
     UserLevelLinkDtoInfo: _UserLevelLinkDtoInfo = _field(default_factory=lambda: _UserLevelLinkDtoInfo())
     UserLevelLinkMemberDtoInfos: list[UserLevelLinkMemberDtoInfo] = _field(default_factory=list["UserLevelLinkMemberDtoInfo"])
@@ -3521,19 +3587,30 @@ class FriendStatusType(_Enum):
 
 class PlayerGuildPositionType(_Enum):
     None_ = 0
+    # [Description("マスター")]
     Leader = 1
-    SubLeader = 2
+    # [Description("ベテラン")]
+    Veteran = 2
+    # [Description("メンバー")]
     Member = 3
+    # [Description("サブマスター")]
+    SubLeader = 4
+    # [Description("指揮官")]
+    Commander = 5
 
 # [MessagePackObject(True)]
 _PlayerGuildPositionType = PlayerGuildPositionType
 @_dataclass(slots=True)
 class PlayerInfo():
+    BattleLeagueRankingToday: int = 0
     BattlePower: int = 0
     Comment: str = ""
+    CommunicationPolicyType: PlayerCommunicationPolicyType = _field(default_factory=lambda: PlayerCommunicationPolicyType())
     CumulativeGuildFame: int = 0
     DeckUserCharacterInfoList: list[UserCharacterInfo] = _field(default_factory=list["UserCharacterInfo"])
+    EventPolicyType: PlayerEventPolicyType = _field(default_factory=lambda: PlayerEventPolicyType())
     FriendStatus: FriendStatusType = _field(default_factory=lambda: FriendStatusType())
+    GuildBattlePolicyType: PlayerGuildBattlePolicyType = _field(default_factory=lambda: PlayerGuildBattlePolicyType())
     GuildId: int = 0
     GuildJoinRequestUtcTimeStamp: int = 0
     GuildJoinTimeStamp: int = 0
@@ -3544,6 +3621,8 @@ class PlayerInfo():
     LastLoginTime: _timedelta = _field(default_factory=lambda: _timedelta())
     LatestQuestId: int = 0
     LatestTowerBattleQuestId: int = 0
+    LegendLeaguePointToday: int = 0
+    LegendLeagueRankingToday: int = 0
     LocalRaidBattlePower: int = 0
     MainCharacterIconId: int = 0
     NpcNameKey: str = ""
@@ -3551,6 +3630,7 @@ class PlayerInfo():
     PlayerId: int = 0
     PlayerLevel: int = 0
     PlayerName: str = ""
+    PlayerRecruitType: _PlayerRecruitType = _field(default_factory=lambda: _PlayerRecruitType())
     PrevLegendLeagueClass: LegendLeagueClassType = _field(default_factory=lambda: LegendLeagueClassType())
     RecruitGuildMemberTimeStamp: int = 0
 
@@ -3560,18 +3640,43 @@ class GlobalGvgGroupType(_Enum):
     Silver = 2
     Golden = 3
 
-class GuildActivityPolicyType(_Enum):
+class GuildCommunicationPolicyType(_Enum):
+    # [Description("指定なし")]
     None_ = 0
-    PlayFreely = 1
-    PlayGuts = 2
-    PlayLeisurely = 3
-    PlayNoisy = 4
-    BeginnerWelcome = 5
+    # [Description("無言")]
+    Silence = 1
+    # [Description("たまに雑談")]
+    SmallTalk = 2
+    # [Description("おしゃべり")]
+    Conversationalist = 3
+
+class GuildEventPolicyType(_Enum):
+    # [Description("指定なし")]
+    None_ = 0
+    # [Description("自由参加")]
+    Freely = 1
+    # [Description("気軽に参加")]
+    Leisurely = 2
+    # [Description("上位を狙う")]
+    Seriously = 3
+
+class GuildBattlePolicyType(_Enum):
+    # [Description("指定なし")]
+    None_ = 0
+    # [Description("自由参加")]
+    Freely = 1
+    # [Description("気軽に参加")]
+    Leisurely = 2
+    # [Description("上位を狙う")]
+    Seriously = 3
 
 # [MessagePackObject(True)]
+_GuildBattlePolicyType = GuildBattlePolicyType
 @_dataclass(slots=True)
 class GuildOverView():
-    ActivityPolicyType: GuildActivityPolicyType = _field(default_factory=lambda: GuildActivityPolicyType())
+    CommunicationPolicyType: GuildCommunicationPolicyType = _field(default_factory=lambda: GuildCommunicationPolicyType())
+    EventPolicyType: GuildEventPolicyType = _field(default_factory=lambda: GuildEventPolicyType())
+    GuildBattlePolicyType: _GuildBattlePolicyType = _field(default_factory=lambda: _GuildBattlePolicyType())
     GuildDescription: str = ""
     GuildName: str = ""
     IsFreeJoin: bool = False
@@ -5469,6 +5574,14 @@ class ErrorCode(_Enum):
     RecruitGuildMemberNotOpenGuild = 253006
     # [Description("プレイヤーが見つかりません。")]
     RecruitGuildMemberSearchNotFoundPlayer = 253010
+    # [Description("サブマスターは1ギルドに1名のみ任命可能です。")]
+    GuildAlreadyExistSubLeader = 253011
+    # [Description("指揮官は1ギルドに1名のみ任命可能です。")]
+    GuildAlreadyExistCommander = 253012
+    # [Description("勧誘コメントの最大文字数を超過しています。")]
+    RecruitGuildMemberOverMessageMaxLength = 253013
+    # [Description("既に勧誘済みです。")]
+    RecruitGuildMemberAlreadyRecruited = 253014
     # [Description("ユーザーデータが見つかりません。")]
     ShopCurrencyMissionDtoNotFound = 261000
     # [Description("ゲリラパックのデータが見つかりません。")]
@@ -5593,8 +5706,8 @@ class ErrorCode(_Enum):
     ChatCanNotReact = 272009
     # [Description("既にアナウンスチャットに登録されています。")]
     ChatAlreadyRegistered = 272010
-    # [Description("マスター・サブマスターのみ使用可能です。")]
-    ChatNotLeaderOrSubLeader = 272011
+    # [Description("権限あるメンバーのみ使用可能です。")]
+    ChatAnnounceHasNoAuthority = 272011
     # [Description("アナウンスに登録可能な最大数を超過しています。")]
     ChatOverMaxRegisterAnnounceChatCount = 272012
     # [Description("アナウンスチャットのインターバル中です。")]
@@ -5625,6 +5738,8 @@ class ErrorCode(_Enum):
     LocalGvgNotMatchingYet = 292002
     # [Description("受け取れる報酬が見つかりませんでした。")]
     LocalGvgNotFoundReceivableReward = 292003
+    # [Description("指定されたパーティが存在しません。")]
+    LocalGvgNotFoundParty = 292004
     # [Description("ユーザーのギルドデータが見つかりません。")]
     GlobalGvgUserGuildDtoNotFound = 301000
     # [Description("ギルドデータが見つかりません。")]
@@ -5635,6 +5750,8 @@ class ErrorCode(_Enum):
     GlobalGvgReceiveRewardInvalidRequest = 302001
     # [Description("受け取れる報酬が見つかりませんでした。")]
     GlobalGvgNotFoundReceivableReward = 302003
+    # [Description("指定されたパーティが存在しません。")]
+    GlobalGvgNotFoundParty = 302004
     # [Description("ユーザのレベルリンクデータが見つかりません")]
     LevelLinkUserLevelLinkDtoNotFound = 311000
     # [Description("ユーザのキャラクターデータが見つかりません")]
@@ -6069,8 +6186,8 @@ class ErrorCode(_Enum):
     MagicOnionGlobalGvgCheckCanJoinBattleAndNoticeNotJoinGuild = 900314
     # [Description("GlobalGvgでギルドに加入した日は参加できないエラー")]
     MagicOnionGlobalGvgCheckCanJoinBattleAndNoticeJoinGuildToDay = 900315
-    # [Description("GlobalGvgでリーダーかサブリーダー以外は操作できないエラー")]
-    MagicOnionGlobalGvgCheckCanJoinBattleAndNoticeNotLeaderAndNotSubLeader = 900316
+    # [Description("GlobalGvgで権限がないメンバーは操作できないエラー")]
+    MagicOnionGlobalGvgCheckCanJoinBattleAndNoticeHasNoPermission = 900316
     # [Description("GlobalGvgが開放されていない")]
     MagicOnionGlobalGvgNotOpen = 900317
     # [Description("GlobalGvgでキャラクターのキャッシュデータが存在しないためパーティ追加に失敗しました。")]
@@ -6113,8 +6230,8 @@ class ErrorCode(_Enum):
     MagicOnionCannotAttackOtherGuild = 1002009
     # [Description("ギルドに加入した日はLocalGvgに参加できません。")]
     MagicOnionCannotPlayLocalGvgInFirstDay = 1002010
-    # [Description("この機能はリーダーかサブリーダーのみ実行できます。")]
-    MagicOnionNotLeader = 1002011
+    # [Description("この機能は権限あるメンバーのみ実行できます。")]
+    MagicOnionHasNoPermission = 1002011
     # [Description("ギルドバトルの参加条件を満たしていないです。")]
     MagicOnionNotJoinedGuildBattle = 1002012
     # [Description("宣戦する条件を満たしていないです。")]
@@ -6127,6 +6244,14 @@ class ErrorCode(_Enum):
     MagicOnionNotOpenGuildBattle = 1002016
     # [Description("キャラクターのキャッシュデータが存在しないためパーティの配置に失敗しました。")]
     MagicOnionLocalGvgAddPartyNotFoundCharacterCache = 1002017
+    # [Description("拠点メモは設定できません。")]
+    MagicOnionCanNotSetCastleMemo = 1002018
+    # [Description("拠点メモの設定の権限がありません。")]
+    MagicOnionHasNoPermissionSetCastleMemo = 1002019
+    # [Description("拠点メモメッセージの最大文字数を超過しています。")]
+    MagicOnionOverCastleMemoMessageMaxLength = 1002020
+    # [Description("既に他のメンバーにより、拠点メモがリセット済みです。")]
+    MagicOnionAlreadyResetCastleMemo = 1002021
     # [Description("プッシュ通知対象外の端末です。")]
     PushNotificationNotSupportedDeviceType = 4000000
     # [Description("プッシュ通知の登録に必要な情報が取得できません。")]
@@ -7146,6 +7271,8 @@ class PartyInfo(_ArrayPacked):
     GuildId: int = 0
     # [Key(7)]
     PartyGuid: str = ""
+    # [Key(8)]
+    HasCastleFallen: bool = False
 
 # [MessagePackObject(False)]
 _PartyInfo = PartyInfo
@@ -7179,6 +7306,8 @@ class CastleBattleHistoryInfo(_ArrayPacked):
     WinGroupType: BattleFieldCharacterGroupType = _field(default_factory=lambda: BattleFieldCharacterGroupType())
     # [Key(7)]
     IsCounter: bool = False
+    # [Key(8)]
+    WinBattleCount: int = 0
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -7190,6 +7319,47 @@ class RecordInfo():
     PlayerCharacterId: int = 0
     PlayerId: int = 0
     PlayerName: str = ""
+
+# [MessagePackObject(True)]
+_BattleFieldCharacterGroupType = BattleFieldCharacterGroupType
+@_dataclass(slots=True)
+class GvgMvpPlayerInfo():
+    BattleFieldCharacterGroupType: _BattleFieldCharacterGroupType = _field(default_factory=lambda: _BattleFieldCharacterGroupType())
+    PlayerInfo: _PlayerInfo = _field(default_factory=lambda: _PlayerInfo())
+    Rank: int = 0
+    TotalKnockOutCount: int = 0
+
+# [MessagePackObject(False)]
+@_dataclass(slots=True)
+class UserGvgCharacterInfoSlim(_ArrayPacked):
+    # [Key(0)]
+    BattlePower: int = 0
+    # [Key(1)]
+    CharacterId: int = 0
+    # [Key(2)]
+    IsSettingLevelLink: bool = False
+    # [Key(3)]
+    Level: int = 0
+    # [Key(4)]
+    RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class GvgMvpPlayerPartyInfo():
+    BattlePower: int = 0
+    CastleId: int = 0
+    CharacterInfoList: list[UserGvgCharacterInfoSlim] = _field(default_factory=list["UserGvgCharacterInfoSlim"])
+    IsAlive: bool = False
+    KnockOutCount: int = 0
+    LastBattleCount: int = 0
+    PartyGuid: str = ""
+    WinBattleCount: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class GvgMvpPlayerDetailInfo():
+    MvpPlayerInfo: GvgMvpPlayerInfo = _field(default_factory=lambda: GvgMvpPlayerInfo())
+    PartyInfoList: list[GvgMvpPlayerPartyInfo] = _field(default_factory=list["GvgMvpPlayerPartyInfo"])
 
 # [Description("キャラクターソート種別")]
 class CharacterSortType(_Enum):
@@ -7462,13 +7632,6 @@ class SystemChatMessageIdType(_Enum):
 class GuildSystemChatOptionInfo():
     IsValid: bool = False
     Type: SystemChatMessageIdType = _field(default_factory=lambda: SystemChatMessageIdType())
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class GuildEditInfo():
-    GuildAnnouncement: str = ""
-    GuildOverView: _GuildOverView = _field(default_factory=lambda: _GuildOverView())
-    GuildSystemChatOptionInfos: list[GuildSystemChatOptionInfo] = _field(default_factory=list["GuildSystemChatOptionInfo"])
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -8375,6 +8538,20 @@ class GvgDialogType(_Enum):
     # [Description("編成ダイアログ")]
     Deploy = 2
 
+class GvgCastleMemoMarkType(_Enum):
+    # [Description("攻撃(強)")]
+    StrongAttack = 1
+    # [Description("攻撃(弱)")]
+    Attack = 2
+    # [Description("防衛(強)")]
+    StrongDefense = 3
+    # [Description("防衛(弱)")]
+    Defense = 4
+    # [Description("汎用")]
+    Common = 5
+    # [Description("禁止")]
+    Forbidden = 6
+
 # [MessagePackObject(False)]
 _ChatIdentityInfo = ChatIdentityInfo
 _ChatReactionType = ChatReactionType
@@ -8398,20 +8575,6 @@ class ChangeChatOptionInfo(_ArrayPacked):
     CanReact: bool = False
     # [Key(2)]
     IsAnnounced: bool = False
-
-# [MessagePackObject(False)]
-@_dataclass(slots=True)
-class UserGvgCharacterInfoSlim(_ArrayPacked):
-    # [Key(0)]
-    BattlePower: int = 0
-    # [Key(1)]
-    CharacterId: int = 0
-    # [Key(2)]
-    IsSettingLevelLink: bool = False
-    # [Key(3)]
-    Level: int = 0
-    # [Key(4)]
-    RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
 
 # [MessagePackObject(False)]
 @_dataclass(slots=True)
@@ -8440,6 +8603,28 @@ class GvgCastleState(_Enum):
     # [Description("反撃に成功した")]
     CounterSuccess = 4
 
+# [Description("KO数のエフェクト種別")]
+class GvgKnockOutEffectType(_Enum):
+    # [Description("エフェクトなし")]
+    None_ = 0
+    # [Description("黒")]
+    Black = 1
+    # [Description("赤")]
+    Red = 2
+    # [Description("紫")]
+    Purple = 3
+    # [Description("青")]
+    Blue = 4
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class GvgActivePlayerInfo():
+    BattleFieldCharacterGroupType: _BattleFieldCharacterGroupType = _field(default_factory=lambda: _BattleFieldCharacterGroupType())
+    GuildId: int = 0
+    MaxPartyKnockOutCount: int = 0
+    PlayerId: int = 0
+    Rank: int = 0
+
 # [MessagePackObject(False)]
 _GvgCastleState = GvgCastleState
 @_dataclass(slots=True)
@@ -8458,6 +8643,8 @@ class CastleInfo(_ArrayPacked):
     GvgCastleState: _GvgCastleState = _field(default_factory=lambda: _GvgCastleState())
     # [Key(6)]
     UtcFallenTimeStamp: int = 0
+    # [Key(7)]
+    LastWinPartyKnockOutCount: int = 0
 
 # [MessagePackObject(False)]
 _UserGvgCharacterInfo = UserGvgCharacterInfo
@@ -8469,4 +8656,15 @@ class PartyCharacterInfo(_ArrayPacked):
     CurrentActionPoint: int = 0
     # [Key(2)]
     IsDeployed: bool = False
+
+# [MessagePackObject(False)]
+_GvgCastleMemoMarkType = GvgCastleMemoMarkType
+@_dataclass(slots=True)
+class CastleMemoInfo(_ArrayPacked):
+    # [Key(0)]
+    CastleId: int = 0
+    # [Key(1)]
+    GvgCastleMemoMarkType: _GvgCastleMemoMarkType = _field(default_factory=lambda: _GvgCastleMemoMarkType())
+    # [Key(2)]
+    Message: str = ""
 
