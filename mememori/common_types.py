@@ -2434,6 +2434,23 @@ class PassiveSkillInfo():
     # [Nest(True, 2)]
     PassiveSubSetSkillInfos: list[PassiveSubSetSkillInfo] = _field(default_factory=list["PassiveSubSetSkillInfo"])
 
+# [Description("PatternSettingタイプ")]
+class PatternSettingType(_Enum):
+    # [Description("なし")]
+    None_ = 0
+    # [Description("マイページバナーの外部Webサイトリンク")]
+    MyPageBannerOuterWebSite = 1
+    # [Description("ミッションの表示優先度")]
+    MissionDisplayOrder = 2
+    # [Description("ミッションのガイド表示優先度")]
+    MissionGuideDisplayOrder = 3
+    # [Description("ゲリラパックの報酬内容")]
+    GuerrillaPackRewardItem = 4
+    # [Description("ダイナミックリンクによるワールド誘導")]
+    InviteWorldByDynamicLink = 5
+    # [Description("初課金ボーナスのダイヤ購入ボタンの遷移先")]
+    FirstChargeBonusButton = 6
+
 # [Description("PvPランキング報酬タイプ")]
 class PvpRankingRewardType(_Enum):
     # [Description("バトルリーグデイリーランキング報酬")]
@@ -4726,6 +4743,14 @@ class ErrorCode(_Enum):
     CommonBuyProductDifferentGameServer = 1000
     # [Description("存在しないプレイヤーです。")]
     CommonDeletedPlayer = 1001
+    # [Description("Dtoデータが存在しません。")]
+    CommonNotFoundDto = 1002
+    # [Description("Dtoタイプが存在しません。")]
+    CommonNotFoundDtoType = 1003
+    # [Description("Maxクリアクエスト情報がありません。")]
+    CommonNotFoundCurrentMaxClearQuestId = 1004
+    # [Description("プレイヤー生成日の情報がありません。")]
+    CommonNotFoundCreatePlayerTimestamp = 1005
     # [Description("ユーザーデータがありません")]
     AuthNotFoundUserAccountDto = 10001
     # [Description("ユーザーのプレイヤーデータが存在しません")]
@@ -5834,6 +5859,8 @@ class ErrorCode(_Enum):
     MissionUserTutorialDtoNotFound = 351003
     # [Description("ユーザーのミッション履歴データが存在しません。")]
     MissionUserMissionOccurrenceHistoryDtoNotFound = 351004
+    # [Description("ユーザーのボスバトルデータが存在しません。")]
+    MissionUserBattleBossDtoNotFound = 351005
     # [Description("未解放のミッションです。")]
     MissionNotOpenMission = 352000
     # [Description("報酬が受け取れません。")]
@@ -7017,6 +7044,12 @@ class AchieveRankingPlayerInfo():
     AchieveLocalTimeStamp: int = 0
     PlayerInfo: _PlayerInfo = _field(default_factory=lambda: _PlayerInfo())
     Rank: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class AchieveRewardReceivedPlayerInfo():
+    PlayerId: int = 0
+    PlayerName: str = ""
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)

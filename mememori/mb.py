@@ -2629,6 +2629,36 @@ class PassiveSkillMB(MasterBookBase):
     # [PropertyOrder(2)]
     PassiveSkillInfos: list[PassiveSkillInfo] = _field(default_factory=list["PassiveSkillInfo"])
 
+# [Description("PatternSetting")]
+# [MessagePackObject(True)]
+_PatternSettingType = PatternSettingType
+@_dataclass(slots=True)
+class PatternSettingMB(MasterBookBase):
+    # [Description("PatternSetting種別")]
+    # [PropertyOrder(1)]
+    PatternSettingType: _PatternSettingType = _field(default_factory=lambda: _PatternSettingType())
+    # [Description("指定番号")]
+    # [PropertyOrder(2)]
+    NumberInfo: int = 0
+    # [Description("プレイヤーIDの上9桁を16で割った剰余条件リスト")]
+    # [PropertyOrder(3)]
+    PlayerIdRemainConditionList: list[int] = _field(default_factory=list["int"])
+    # [Description("TimeServerId条件リスト")]
+    # [PropertyOrder(4)]
+    TimeServerIdConditionList: list[int] = _field(default_factory=list["int"])
+    # [Description("クエスト進行度範囲条件リスト")]
+    # [PropertyOrder(5)]
+    ProgressQuestIdConditionList: list[int] = _field(default_factory=list["int"])
+    # [Description("プレイヤー新規登録後経過日数範囲条件リスト")]
+    # [PropertyOrder(6)]
+    ElapsedFromCreatePlayerDayConditionList: list[int] = _field(default_factory=list["int"])
+    # [Description("開始時刻")]
+    # [PropertyOrder(7)]
+    StartTime: str = ""
+    # [Description("終了時刻")]
+    # [PropertyOrder(8)]
+    EndTime: str = ""
+
 # [Description("プレイヤーランク")]
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
