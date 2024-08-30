@@ -2666,29 +2666,35 @@ class PlayerRankMB(MasterBookBase):
     # [Description("ランク")]
     # [PropertyOrder(1)]
     Rank: int = 0
-    # [Description("キャラパラメータ命中ボーナス")]
+    # [Description("キャラパラメータクリティカルボーナス")]
     # [PropertyOrder(10)]
-    HitBonus: int = 0
-    # [Description("キャラパラメータ弱体効果命中ボーナス")]
+    CriticalBonus: int = 0
+    # [Description("キャラパラメータ命中ボーナス")]
     # [PropertyOrder(11)]
+    HitBonus: int = 0
+    # [Description("キャラパラメータ回避ボーナス")]
+    # [PropertyOrder(12)]
+    AvoidanceBonus: int = 0
+    # [Description("キャラパラメータ弱体効果命中ボーナス")]
+    # [PropertyOrder(13)]
     DebuffHitBonus: int = 0
     # [Description("キャラパラメータスピードボーナス")]
-    # [PropertyOrder(12)]
+    # [PropertyOrder(14)]
     SpeedBonus: int = 0
     # [Description("キャラパラメータクリダメ強化ボーナス")]
-    # [PropertyOrder(13)]
+    # [PropertyOrder(15)]
     CriticalDamageEnhanceBonus: int = 0
     # [Description("キャラパラメータカウンタボーナス")]
-    # [PropertyOrder(14)]
+    # [PropertyOrder(16)]
     DamageReflectBonus: int = 0
     # [Description("キャラパラメータHPドレインボーナス")]
-    # [PropertyOrder(15)]
+    # [PropertyOrder(17)]
     HpDrainBonus: int = 0
     # [Description("命中率ボーナス(パラメータX)")]
-    # [PropertyOrder(16)]
+    # [PropertyOrder(18)]
     HitDirectPercentBonus: int = 0
     # [Description("レベルリンク枠最大数")]
-    # [PropertyOrder(17)]
+    # [PropertyOrder(19)]
     LevelLinkMemberMaxCount: int = 0
     # [Description("必要累計経験値")]
     # [PropertyOrder(2)]
@@ -2700,21 +2706,21 @@ class PlayerRankMB(MasterBookBase):
     # [Description("キャラパラメータ攻撃力ボーナス")]
     # [PropertyOrder(4)]
     AttackPowerBonus: int = 0
-    # [Description("キャラパラメータHPボーナス")]
+    # [Description("キャラパラメータ攻撃力%ボーナス")]
     # [PropertyOrder(5)]
+    AttackPowerPercentBonus: int = 0
+    # [Description("キャラパラメータHPボーナス")]
+    # [PropertyOrder(6)]
     HpBonus: int = 0
     # [Description("キャラパラメータHP%ボーナス")]
-    # [PropertyOrder(6)]
+    # [PropertyOrder(7)]
     HpPercentBonus: int = 0
     # [Description("キャラパラメータ防御貫通ボーナス")]
-    # [PropertyOrder(7)]
+    # [PropertyOrder(8)]
     DefensePenetrationBonus: int = 0
     # [Description("キャラパラメータ物魔防御貫通ボーナス")]
-    # [PropertyOrder(8)]
-    DamageEnhanceBonus: int = 0
-    # [Description("キャラパラメータクリティカルボーナス")]
     # [PropertyOrder(9)]
-    CriticalBonus: int = 0
+    DamageEnhanceBonus: int = 0
 
 # [Description("PVPランキング報酬")]
 # [MessagePackObject(True)]

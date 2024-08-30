@@ -1832,6 +1832,8 @@ class LimitedEventType(_Enum):
     ElementTowerAllRelease = 1
     # [Description("シリアルコード入力")]
     SerialCode = 2
+    # [Description("通知強制削除")]
+    NotificationForceCancel = 10000
 
 # [Description("キャラクターレアリティを持つ可能性があるアイテムが実装するインターフェース")]
 class IUserCharacterItem(_Protocol):
