@@ -113,6 +113,8 @@ class ItemType(_Enum):
     IconFragment = 35
     # [Description("タイプ強化アイテム")]
     GuildTowerJobReinforcementMaterial = 36
+    # [Description("人気投票(ItemId => PopularityVoteMBのId)")]
+    PopularityVote = 39
     # [Description("イベント交換所アイテム")]
     EventExchangePlaceItem = 50
     # [Description("Stripeクーポン")]
@@ -1050,6 +1052,8 @@ class MissionAchievementType(_Enum):
     GuildTowerMaxJobLevel = 23020100
     # [Description("全てのタイプのギルドツリー強化Lvの内で最低到達のレベル")]
     GuildTowerMinJobLevel = 23020200
+    # [Description("人気投票チケットの消費数")]
+    ConsumePopularityVoteTicket = 25010100
 
 # [Description("SNS情報")]
 # [MessagePackObject(True)]
@@ -1133,6 +1137,8 @@ class TransferSpotType(_Enum):
     StarsGuidanceTradeShop = 220
     # [Description("初回インストール時のワールド指定")]
     TitleWorld = 230
+    # [Description("人気投票")]
+    PopularityVote = 270
     # [Description("フレンド")]
     Friend = 4
 
@@ -1483,6 +1489,8 @@ class MissionTransitionDestinationType(_Enum):
     GuildTower = 2301
     # [Description("ギルドツリーLV強化ダイアログ")]
     GuildTowerReinforceJob = 2302
+    # [Description("人気投票メイン画面")]
+    PopularityVote = 2501
 
 # [Description("ガチャカテゴリータイプ")]
 class GachaCategoryType(_Enum):
@@ -1768,6 +1776,8 @@ class HelpParameterType(_Enum):
     GuildBattleMinPlacement = 2
     # [Description("グランドバトル最小配置数")]
     GrandBattleMinPlacement = 3
+    # [Description("人気投票期間情報")]
+    PopularityVoteTimeInfo = 4
 
 # [Description("ヘルプパート")]
 # [MessagePackObject(True)]
@@ -1965,6 +1975,10 @@ class MissionGroupType(_Enum):
     Guild = 10
     # [Description("ギルドツリー")]
     GuildTower = 11
+    # [Description("人気投票")]
+    PopularityVote = 13
+    # [Description("デイリー追加報酬")]
+    DailyBonus = 1000
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -2045,6 +2059,7 @@ class MissionType(_Enum):
     PanelSheet3 = 903
     Guild = 10
     GuildTower = 11
+    PopularityVote = 13
 
 # [Description("解放されるコマンドの種類")]
 class OpenCommandType(_Enum):
@@ -2182,6 +2197,8 @@ class OpenCommandType(_Enum):
     StarsGuidanceTradeShop = 280
     # [Description("神装強化(一括選択機能)")]
     BulkEquipmentAscend = 300
+    # [Description("人気投票")]
+    PopularityVote = 360
     # [Description("武具固定")]
     LockEquipment = 1000
 
@@ -2391,6 +2408,8 @@ class PassiveTrigger(_Enum):
     AllyReceiveConfuseActionDebuff = 38
     # [Description("ターン開始時B")]
     TurnStartBType = 39
+    # [Description("被バフ解除時")]
+    ReceiveRemoveBuff = 40
     # [Description("被ダメージ量判定(自分の情報だけ参照)")]
     CheckReceiveDamageSelf = 41
     # [Description("被ダメージ量判定")]
@@ -2452,6 +2471,41 @@ class PatternSettingType(_Enum):
     InviteWorldByDynamicLink = 5
     # [Description("初課金ボーナスのダイヤ購入ボタンの遷移先")]
     FirstChargeBonusButton = 6
+
+# [Description("発表タイプ")]
+class PopularityPresentationVoteType(_Enum):
+    # [Description("なし")]
+    None_ = 0
+    # [Description("予選中間発表")]
+    PreliminaryInterim = 1
+    # [Description("予選結果")]
+    PreliminaryResult = 2
+    # [Description("本選中間発表")]
+    FinalInterim = 3
+    # [Description("本選結果")]
+    FinalResult = 4
+
+# [MessagePackObject(True)]
+_PopularityPresentationVoteType = PopularityPresentationVoteType
+@_dataclass(slots=True)
+class ResultPresentationSetting():
+    IsRandomDisplay: bool = False
+    PopularityPresentationVoteType: _PopularityPresentationVoteType = _field(default_factory=lambda: _PopularityPresentationVoteType())
+    RankingDisplayRange: int = 0
+    VoteCountDisplayRange: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class EntryCharacter():
+    EntryCharacterId: int = 0
+    SubDisplayCharacterIdList: list[int] = _field(default_factory=list["int"])
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class PopularityVoteReward():
+    VoteCount: int = 0
+    # [Nest(True, 1)]
+    VoteRewardItems: list[UserItem] = _field(default_factory=list["UserItem"])
 
 # [Description("PvPランキング報酬タイプ")]
 class PvpRankingRewardType(_Enum):
@@ -3209,6 +3263,24 @@ class NotificationType(_Enum):
     NewRecruitGuildMember = 12
     # [Description("ギルドツリーミッションの受取可能な報酬がある場合")]
     ReceivableGuildTowerMission = 13
+    # [Description("人気投票のミッションで報酬を受け取れるものがあるとき")]
+    ReceivablePopularityVoteMission = 14
+    # [Description("投票報酬で報酬を受け取れるものがあるとき")]
+    ReceivablePopularityVoteReward = 15
+    # [Description("投票チケットを1枚以上もっているかつ、現在予選期間内で、その予選中に一度も投票したことが無い時")]
+    NotPopularityVoteInPreliminary = 16
+    # [Description("投票チケットを1枚以上もっているかつ、現在本選期間内で、その本選中に一度も投票したことが無い時")]
+    NotPopularityVoteInFinal = 17
+    # [Description("投票チケットを1枚以上もっているかつ、予選本選いずれかの期間内で、その日一度も投票してない時")]
+    NotPopularityVoteOnDay = 18
+    # [Description("予選中間発表の結果が出た時（現在時間が予選中間発表日時を過ぎると表示）")]
+    PreliminaryInterimResult = 19
+    # [Description("予選結果が出た時（現在時間が本選開始日時を過ぎると表示）")]
+    PreliminaryResult = 20
+    # [Description("本選中間発表の結果が出た時（現在時間が本選中間発表日時を過ぎると表示）")]
+    FinalInterimResult = 21
+    # [Description("本選結果が出た時（現在時間が結果発表開始日時を過ぎると表示）")]
+    FinalResult = 22
 
 # [MessagePackObject(True)]
 _NotificationType = NotificationType
@@ -3278,6 +3350,10 @@ class PlayerSettingsType(_Enum):
     None_ = 0
     # [Description("レアリティNのキャラ自動販売")]
     AutoSellRarityNCharacter = 1
+    # [Description("週間トピックスのバトルリーグ掲載許可")]
+    WeeklyTopicsBattleLeaguePostingPermission = 2
+    # [Description("週間トピックスのレジェンドリーグ掲載許可")]
+    WeeklyTopicsLegendLeaguePostingPermission = 3
 
 # [MessagePackObject(True)]
 _PlayerSettingsType = PlayerSettingsType
@@ -6045,6 +6121,28 @@ class ErrorCode(_Enum):
     StarsGuidanceTradeShopConsumeItemInvalid = 432002
     # [Description("交換制限を超えました。")]
     StarsGuidanceTradeShopOverLimitTradeCount = 432003
+    # [Description("人気投票機能は使えません。")]
+    PopularityVoteUnavailable = 442000
+    # [Description("人気投票が可能な期限ではありません。")]
+    PopularityVoteNotVotingPeriod = 442001
+    # [Description("投票可能なキャラではありません。")]
+    PopularityVoteNotEntryCharacter = 442002
+    # [Description("マイリストから解除できません。")]
+    PopularityVoteInvalidRemoveCharacterFromMyList = 442003
+    # [Description("マイリストに登録ずみのキャラクターです。")]
+    PopularityVoteAlreadyRegisterCharacter = 442004
+    # [Description("マイリストに登録できないキャラクターです。")]
+    PopularityVoteNotFoundEntryCharacter = 442005
+    # [Description("投票報酬がありません。")]
+    PopularityVoteNotFoundVoteCountReward = 442006
+    # [Description("累積投票数が足りません。")]
+    PopularityVoteNotEnoughGoalVoteCount = 442007
+    # [Description("受け取り済みの報酬です。")]
+    PopularityVoteAlreadyRewardGoalVoteCountItem = 442008
+    # [Description("予選結果を確認できる期限ではありません。")]
+    PopularityVoteUnavailablePreliminaryResult = 442009
+    # [Description("本選結果を確認できる期限ではありません。")]
+    PopularityVoteUnavailableFinalResult = 442010
     # [Description("存在しないTreasureChestです。")]
     ItemOpenTreasureChestIdNotFound = 602004
     # [Description("存在しないTreasureChestです。")]
@@ -7127,6 +7225,18 @@ class UserPresentDtoInfo():
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
+class VoteCharacter():
+    CharacterId: int = 0
+    VoteCount: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class PopularityVoteRewardInfo():
+    GoalVoteCount: int = 0
+    IsReceived: bool = False
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
 class ClearNotificationInfo():
     NotificationType: _NotificationType = _field(default_factory=lambda: _NotificationType())
     Value: int = 0
@@ -7418,6 +7528,8 @@ class CharacterSortType(_Enum):
     Favorite = 8
     # [Description("ソートしない")]
     None_ = 9
+    # [Description("人気投票")]
+    PopularityVote = 10
 
 # [Description("ジェンドリーグアイコン報酬表示タブタイプ")]
 class LegendLeagueIconRewardDisplayTabType(_Enum):

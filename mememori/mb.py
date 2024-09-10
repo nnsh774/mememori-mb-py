@@ -2722,6 +2722,65 @@ class PlayerRankMB(MasterBookBase):
     # [PropertyOrder(9)]
     DamageEnhanceBonus: int = 0
 
+# [Description("人気投票")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class PopularityVoteMB(MasterBookBase):
+    # [Description("開始日時")]
+    # [PropertyOrder(1)]
+    StartTimeFixJST: str = ""
+    # [Description("ミッション開始日時（現地時間）")]
+    # [PropertyOrder(10)]
+    MissionStartTime: str = ""
+    # [Description("ミッション終了日時（現地時間）")]
+    # [PropertyOrder(11)]
+    MissionEndTime: str = ""
+    # [Description("ミッションリセット日時（現地時間）")]
+    # [PropertyOrder(12)]
+    MissionResetTime: str = ""
+    # [Description("対象ミッションID")]
+    # [PropertyOrder(13)]
+    TargetMissionIdList: list[int] = _field(default_factory=list["int"])
+    # [Description("本選出場定員数")]
+    # [PropertyOrder(14)]
+    FinalCharacterCount: int = 0
+    # [Description("結果発表設定リスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(15)]
+    ResultPresentationSettingList: list[ResultPresentationSetting] = _field(default_factory=list["ResultPresentationSetting"])
+    # [Description("エントリーキャラクターリスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(16)]
+    EntryCharacterList: list[EntryCharacter] = _field(default_factory=list["EntryCharacter"])
+    # [Description("投票報酬リスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(17)]
+    PopularityVoteRewardList: list[PopularityVoteReward] = _field(default_factory=list["PopularityVoteReward"])
+    # [Description("終了日時")]
+    # [PropertyOrder(2)]
+    EndTimeFixJST: str = ""
+    # [Description("予選開始日時")]
+    # [PropertyOrder(3)]
+    PreliminaryStartTimeFixJst: str = ""
+    # [Description("予選終了日時")]
+    # [PropertyOrder(4)]
+    PreliminaryEndTimeFixJst: str = ""
+    # [Description("本選開始日時")]
+    # [PropertyOrder(5)]
+    FinalStartTimeFixJst: str = ""
+    # [Description("本選終了日時")]
+    # [PropertyOrder(6)]
+    FinalEndTimeFixJst: str = ""
+    # [Description("結果発表開始日時")]
+    # [PropertyOrder(7)]
+    FinalResultStartTimeFixJst: str = ""
+    # [Description("予選中間発表日時")]
+    # [PropertyOrder(8)]
+    PreliminaryInterimStartTimeFixJst: str = ""
+    # [Description("本選中間発表日時")]
+    # [PropertyOrder(9)]
+    FinalInterimStartTimeFixJst: str = ""
+
 # [Description("PVPランキング報酬")]
 # [MessagePackObject(True)]
 _PvpRankingRewardType = PvpRankingRewardType
@@ -3220,6 +3279,11 @@ class TotalActivityMedalRewardMB(MasterBookBase):
     # [Description("ミッション種別")]
     # [PropertyOrder(1)]
     MissionGroupType: _MissionGroupType = _field(default_factory=lambda: _MissionGroupType())
+    # [Description("イベント報酬リスト")]
+    # [Nest(False, 0)]
+    # [Obsolete]
+    # [PropertyOrder(10)]
+    EventMissionRewardList: list[EventMissionReward] = _field(default_factory=list["EventMissionReward"])
     # [Description("MissionGroupTypeごとの指定値")]
     # [PropertyOrder(2)]
     Value: int = 0
@@ -3230,16 +3294,23 @@ class TotalActivityMedalRewardMB(MasterBookBase):
     # [Nest(False, 0)]
     # [PropertyOrder(4)]
     RewardList: list[MissionReward] = _field(default_factory=list["MissionReward"])
-    # [Description("イベント開始時刻")]
+    # [Description("開始時刻")]
     # [PropertyOrder(5)]
+    StartTime: str = ""
+    # [Description("終了時刻")]
+    # [PropertyOrder(6)]
+    EndTime: str = ""
+    # [Description("表示順(昇順)")]
+    # [PropertyOrder(7)]
+    SortOrder: int = 0
+    # [Description("イベント開始時刻")]
+    # [Obsolete]
+    # [PropertyOrder(8)]
     EventStartTime: str = ""
     # [Description("イベント終了時刻")]
-    # [PropertyOrder(6)]
+    # [Obsolete]
+    # [PropertyOrder(9)]
     EventEndTime: str = ""
-    # [Description("イベント報酬リスト")]
-    # [Nest(False, 0)]
-    # [PropertyOrder(7)]
-    EventMissionRewardList: list[EventMissionReward] = _field(default_factory=list["EventMissionReward"])
 
 # [Description("無窮の塔　敵データ")]
 # [MessagePackObject(True)]
