@@ -6143,6 +6143,16 @@ class ErrorCode(_Enum):
     PopularityVoteUnavailablePreliminaryResult = 442009
     # [Description("本選結果を確認できる期限ではありません。")]
     PopularityVoteUnavailableFinalResult = 442010
+    # [Description("シリアルコードに間違いがあるか不正な文字が含まれています。")]
+    SerialCodeInvalidCode = 450001
+    # [Description("シリアルコードの有効期限が終了しました。")]
+    SerialCodeInvalidDate = 450002
+    # [Description("連続して無効なコードが入力されました。5分後に再度お試しください。")]
+    SerialCodeContinuousInput = 450003
+    # [Description("このシリアルコードは既に使用されました。")]
+    SerialCodeAlreadyUsedSameCodeGroup = 450004
+    # [Description("利用条件を満たしていないシリアルコードが入力されました。入力条件をご確認ください。")]
+    SerialCodeAlreadyUsedOtherCodeGroup = 450005
     # [Description("存在しないTreasureChestです。")]
     ItemOpenTreasureChestIdNotFound = 602004
     # [Description("存在しないTreasureChestです。")]
@@ -7113,6 +7123,17 @@ class StripeShopProductInfo():
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
+class PresentItem():
+    # [Description("アイテム")]
+    # [Nest(True, 2)]
+    # [PropertyOrder(1)]
+    Item: UserItem = _field(default_factory=lambda: UserItem())
+    # [Description("キャラクターレアリティ")]
+    # [PropertyOrder(2)]
+    RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
 class RetrieveItemData():
     # [Description("回収アイテム")]
     # [Nest(True, 2)]
@@ -7199,17 +7220,6 @@ class MapPlayerInfo():
 class UserMapBuildingDtoInfo():
     QuestMapBuildingId: int = 0
     SelectedIndex: int = 0
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class PresentItem():
-    # [Description("アイテム")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(1)]
-    Item: UserItem = _field(default_factory=lambda: UserItem())
-    # [Description("キャラクターレアリティ")]
-    # [PropertyOrder(2)]
-    RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
