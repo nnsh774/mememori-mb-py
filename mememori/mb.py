@@ -405,6 +405,9 @@ class CharacterCollectionLevelMB(MasterBookBase):
     # [Description("キャラクターレアリティ増加")]
     # [PropertyOrder(6)]
     CharacterRarityBonus: int = 0
+    # [Description("レベル上限増加")]
+    # [PropertyOrder(7)]
+    MaxLevelIncreaseValue: int = 0
 
 # [Description("アルカナ")]
 # [MessagePackObject(True)]
@@ -422,6 +425,9 @@ class CharacterCollectionMB(MasterBookBase):
     # [Description("新アルカナの終了時間(JST)")]
     # [PropertyOrder(4)]
     EndTimeFixJST: str = ""
+    # [Description("表示開始達成パーティLv")]
+    # [PropertyOrder(5)]
+    RequiredPartyLv: int = 0
 
 # [Description("アルカナ解放報酬")]
 # [MessagePackObject(True)]
@@ -737,6 +743,55 @@ class ChatEffectKeywordMB(MasterBookBase):
     # [PropertyOrder(4)]
     EndTimeFixJST: str = ""
 
+# [Description("コラボミッション")]
+# [MessagePackObject(True)]
+_MypageIconDisplayLocationType = MypageIconDisplayLocationType
+_StartEndTimeZoneType = StartEndTimeZoneType
+@_dataclass(slots=True)
+class CollabMissionMB(MasterBookBase):
+    # [Description("時間タイプ")]
+    # [PropertyOrder(1)]
+    StartEndTimeZoneType: _StartEndTimeZoneType = _field(default_factory=lambda: _StartEndTimeZoneType())
+    # [Description("対象ミッションIDリスト")]
+    # [PropertyOrder(10)]
+    TargetMissionIdList: list[int] = _field(default_factory=list["int"])
+    # [Description("Url1")]
+    # [PropertyOrder(11)]
+    Url1: str = ""
+    # [Description("Url2")]
+    # [PropertyOrder(12)]
+    Url2: str = ""
+    # [Description("キャラクターID(楽曲開放ミッション用)")]
+    # [PropertyOrder(13)]
+    CharacterId: int = 0
+    # [Description("アイコン表示箇所")]
+    # [PropertyOrder(14)]
+    MypageIconDisplayLocationType: _MypageIconDisplayLocationType = _field(default_factory=lambda: _MypageIconDisplayLocationType())
+    # [Description("開始日時")]
+    # [PropertyOrder(2)]
+    StartTime: str = ""
+    # [Description("終了日時")]
+    # [PropertyOrder(3)]
+    EndTime: str = ""
+    # [Description("メイン画像Id")]
+    # [PropertyOrder(4)]
+    ImageId: int = 0
+    # [Description("メイン画像座標X")]
+    # [PropertyOrder(5)]
+    ImageX: float = 0.0
+    # [Description("メイン画像座標Y")]
+    # [PropertyOrder(6)]
+    ImageY: float = 0.0
+    # [Description("メイン画像サイズ")]
+    # [PropertyOrder(7)]
+    ImageSize: float = 0.0
+    # [Description("説明文")]
+    # [PropertyOrder(8)]
+    DescriptionTextKey: str = ""
+    # [Description("ミッションタイトル")]
+    # [PropertyOrder(9)]
+    TitleTextKey: str = ""
+
 # [Description("コミュニティ")]
 # [MessagePackObject(True)]
 _CountryCodeType = CountryCodeType
@@ -1034,44 +1089,41 @@ class EquipmentMB(MasterBookBase):
     # [Description("付加パラメータ合計値")]
     # [PropertyOrder(10)]
     AdditionalParameterTotal: int = 0
-    # [Description("武具強化素材テーブルID")]
-    # [PropertyOrder(12)]
-    EquipmentReinforcementMaterialId: int = 0
     # [Description("武具セットID")]
-    # [PropertyOrder(13)]
+    # [PropertyOrder(12)]
     EquipmentSetId: int = 0
     # [Description("専属効果ID")]
-    # [PropertyOrder(14)]
+    # [PropertyOrder(13)]
     ExclusiveEffectId: int = 0
     # [Description("専属スキル説明文ID")]
-    # [PropertyOrder(15)]
+    # [PropertyOrder(14)]
     EquipmentExclusiveSkillDescriptionId: int = 0
     # [Description("進化先武具ID")]
-    # [PropertyOrder(16)]
+    # [PropertyOrder(15)]
     AfterLevelEvolutionEquipmentId: int = 0
     # [Description("進化先レアリティ武具ID")]
-    # [PropertyOrder(17)]
+    # [PropertyOrder(16)]
     AfterRarityEvolutionEquipmentId: int = 0
     # [Description("武具進化テーブルID")]
-    # [PropertyOrder(18)]
+    # [PropertyOrder(17)]
     EquipmentEvolutionId: int = 0
     # [Description("合成情報ID")]
-    # [PropertyOrder(19)]
+    # [PropertyOrder(18)]
     CompositeId: int = 0
+    # [Description("鋳造ID")]
+    # [PropertyOrder(19)]
+    EquipmentForgeId: int = 0
     # [Description("レアリティ")]
     # [PropertyOrder(2)]
     RarityFlags: _Flags[EquipmentRarityFlags] = _field(default_factory=lambda: _Flags["EquipmentRarityFlags"]([]))
-    # [Description("鋳造ID")]
-    # [PropertyOrder(21)]
-    EquipmentForgeId: int = 0
     # [Description("ロック無し鍛錬に必要な銅貨")]
-    # [PropertyOrder(22)]
+    # [PropertyOrder(20)]
     GoldRequiredToTraining: int = 0
     # [Description("最初の宝石スロット解放に必要な銅貨")]
-    # [PropertyOrder(23)]
+    # [PropertyOrder(21)]
     GoldRequiredToOpeningFirstSphereSlot: int = 0
     # [Description("アイコンID")]
-    # [PropertyOrder(24)]
+    # [PropertyOrder(22)]
     IconId: int = 0
     # [Description("武具レベル")]
     # [PropertyOrder(3)]
@@ -1100,10 +1152,17 @@ class EquipmentMB(MasterBookBase):
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class EquipmentReinforcementMaterialMB(MasterBookBase):
-    # [Description("レベル毎の強化アイテムリスト")]
-    # [Nest(False, 0)]
+    # [Description("強化Lv")]
     # [PropertyOrder(1)]
-    ReinforcementMap: list[EquipmentReinforcementMaterialInfo] = _field(default_factory=list["EquipmentReinforcementMaterialInfo"])
+    ReinforcementLevel: int = 0
+    # [Description("武器強化アイテムリスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(2)]
+    WeaponRequiredItemList: list[UserItem] = _field(default_factory=list["UserItem"])
+    # [Description("防具強化アイテムリスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(3)]
+    OthersRequiredItemList: list[UserItem] = _field(default_factory=list["UserItem"])
 
 # [Description("武具強化パラメータテーブル")]
 # [MessagePackObject(True)]
@@ -1138,6 +1197,9 @@ class EquipmentSetMaterialMB(MasterBookBase):
     # [Description("レアリティ")]
     # [PropertyOrder(7)]
     ItemRarityFlags: _Flags[_ItemRarityFlags] = _field(default_factory=lambda: _Flags["_ItemRarityFlags"]([]))
+    # [Description("入手宝箱Id")]
+    # [PropertyOrder(8)]
+    TreasureChestId: int = 0
 
 # [Description("武具セット")]
 # [MessagePackObject(True)]
@@ -1539,6 +1601,9 @@ class GuildRaidBossMB(MasterBookBase):
     # [Description("ワールド報酬キャラ画像サイズ")]
     # [PropertyOrder(26)]
     WorldDamageBarRewardCharacterImageSize: float = 0.0
+    # [Description("マイページ表示タイプ")]
+    # [PropertyOrder(27)]
+    IsActiveMypageIcon: bool = False
     # [Description("ボス種別")]
     # [PropertyOrder(3)]
     GuildRaidBossType: _GuildRaidBossType = _field(default_factory=lambda: _GuildRaidBossType())
@@ -1944,6 +2009,9 @@ class LimitedLoginBonusMB(MasterBookBase):
     # [Description("特別報酬カウントテキスト色")]
     # [PropertyOrder(13)]
     SpecialRewardCountTextColor: str = ""
+    # [Description("アイコン表示箇所")]
+    # [PropertyOrder(14)]
+    MypageIconDisplayLocationType: _MypageIconDisplayLocationType = _field(default_factory=lambda: _MypageIconDisplayLocationType())
     # [Description("終了日時")]
     # [PropertyOrder(2)]
     EndTime: str = ""
@@ -2035,6 +2103,9 @@ class LimitedMissionMB(MasterBookBase):
     # [Description("対象ミッションID")]
     # [PropertyOrder(11)]
     TargetMissionIdList: list[int] = _field(default_factory=list["int"])
+    # [Description("アイコン表示箇所")]
+    # [PropertyOrder(12)]
+    MypageIconDisplayLocationType: _MypageIconDisplayLocationType = _field(default_factory=lambda: _MypageIconDisplayLocationType())
     # [Description("終了日時")]
     # [PropertyOrder(2)]
     EndTime: str = ""
@@ -2285,6 +2356,42 @@ class LocalRaidQuestMB(MasterBookBase):
     # [PropertyOrder(9)]
     LocalRaidEnemyIds: list[int] = _field(default_factory=list["int"])
 
+# [Description("ラッキーチャンス")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class LuckyChanceMB(MasterBookBase):
+    # [Description("時間タイプ")]
+    # [PropertyOrder(1)]
+    StartEndTimeZoneType: _StartEndTimeZoneType = _field(default_factory=lambda: _StartEndTimeZoneType())
+    # [Description("個人情報が削除可能になる日時")]
+    # [PropertyOrder(10)]
+    CanDeletePersonalInfoTime: str = ""
+    # [Description("開始日時")]
+    # [PropertyOrder(2)]
+    StartTime: str = ""
+    # [Description("終了日時")]
+    # [PropertyOrder(3)]
+    EndTime: str = ""
+    # [Description("入力フォーム終了日時")]
+    # [PropertyOrder(4)]
+    InputFormEndTime: str = ""
+    # [Description("表示タイプ")]
+    # [PropertyOrder(5)]
+    MypageIconDisplayLocationType: _MypageIconDisplayLocationType = _field(default_factory=lambda: _MypageIconDisplayLocationType())
+    # [Description("タイトルキー")]
+    # [PropertyOrder(6)]
+    TitleTextKey: str = ""
+    # [Description("ボタンIdリスト")]
+    # [PropertyOrder(7)]
+    LuckyChanceButtonIdList: list[int] = _field(default_factory=list["int"])
+    # [Description("同一ユーザーの抽選上限回数")]
+    # [PropertyOrder(8)]
+    LimitUserDrawCount: int = 0
+    # [Description("消費アイテム")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(9)]
+    ConsumeItem: UserItem = _field(default_factory=lambda: UserItem())
+
 # [Description("ミッションクリア個数報酬")]
 # [MessagePackObject(True)]
 _MissionGroupType = MissionGroupType
@@ -2392,6 +2499,7 @@ class MissionTabNameMB(MasterBookBase):
 
 # [Description("朗読")]
 # [MessagePackObject(True)]
+_MonologueBgmType = MonologueBgmType
 @_dataclass(slots=True)
 class MonologueMB(MasterBookBase):
     # [Description("CharacterDteailVoiceMBのID")]
@@ -2411,6 +2519,9 @@ class MonologueMB(MasterBookBase):
     # [Description("表示開始日時")]
     # [PropertyOrder(5)]
     StartTimeFixJST: str = ""
+    # [Description("朗読再生BGM設定")]
+    # [PropertyOrder(6)]
+    MonologueBgmType: _MonologueBgmType = _field(default_factory=lambda: _MonologueBgmType())
 
 # [Description("月間ログインボーナス")]
 # [MessagePackObject(True)]
@@ -2482,6 +2593,9 @@ class NewCharacterMissionMB(MasterBookBase):
     # [Description("Twitter")]
     # [PropertyOrder(11)]
     TwitterUrl: str = ""
+    # [Description("アイコン表示箇所")]
+    # [PropertyOrder(12)]
+    MypageIconDisplayLocationType: _MypageIconDisplayLocationType = _field(default_factory=lambda: _MypageIconDisplayLocationType())
     # [Description("終了日時")]
     # [PropertyOrder(2)]
     EndTimeFixJST: str = ""
@@ -2591,12 +2705,14 @@ class PanelMB(MasterBookBase):
 
 # [Description("パネルミッション")]
 # [MessagePackObject(True)]
-_StartEndTimeZoneType = StartEndTimeZoneType
 @_dataclass(slots=True)
 class PanelMissionMB(MasterBookBase):
     # [Description("キャンペーンタイトルキー")]
     # [PropertyOrder(1)]
     CampaignTitleKey: str = ""
+    # [Description("アイコン表示箇所")]
+    # [PropertyOrder(12)]
+    MypageIconDisplayLocationType: _MypageIconDisplayLocationType = _field(default_factory=lambda: _MypageIconDisplayLocationType())
     # [Description("シート情報")]
     # [Nest(False, 0)]
     # [PropertyOrder(2)]
