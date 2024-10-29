@@ -2630,33 +2630,36 @@ class OpenContentMB(MasterBookBase):
     # [Description("コンテンツ開放タイプ")]
     # [PropertyOrder(1)]
     OpenContentType: _OpenContentType = _field(default_factory=lambda: _OpenContentType())
-    # [Description("トチュートリアルID")]
+    # [Description("トースト")]
     # [PropertyOrder(10)]
+    ToastKey: str = ""
+    # [Description("チュートリアルID")]
+    # [PropertyOrder(11)]
     TutorialId: int = 0
-    # [Description("コンテンツ開放値")]
+    # [Description("ガイド表示開始値")]
     # [PropertyOrder(2)]
+    GuideStartValue: int = 0
+    # [Description("コンテンツ開放値")]
+    # [PropertyOrder(3)]
     OpenContentValue: int = 0
     # [Description("開放内容キー")]
-    # [PropertyOrder(3)]
+    # [PropertyOrder(4)]
     DescriptionKey: str = ""
     # [Description("演出パス")]
-    # [PropertyOrder(4)]
+    # [PropertyOrder(5)]
     AssetPath: str = ""
     # [Description("解放されるコマンドの種類")]
-    # [PropertyOrder(5)]
+    # [PropertyOrder(6)]
     OpenCommandType: _OpenCommandType = _field(default_factory=lambda: _OpenCommandType())
     # [Description("ガイド表示タイプ")]
-    # [PropertyOrder(6)]
+    # [PropertyOrder(7)]
     IsActiveGuide: bool = False
     # [Description("ガイド表示優先順")]
-    # [PropertyOrder(7)]
+    # [PropertyOrder(8)]
     GuideOrderNumber: int = 0
     # [Description("ガイド説明文")]
-    # [PropertyOrder(8)]
-    GuideDescriptionKey: str = ""
-    # [Description("トースト")]
     # [PropertyOrder(9)]
-    ToastKey: str = ""
+    GuideDescriptionKey: str = ""
 
 # [Description("パネル図鑑")]
 # [MessagePackObject(True)]
@@ -3395,11 +3398,6 @@ class TotalActivityMedalRewardMB(MasterBookBase):
     # [Description("ミッション種別")]
     # [PropertyOrder(1)]
     MissionGroupType: _MissionGroupType = _field(default_factory=lambda: _MissionGroupType())
-    # [Description("イベント報酬リスト")]
-    # [Nest(False, 0)]
-    # [Obsolete]
-    # [PropertyOrder(10)]
-    EventMissionRewardList: list[EventMissionReward] = _field(default_factory=list["EventMissionReward"])
     # [Description("MissionGroupTypeごとの指定値")]
     # [PropertyOrder(2)]
     Value: int = 0
@@ -3419,14 +3417,6 @@ class TotalActivityMedalRewardMB(MasterBookBase):
     # [Description("表示順(昇順)")]
     # [PropertyOrder(7)]
     SortOrder: int = 0
-    # [Description("イベント開始時刻")]
-    # [Obsolete]
-    # [PropertyOrder(8)]
-    EventStartTime: str = ""
-    # [Description("イベント終了時刻")]
-    # [Obsolete]
-    # [PropertyOrder(9)]
-    EventEndTime: str = ""
 
 # [Description("無窮の塔　敵データ")]
 # [MessagePackObject(True)]

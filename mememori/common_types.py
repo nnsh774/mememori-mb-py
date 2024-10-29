@@ -2726,21 +2726,6 @@ class BattleType(_Enum):
     # [Description("ギルドツリー")]
     GuildTower = 12
 
-class IHasEventStartEndTime(_Protocol):
-    # [DateTimeString]
-    EventEndTime: str
-    # [DateTimeString]
-    EventStartTime: str
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class EventMissionReward():
-    # [Nest(True, 1)]
-    # [PropertyOrder(1)]
-    EventItem: UserItem = _field(default_factory=lambda: UserItem())
-    # [PropertyOrder(2)]
-    RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
-
 # [Description("無窮の塔タイプ")]
 class TowerType(_Enum):
     None_ = 0
@@ -3405,6 +3390,8 @@ class EffectType(_Enum):
     GiveDamageStandardUp = 1026
     # [Description("被ダメージ基準値減少")]
     ReceiveDamageStandardDown = 1027
+    # [Description("被持続ダメージ減少")]
+    ReceiveTransientDamageDown = 1028
     # [Description("命中率増加")]
     HitRateUp = 1500
     # [Description("回避率増加")]
@@ -3611,6 +3598,8 @@ class EffectType(_Enum):
     GiveDamageStandardDown = 5025
     # [Description("被ダメージ基準値増加")]
     ReceiveDamageStandardUp = 5026
+    # [Description("被持続ダメージ増加")]
+    ReceiveTransientDamageUp = 5028
     # [Description("命中率減少")]
     HitRateDown = 5500
     # [Description("回避率減少")]
@@ -6645,6 +6634,8 @@ class ErrorCode(_Enum):
     MagicOnionGlobalGvgNotOpen = 900317
     # [Description("GlobalGvgでキャラクターのキャッシュデータが存在しないためパーティ追加に失敗しました。")]
     MagicOnionGlobalGvgAddCastlePartyNotFoundCharacterCache = 900318
+    # [Description("グランドバトルの参加条件を満たしていません。")]
+    MagicOnionNotJoinedGrandBattle = 900319
     # [Description("認証に失敗しました。")]
     MagicOnionAuthenticationFail = 1000000
     # [Description("プレイヤーの情報を見つけません。")]
