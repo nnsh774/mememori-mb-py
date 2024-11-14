@@ -1890,6 +1890,8 @@ class LimitedEventType(_Enum):
     SerialCode = 2
     # [Description("通知強制削除")]
     NotificationForceCancel = 10000
+    # [Description("GooglePlayのレシート消費をクライアントで行う")]
+    EnableGooglePlayReceiptConsumeByClient = 10001
 
 # [Description("キャラクターレアリティを持つ可能性があるアイテムが実装するインターフェース")]
 class IUserCharacterItem(_Protocol):
@@ -1945,6 +1947,8 @@ class LocalNotificationSendType(_Enum):
     TimeSpecified = 1
     # [Description("放置報酬上限到達")]
     AutoBattle = 2
+    # [Description("一週間限定パック終了直前")]
+    OneWeekLimitedPack = 3
 
 # [Description("ローカル通知種別")]
 class LocalNotificationType(_Enum):
@@ -1955,6 +1959,8 @@ class LocalNotificationType(_Enum):
     LocalRaid = 2
     # [Description("バトルリーグ報酬受け取り")]
     BattleLeagueReward = 3
+    # [Description("一週間パック終了")]
+    OneWeekLimitedPack = 4
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -2528,6 +2534,8 @@ class PatternSettingType(_Enum):
     InviteWorldByDynamicLink = 5
     # [Description("初課金ボーナスのダイヤ購入ボタンの遷移先")]
     FirstChargeBonusButton = 6
+    # [Description("一週間限定パックの購入期限プッシュ通知")]
+    OneWeekLimitedPackPushNotification = 7
 
 # [Description("発表タイプ")]
 class PopularityPresentationVoteType(_Enum):
@@ -4633,6 +4641,7 @@ class UserSyncData():
     DataLinkageMap: dict[SnsType, bool] = _field(default_factory=dict["SnsType", "bool"])
     DeletedCharacterGuidList: list[str] = _field(default_factory=list["str"])
     DeletedEquipmentGuidList: list[str] = _field(default_factory=list["str"])
+    ExistPurchasableOneWeekLimitedPack: bool | None = None
     ExistUnconfirmedRetrieveItemHistory: bool | None = None
     ExistVipDailyGift: bool | None = None
     GivenItemCountInfoList: list[UserItem] = _field(default_factory=list["UserItem"])

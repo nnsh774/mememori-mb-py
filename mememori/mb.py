@@ -2012,6 +2012,15 @@ class LimitedLoginBonusMB(MasterBookBase):
     # [Description("アイコン表示箇所")]
     # [PropertyOrder(14)]
     MypageIconDisplayLocationType: _MypageIconDisplayLocationType = _field(default_factory=lambda: _MypageIconDisplayLocationType())
+    # [Description("キャラ画像座標X")]
+    # [PropertyOrder(15)]
+    CharacterImageX: float = 0.0
+    # [Description("キャラ画像座標Y")]
+    # [PropertyOrder(16)]
+    CharacterImageY: float = 0.0
+    # [Description("キャラ画像サイズ")]
+    # [PropertyOrder(17)]
+    CharacterImageSize: float = 0.0
     # [Description("終了日時")]
     # [PropertyOrder(2)]
     EndTime: str = ""
