@@ -3412,6 +3412,12 @@ class EffectType(_Enum):
     DebuffHitRateUp = 1504
     # [Description("弱体効果耐性率増加")]
     DebuffResistRateUp = 1505
+    # [Description("攻撃力増加(A)")]
+    AttackPowerATypeUp = 1610
+    # [Description("与ダメージ増加(A)")]
+    GiveDamageATypeUp = 1620
+    # [Description("被ダメージ減少(A)")]
+    ReceiveDamageATypeDown = 1630
     # [Description("ダメージ無効化")]
     DamageGuard = 2001
     # [Description("シールド1")]
@@ -3620,6 +3626,12 @@ class EffectType(_Enum):
     DebuffHitRateDown = 5504
     # [Description("弱体効果耐性率減少")]
     DebuffResistRateDown = 5505
+    # [Description("攻撃力減少(A)")]
+    AttackPowerATypeDown = 5610
+    # [Description("与ダメージ減少(A)")]
+    GiveDamageATypeDown = 5620
+    # [Description("被ダメージ増加(A)")]
+    ReceiveDamageATypeUp = 5630
     # [Description("スタン")]
     Stun = 6001
     # [Description("混乱")]
@@ -4705,6 +4717,9 @@ class UserSyncData():
 _UserSyncData = UserSyncData
 class IUserSyncApiResponse(_Protocol):
     UserSyncData: _UserSyncData
+
+class IHasSteamTicketApiRequest(_Protocol):
+    SteamTicket: str
 
 # [Description("アカウント停止タイプ")]
 class AccountSuspensionType(_Enum):
@@ -6773,6 +6788,34 @@ class ErrorCode(_Enum):
     StripeNotEnoughPoint = 5010012
     # [Description("Stripe セッションデータがありません。")]
     StripeNotFoundSession = 5010013
+    # [Description("ユーザーのSteamIdの取得に失敗しました。")]
+    SteamFailedToGetUserSteamId = 6000101
+    # [Description("既に別のSteamアカウントと紐づいたユーザーです。")]
+    SteamAlreadyLinkedOtherSteamId = 6000102
+    # [Description("端末種別がSteamではありません。")]
+    SteamDeviceTypeIsNotSteam = 6000201
+    # [Description("未定義の言語コードです。")]
+    SteamNotDefinedLanguageCode = 6000202
+    # [Description("Steamのユーザー情報取得に失敗しました。")]
+    SteamFailedToGetUserInfo = 6000203
+    # [Description("価格情報が定義されていません。")]
+    SteamNotDefinedProductPriceInfo = 6000204
+    # [Description("Steamでの課金開始に失敗しました。")]
+    SteamFailedToInitTxn = 6000205
+    # [Description("Steamでの購入ステータス取得に失敗しました。")]
+    SteamFailedToQueryTxn = 6000301
+    # [Description("Steamでの購入完了に失敗しました。")]
+    SteamFailedToFinalizeTxn = 6000302
+    # [Description("Steamでの課金に失敗しました。")]
+    SteamNotCorrectSteamId = 6000303
+    # [Description("Steamでの課金に失敗しました。")]
+    SteamInvalidTxnStatus = 6000304
+    # [Description("Steamでのサブスク情報取得に失敗しました。")]
+    SteamFailedToGetUserAgreementInfo = 6000305
+    # [Description("Steamでのサブスク情報取得に失敗しました。")]
+    SteamNotFoundUserAgreementInfo = 6000306
+    # [Description("Steamでのサブスク情報取得に失敗しました。")]
+    SteamAgreementInfoIsNull = 6000307
 
 # [MessagePackObject(True)]
 _ErrorCode = ErrorCode
@@ -6861,9 +6904,6 @@ class StarsGuidanceConsumeItemInfo():
     # [Description("交換先アイテム個数")]
     # [PropertyOrder(4)]
     GiveItemCount: int = 0
-
-class IHasSteamTicketApiRequest(_Protocol):
-    SteamTicket: str
 
 class ShopProductType(_Enum):
     # [Description("買い切り一般商品")]
@@ -7557,13 +7597,6 @@ class ClearNotificationInfo():
     NotificationType: _NotificationType = _field(default_factory=lambda: _NotificationType())
     Value: int = 0
 
-# [Description("お知らせカテゴリー")]
-class NoticeCategoryType(_Enum):
-    # [Description("イベントタブ")]
-    EventTab = 0
-    # [Description("お知らせタブ")]
-    NoticeTab = 1
-
 # [Description("お知らせボタンのシンボル画像タイプ")]
 class NoticeButtonImageType(_Enum):
     # [Description("表示なし")]
@@ -7586,6 +7619,13 @@ class NoticeButtonImageType(_Enum):
     Other = 8
     # [Description("アンケート")]
     Survey = 9
+
+# [Description("お知らせカテゴリー")]
+class NoticeCategoryType(_Enum):
+    # [Description("イベントタブ")]
+    EventTab = 0
+    # [Description("お知らせタブ")]
+    NoticeTab = 1
 
 # [Description("お知らせ情報")]
 # [MessagePackObject(True)]
