@@ -653,7 +653,7 @@ class CharacterProfileMB(MasterBookBase):
     # [Nest(False, 0)]
     # [PropertyOrder(8)]
     MovieJpUrl: TranslatedText = _field(default_factory=lambda: TranslatedText())
-    # [Description("動画配信サイトURL(JP)")]
+    # [Description("動画配信サイトURL(US)")]
     # [Nest(False, 0)]
     # [PropertyOrder(9)]
     MovieUsUrl: TranslatedText = _field(default_factory=lambda: TranslatedText())
@@ -1753,6 +1753,7 @@ class GuildTowerEventMB(MasterBookBase):
     # [Description("終了日時(現地時間)")]
     # [PropertyOrder(3)]
     EndTime: str = ""
+    # [DateTimeString]
     # [Description("バナー表示終了日時")]
     # [PropertyOrder(4)]
     DisplayBannerEndTime: str = ""
@@ -1888,6 +1889,21 @@ class InquiryButtonMB(MasterBookBase):
     # [Description("デバイスタイプリスト(空いている場合に全体)")]
     # [PropertyOrder(7)]
     DeviceTypes: list[int] = _field(default_factory=list["int"])
+
+# [Description("アイテム所持上限クエスト切替")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class ItemMaxCountSwitchingQuestMB(MasterBookBase):
+    # [Description("アイテム種別")]
+    # [PropertyOrder(1)]
+    ItemType: _ItemType = _field(default_factory=lambda: _ItemType())
+    # [Description("アイテムID")]
+    # [PropertyOrder(2)]
+    ItemId: int = 0
+    # [Description("所持数上限切替クエストリスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(3)]
+    MaxCountSwitchingQuestList: list[MaxCountSwitchingQuest] = _field(default_factory=list["MaxCountSwitchingQuest"])
 
 # [Description("アイテムの表示情報")]
 # [MessagePackObject(True)]
@@ -2372,6 +2388,7 @@ class LuckyChanceMB(MasterBookBase):
     # [Description("時間タイプ")]
     # [PropertyOrder(1)]
     StartEndTimeZoneType: _StartEndTimeZoneType = _field(default_factory=lambda: _StartEndTimeZoneType())
+    # [DateTimeString]
     # [Description("個人情報が削除可能になる日時")]
     # [PropertyOrder(10)]
     CanDeletePersonalInfoTime: str = ""
@@ -2381,6 +2398,7 @@ class LuckyChanceMB(MasterBookBase):
     # [Description("終了日時")]
     # [PropertyOrder(3)]
     EndTime: str = ""
+    # [DateTimeString]
     # [Description("入力フォーム終了日時")]
     # [PropertyOrder(4)]
     InputFormEndTime: str = ""
@@ -2525,6 +2543,7 @@ class MonologueMB(MasterBookBase):
     # [Nest(False, 0)]
     # [PropertyOrder(4)]
     MonologueSettingDatasUS: list[MonologueSettingData] = _field(default_factory=list["MonologueSettingData"])
+    # [DateTimeString]
     # [Description("表示開始日時")]
     # [PropertyOrder(5)]
     StartTimeFixJST: str = ""
@@ -2738,6 +2757,7 @@ class PanelMissionMB(MasterBookBase):
     # [Description("終了日時")]
     # [PropertyOrder(5)]
     EndTime: str = ""
+    # [DateTimeString]
     # [Description("強制開始時刻(現地時間)")]
     # [PropertyOrder(6)]
     ForceStartTime: str = ""
@@ -2857,12 +2877,15 @@ class PopularityVoteMB(MasterBookBase):
     # [Description("開始日時")]
     # [PropertyOrder(1)]
     StartTimeFixJST: str = ""
+    # [DateTimeString]
     # [Description("ミッション開始日時（現地時間）")]
     # [PropertyOrder(10)]
     MissionStartTime: str = ""
+    # [DateTimeString]
     # [Description("ミッション終了日時（現地時間）")]
     # [PropertyOrder(11)]
     MissionEndTime: str = ""
+    # [DateTimeString]
     # [Description("ミッションリセット日時（現地時間）")]
     # [PropertyOrder(12)]
     MissionResetTime: str = ""
@@ -2887,24 +2910,31 @@ class PopularityVoteMB(MasterBookBase):
     # [Description("終了日時")]
     # [PropertyOrder(2)]
     EndTimeFixJST: str = ""
+    # [DateTimeString]
     # [Description("予選開始日時")]
     # [PropertyOrder(3)]
     PreliminaryStartTimeFixJst: str = ""
+    # [DateTimeString]
     # [Description("予選終了日時")]
     # [PropertyOrder(4)]
     PreliminaryEndTimeFixJst: str = ""
+    # [DateTimeString]
     # [Description("本選開始日時")]
     # [PropertyOrder(5)]
     FinalStartTimeFixJst: str = ""
+    # [DateTimeString]
     # [Description("本選終了日時")]
     # [PropertyOrder(6)]
     FinalEndTimeFixJst: str = ""
+    # [DateTimeString]
     # [Description("結果発表開始日時")]
     # [PropertyOrder(7)]
     FinalResultStartTimeFixJst: str = ""
+    # [DateTimeString]
     # [Description("予選中間発表日時")]
     # [PropertyOrder(8)]
     PreliminaryInterimStartTimeFixJst: str = ""
+    # [DateTimeString]
     # [Description("本選中間発表日時")]
     # [PropertyOrder(9)]
     FinalInterimStartTimeFixJst: str = ""

@@ -1851,6 +1851,17 @@ class InquiryButtonType(_Enum):
     # [Description("アカウント削除")]
     AccountDelete = 3
 
+# [Description("所持数上限切替クエスト")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MaxCountSwitchingQuest():
+    # [Description("クエストID")]
+    # [PropertyOrder(1)]
+    QuestId: int = 0
+    # [Description("所持数上限")]
+    # [PropertyOrder(2)]
+    MaxCount: int = 0
+
 # [Description("第2フレーム種類")]
 class SecondaryFrameType(_Enum):
     # [Description("不明")]
@@ -4047,6 +4058,20 @@ class WeeklyTopicsShopData():
     ExpirationTimeStamp: int = 0
     TradeShopItemList: list[TradeShopItem] = _field(default_factory=list["TradeShopItem"])
 
+# [Description("アイテム所持上限確認済みクエスト")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class ConfirmedItemQuest():
+    # [Description("アイテムタイプ")]
+    # [PropertyOrder(1)]
+    ItemType: _ItemType = _field(default_factory=lambda: _ItemType())
+    # [Description("アイテムId")]
+    # [PropertyOrder(2)]
+    ItemId: int = 0
+    # [Description("クエストID")]
+    # [PropertyOrder(3)]
+    QuestId: int = 0
+
 class SnsType(_Enum):
     None_ = 0
     OrtegaId = 1
@@ -4069,7 +4094,7 @@ class LeadLockEquipmentDialogType(_Enum):
     None_ = 0
     # [Description("新キャラ入手")]
     NewCharacter = 1
-    # [Description("最後の更新から7日経過")]
+    # [Description("最後の更新またはキャンセルから一定期間経過")]
     PassedDays = 2
 
 # [MessagePackObject(True)]
@@ -4305,8 +4330,8 @@ class GuidanceType(_Enum):
     RecruitSetting = 1
     # [Description("ギルド加入")]
     GuildJoining = 2
-    # [Description("ギルド移籍")]
-    GuildMove = 3
+    # [Description("勧誘設定")]
+    RecruitSetting2 = 3
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -4610,6 +4635,13 @@ class UserStatusDtoInfo():
     VipExp: int = 0
 
 # [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserSyncGvgDeckDtoInfo():
+    EndIntervalTimestamp: int = 0
+    PlayerId: int = 0
+    SelectedDeckType: DeckUseContentType = _field(default_factory=lambda: DeckUseContentType())
+
+# [MessagePackObject(True)]
 _TowerType = TowerType
 @_dataclass(slots=True)
 class UserTowerBattleDtoInfo():
@@ -4643,11 +4675,13 @@ _UserRankUpPrioritySettingDtoInfo = UserRankUpPrioritySettingDtoInfo
 _UserRecruitGuildMemberSettingDtoInfo = UserRecruitGuildMemberSettingDtoInfo
 _UserShopFirstChargeBonusDtoInfo = UserShopFirstChargeBonusDtoInfo
 _UserStatusDtoInfo = UserStatusDtoInfo
+_UserSyncGvgDeckDtoInfo = UserSyncGvgDeckDtoInfo
 @_dataclass(slots=True)
 class UserSyncData():
     BlockPlayerIdList: list[int] = _field(default_factory=list["int"])
     CanJoinTodayLegendLeague: bool | None = None
     ClearedTutorialIdList: list[int] = _field(default_factory=list["int"])
+    ConfirmedItemQuestList: list[ConfirmedItemQuest] = _field(default_factory=list["ConfirmedItemQuest"])
     CreateUserIdTimestamp: int | None = None
     CreateWorldLocalTimeStamp: int | None = None
     DataLinkageMap: dict[SnsType, bool] = _field(default_factory=dict["SnsType", "bool"])
@@ -4711,6 +4745,7 @@ class UserSyncData():
     UserShopMonthlyBoostDtoInfos: list[UserShopMonthlyBoostDtoInfo] = _field(default_factory=list["UserShopMonthlyBoostDtoInfo"])
     UserShopSubscriptionDtoInfos: list[UserShopSubscriptionDtoInfo] = _field(default_factory=list["UserShopSubscriptionDtoInfo"])
     UserStatusDtoInfo: _UserStatusDtoInfo = _field(default_factory=lambda: _UserStatusDtoInfo())
+    UserSyncGvgDeckDtoInfo: _UserSyncGvgDeckDtoInfo = _field(default_factory=lambda: _UserSyncGvgDeckDtoInfo())
     UserTowerBattleDtoInfos: list[UserTowerBattleDtoInfo] = _field(default_factory=list["UserTowerBattleDtoInfo"])
     UserVipGiftDtoInfos: list[UserVipGiftDtoInfo] = _field(default_factory=list["UserVipGiftDtoInfo"])
 
@@ -5006,7 +5041,7 @@ _ErrorHandlingType = ErrorHandlingType
 class IErrorResponse(_Protocol):
     ErrorHandlingType: _ErrorHandlingType
     ErrorMessageId: int
-    MessageParams: str
+    MessageParams: list[str]
 
 # [Description("エラーコード")]
 class ErrorCode(_Enum):
@@ -5152,6 +5187,8 @@ class ErrorCode(_Enum):
     UserClearPartyNotFound = 91007
     # [Description("ユーザのチュートリアルデータが見つかりません")]
     UserTutorialDtoNotFound = 91008
+    # [Description("ユーザのGvgパーティ同期データが見つかりません")]
+    UserUserSyncGvgDeckDtoNotFound = 91009
     # [Description("所持してないキャラーです")]
     UserNotHaveCharacter = 92000
     # [Description("無効な誕生日です。")]
@@ -5176,6 +5213,12 @@ class ErrorCode(_Enum):
     UserSaveDeckOverMaxCharacterCount = 93106
     # [Description("パーティNoの値が不正です。")]
     UserSaveDeckInvalidDeckNo = 93107
+    # [Description("不正なデッキ種別です。")]
+    UserSyncGvgDeckInvalidDeckType = 93108
+    # [Description("パーティ同期のインターバル中です。")]
+    UserSyncGvgDeckInterval = 93109
+    # [Description("パーティが同期されていないため同期を解除できません。")]
+    UserUnsyncGvgDeckNotSyncGvgDeck = 93110
     # [Description("ユーザーのステータスデータが存在しません。")]
     BattleCommonUserStatusDtoNotFound = 96000
     # [Description("例外ケースサブスキルの条件データが存在しません。")]
@@ -6828,7 +6871,7 @@ class ApiErrorResponse(ApiResponseBase):
     ErrorMessageId: int = 0
     Message: str = ""
     # [Obsolete("ErrorCodeに移行します")]
-    MessageParams: str = ""
+    MessageParams: list[str] = _field(default_factory=list["str"])
 
 # [Description("パーティー")]
 # [MessagePackObject(True)]
@@ -8717,7 +8760,7 @@ class ChatInfo(_ArrayPacked):
     # [Key(9)]
     SystemChatMessageIdType: _SystemChatMessageIdType = _field(default_factory=lambda: _SystemChatMessageIdType())
     # [Key(10)]
-    SystemChatMessageArgs: str = ""
+    SystemChatMessageArgs: list[str] = _field(default_factory=list["str"])
     # [Key(11)]
     GuildName: str = ""
 
