@@ -3681,11 +3681,14 @@ class TreasureChestMB(MasterBookBase):
     # [Description("TreasureChestItemMBのIdリスト")]
     # [PropertyOrder(12)]
     TreasureChestItemIdList: list[int] = _field(default_factory=list["int"])
-    # [Description("終了日時")]
+    # [Description("一括使用")]
     # [PropertyOrder(13)]
+    BulkUseEnabled: bool = False
+    # [Description("終了日時")]
+    # [PropertyOrder(14)]
     EndTime: str = ""
     # [Description("開始日時")]
-    # [PropertyOrder(14)]
+    # [PropertyOrder(15)]
     StartTime: str = ""
     # [Description("表示名キー")]
     # [PropertyOrder(2)]

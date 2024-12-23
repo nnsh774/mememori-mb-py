@@ -121,6 +121,8 @@ class ItemType(_Enum):
     PopularityVote = 39
     # [Description("ラッキーチャンスガチャチケット")]
     LuckyChanceGachaTicket = 40
+    # [Description("チャットふきだし")]
+    ChatBalloon = 41
     # [Description("イベント交換所アイテム")]
     EventExchangePlaceItem = 50
     # [Description("Stripeクーポン")]
@@ -2279,6 +2281,8 @@ class OpenCommandType(_Enum):
     BulkSphereSet = 440
     # [Description("イベントポータル")]
     EventPortal = 460
+    # [Description("アイテムボックス 消費タブ一括使用")]
+    BulkUseItem = 480
     # [Description("武具固定")]
     LockEquipment = 1000
     # [Description("武具固定(ギルドバトル用)")]
@@ -3013,6 +3017,7 @@ _PlayerRecruitType = PlayerRecruitType
 class PlayerInfo():
     BattleLeagueRankingToday: int = 0
     BattlePower: int = 0
+    ChatBalloonItemId: int = 0
     Comment: str = ""
     CommunicationPolicyType: PlayerCommunicationPolicyType = _field(default_factory=lambda: PlayerCommunicationPolicyType())
     CumulativeGuildFame: int = 0
@@ -3187,9 +3192,23 @@ class BattleActiveSkill():
     SkillOrderNumber: int = 0
     SubSetSkillIds: list[int] = _field(default_factory=list["int"])
 
+class PassiveSkillGrantorType(_Enum):
+    # [Description("なし")]
+    None_ = 0
+    # [Description("自分")]
+    Self = 1
+    # [Description("加護")]
+    Relic = 2
+    # [Description("ギルドバトル用効果")]
+    GuildBattle = 3
+    # [Description("チーム用")]
+    Team = 4
+
 # [MessagePackObject(True)]
+_PassiveSkillGrantorType = PassiveSkillGrantorType
 @_dataclass(slots=True)
 class BattlePassiveSkill():
+    PassiveSkillGrantorType: _PassiveSkillGrantorType = _field(default_factory=lambda: _PassiveSkillGrantorType())
     PassiveSkillId: int = 0
     PassiveSubSetSkillInfos: list[PassiveSubSetSkillInfo] = _field(default_factory=list["PassiveSubSetSkillInfo"])
 
@@ -3329,6 +3348,10 @@ class SkillCategory(_Enum):
     StatusDrain = 100
     # [Description("印の効果")]
     SkillMark = 200
+    # [Description("固有バフ（エフェクトなし）")]
+    SpecialBuffNotEffect = 201
+    # [Description("固有デバフ（エフェクトなし）")]
+    SpecialDeBuffNotEffect = 202
     # [Description("バフ効果削除")]
     RemoveBuffEffect = 500
     # [Description("デバフ効果削除")]
@@ -4447,6 +4470,8 @@ class NotificationType(_Enum):
     FinalResult = 22
     # [Description("進化解放可能")]
     RankRelease = 23
+    # [Description("新規獲得したチャットふきだしがあるとき")]
+    ChatBalloon = 24
 
 # [MessagePackObject(True)]
 _NotificationType = NotificationType
@@ -4661,7 +4686,36 @@ class UserVipGiftDtoInfo():
     VipGiftId: int = 0
     VipLv: int = 0
 
+class ChatType(_Enum):
+    SvS = 0
+    World = 1
+    Guild = 2
+    Private = 3
+    Friend = 4
+    Block = 5
+
+# [Description("チャット背景タイプ")]
+class ChatBackgroundType(_Enum):
+    # [Description("デフォルト")]
+    Default = 0
+    # [Description("ベースの色変更(暖色)＋とけねこワンポイント")]
+    Warm = 1
+    # [Description("ベースの色変更(寒色)＋タイトルロゴ")]
+    Cool = 2
+    # [Description("とけねこスタンプちりばめ")]
+    Studded = 3
+    # [Description("メメモリ調の筆跡やインクのにじみのようなデザイン")]
+    Smear = 4
+
 # [MessagePackObject(True)]
+@_dataclass(slots=True)
+class ChatSettingData():
+    BackgroundTypeDictionary: dict[ChatType, ChatBackgroundType] = _field(default_factory=dict["ChatType", "ChatBackgroundType"])
+    BalloonItemId: int = 0
+    FontSize: int = 0
+
+# [MessagePackObject(True)]
+_ChatSettingData = ChatSettingData
 _LegendLeagueClassType = LegendLeagueClassType
 _PrivacySettingsType = PrivacySettingsType
 _UserBattleBossDtoInfo = UserBattleBossDtoInfo
@@ -4680,6 +4734,7 @@ _UserSyncGvgDeckDtoInfo = UserSyncGvgDeckDtoInfo
 class UserSyncData():
     BlockPlayerIdList: list[int] = _field(default_factory=list["int"])
     CanJoinTodayLegendLeague: bool | None = None
+    ChatSettingData: _ChatSettingData = _field(default_factory=lambda: _ChatSettingData())
     ClearedTutorialIdList: list[int] = _field(default_factory=list["int"])
     ConfirmedItemQuestList: list[ConfirmedItemQuest] = _field(default_factory=list["ConfirmedItemQuest"])
     CreateUserIdTimestamp: int | None = None
@@ -6115,6 +6170,12 @@ class ErrorCode(_Enum):
     ChatOverMaxRegisterAnnounceChatCount = 272012
     # [Description("アナウンスチャットのインターバル中です。")]
     ChatGuildChatAnnounceInterval = 272013
+    # [Description("所持していないふきだしです。")]
+    ChatSettingNotHaveBalloon = 272014
+    # [Description("所持していない背景です。")]
+    ChatSettingNotHaveBackground = 272015
+    # [Description("設定できない文字サイズです。")]
+    ChatSettingNotAllowedFontSize = 272016
     # [Description("未受け取りのプレゼントは削除できません。")]
     PresentDeleteNotReceivedPresent = 282001
     # [Description("削除済みのプレゼントは受け取れません。")]
@@ -6559,6 +6620,10 @@ class ErrorCode(_Enum):
     ItemGoldExchangeNotOpen = 602021
     # [Description("不正なリクエストです")]
     ItemUsingInvalidItems = 602022
+    # [Description("一括使用は解放されていません。")]
+    ItemBulkUseItemNotOpen = 602023
+    # [Description("一括使用できないアイテムです。")]
+    ItemBulkUseItemNotSupported = 602024
     # [Description("LocalRaidで解散に失敗した")]
     MagicOnionLocalRaidDisbandRoomFailed = 900102
     # [Description("LocalRaidで他の部屋に参加しているので参加に失敗した")]
@@ -7835,6 +7900,29 @@ class LocalRaidBattleLogInfo():
     QuestId: int = 0
 
 # [MessagePackObject(True)]
+@_dataclass(slots=True)
+class LocalRaidQuestInfo():
+    FirstBattleRewards: list[UserItem] = _field(default_factory=list["UserItem"])
+    FixedBattleRewards: list[UserItem] = _field(default_factory=list["UserItem"])
+    Id: int = 0
+    Level: int = 0
+    LocalRaidBannerId: int = 0
+    LocalRaidEnemyIds: list[int] = _field(default_factory=list["int"])
+    RecommendedBattlePower: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class LocalRaidEnemyInfo():
+    BattlePower: int = 0
+    CharacterRarityFlags: _Flags[_CharacterRarityFlags] = _field(default_factory=lambda: _Flags["_CharacterRarityFlags"]([]))
+    ElementType: _ElementType = _field(default_factory=lambda: _ElementType())
+    EnemyRank: int = 0
+    Id: int = 0
+    NameKey: str = ""
+    UnitIconId: int = 0
+    UnitIconType: _UnitIconType = _field(default_factory=lambda: _UnitIconType())
+
+# [MessagePackObject(True)]
 _UserCharacterInfo = UserCharacterInfo
 @_dataclass(slots=True)
 class UserGvgCharacterInfo():
@@ -7996,6 +8084,13 @@ class LegendLeagueIconReward():
     Order: int = 0
     StartLocalTime: int = 0
 
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class TreasureChestReward():
+    Item: UserItem = _field(default_factory=lambda: UserItem())
+    RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
+    SacredTreasureType: _SacredTreasureType = _field(default_factory=lambda: _SacredTreasureType())
+
 # [Description("高速周回チケット")]
 class QuestQuickTicketType(_Enum):
     # [Description("ゴールド1時間")]
@@ -8038,13 +8133,6 @@ class QuestQuickTicketType(_Enum):
     LuxuryHours8 = 19
     # [Description("豪華な袋24時間")]
     LuxuryHours24 = 20
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class TreasureChestReward():
-    Item: UserItem = _field(default_factory=lambda: UserItem())
-    RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
-    SacredTreasureType: _SacredTreasureType = _field(default_factory=lambda: _SacredTreasureType())
 
 # [MessagePackObject(True)]
 _TreasureChestReward = TreasureChestReward
@@ -8218,6 +8306,10 @@ class SystemChatMessageIdType(_Enum):
     GuildTowerStartCombo = 16
     # [Description("ギルドツリーで{プレイヤー名}の活躍で{数値}コンボを達成しました！")]
     GuildTowerAchieveCombo = 17
+    # [Description("Aギルドの[布告したプレイヤー名]がBギルドの[拠点名]に布告しました！")]
+    DeclareToTargetGuild = 18
+    # [Description("Aギルドの[布告したプレイヤー名]がBギルドの[拠点名]に反撃を宣言しました！")]
+    RecaptureToTargetGuild = 19
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -8705,14 +8797,6 @@ class ChatIdentityInfo(_ArrayPacked):
     # [Key(1)]
     SendPlayerId: int = 0
 
-class ChatType(_Enum):
-    SvS = 0
-    World = 1
-    Guild = 2
-    Private = 3
-    Friend = 4
-    Block = 5
-
 # [Description("システムチャット種別")]
 class SystemChatType(_Enum):
     None_ = 0
@@ -8763,6 +8847,8 @@ class ChatInfo(_ArrayPacked):
     SystemChatMessageArgs: list[str] = _field(default_factory=list["str"])
     # [Key(11)]
     GuildName: str = ""
+    # [Key(12)]
+    BalloonItemId: int = 0
 
 class ChatReactionType(_Enum):
     # [Description("リアクションなし")]
