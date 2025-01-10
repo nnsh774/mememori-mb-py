@@ -2244,67 +2244,6 @@ class LocalRaidBonusScheduleMB(MasterBookBase):
     # [PropertyOrder(4)]
     EndTime: str = ""
 
-# [Description("幻影の神殿敵データ")]
-# [MessagePackObject(True)]
-# [NotUseOnAuth]
-# [NotUseOnBatch]
-# [NotUseOnSerialCodeInput]
-@_dataclass(slots=True)
-class LocalRaidEnemyMB(MasterBookBase):
-    # [Description("ユニットアイコンタイプ")]
-    # [PropertyOrder(1)]
-    UnitIconType: _UnitIconType = _field(default_factory=lambda: _UnitIconType())
-    # [Description("バトルパラメータ")]
-    # [Nest(True, 1)]
-    # [PropertyOrder(10)]
-    BattleParameter: _BattleParameter = _field(default_factory=lambda: _BattleParameter())
-    # [Description("通常攻撃として使ってくるスキルID")]
-    # [PropertyOrder(11)]
-    NormalSkillId: int = 0
-    # [Description("アクティブスキルIDのリスト")]
-    # [PropertyOrder(12)]
-    ActiveSkillIds: list[int] = _field(default_factory=list["int"])
-    # [Description("パッシブスキルIDのリスト")]
-    # [PropertyOrder(13)]
-    PassiveSkillIds: list[int] = _field(default_factory=list["int"])
-    # [Description("敵キャラクターID")]
-    # [PropertyOrder(14)]
-    BattleEnemyCharacterId: int = 0
-    # [Description("敵武具ID")]
-    # [PropertyOrder(15)]
-    EnemyEquipmentId: int = 0
-    # [Description("専用武器レアリティ")]
-    # [PropertyOrder(16)]
-    ExclusiveEquipmentRarityFlags: _Flags[EquipmentRarityFlags] = _field(default_factory=lambda: _Flags["EquipmentRarityFlags"]([]))
-    # [Description("敵調整ID")]
-    # [PropertyOrder(17)]
-    EnemyAdjustId: int = 0
-    # [Description("ユニットアイコンID")]
-    # [PropertyOrder(2)]
-    UnitIconId: int = 0
-    # [Description("名称キー")]
-    # [PropertyOrder(3)]
-    NameKey: str = ""
-    # [Description("敵のランク")]
-    # [PropertyOrder(4)]
-    EnemyRank: int = 0
-    # [Description("戦闘力")]
-    # [PropertyOrder(5)]
-    BattlePower: int = 0
-    # [Description("職業")]
-    # [PropertyOrder(6)]
-    JobFlags: _Flags[_JobFlags] = _field(default_factory=lambda: _Flags["_JobFlags"]([]))
-    # [Description("属性")]
-    # [PropertyOrder(7)]
-    ElementType: _ElementType = _field(default_factory=lambda: _ElementType())
-    # [Description("レアリティ")]
-    # [PropertyOrder(8)]
-    CharacterRarityFlags: _Flags[_CharacterRarityFlags] = _field(default_factory=lambda: _Flags["_CharacterRarityFlags"]([]))
-    # [Description("ベースパラメータ")]
-    # [Nest(True, 1)]
-    # [PropertyOrder(9)]
-    BaseParameter: _BaseParameter = _field(default_factory=lambda: _BaseParameter())
-
 # [Description("幻影の神殿イベントスケジュール")]
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -2346,40 +2285,6 @@ class LocalRaidQuestGroupMB(MasterBookBase):
     # [Description("ワールド生成経過日数")]
     # [PropertyOrder(4)]
     OverDayFromCreateWorldTime: int = 0
-
-# [Description("幻影の神殿クエスト")]
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class LocalRaidQuestMB(MasterBookBase):
-    # [Description("クエスト名キー")]
-    # [PropertyOrder(1)]
-    LocalRaidBannerId: int = 0
-    # [Description("LocalRaidEventScheduleMBのId")]
-    # [PropertyOrder(2)]
-    LocalRaidEventScheduleId: int = 0
-    # [Description("修練レベル(イベント時のクエスト参照用)")]
-    # [PropertyOrder(3)]
-    LocalRaidLevel: int = 0
-    # [Description("イベント経過日数")]
-    # [PropertyOrder(4)]
-    OverDayFromStartEventTime: int = 0
-    # [Description("レベル")]
-    # [PropertyOrder(5)]
-    Level: int = 0
-    # [Description("個人戦力目安")]
-    # [PropertyOrder(6)]
-    RecommendedBattlePower: int = 0
-    # [Description("初回報酬")]
-    # [Nest(False, 0)]
-    # [PropertyOrder(7)]
-    FirstBattleRewards: list[UserItem] = _field(default_factory=list["UserItem"])
-    # [Description("通常報酬")]
-    # [Nest(False, 0)]
-    # [PropertyOrder(8)]
-    FixedBattleRewards: list[UserItem] = _field(default_factory=list["UserItem"])
-    # [Description("敵Idリスト")]
-    # [PropertyOrder(9)]
-    LocalRaidEnemyIds: list[int] = _field(default_factory=list["int"])
 
 # [Description("ラッキーチャンス")]
 # [MessagePackObject(True)]

@@ -6136,6 +6136,8 @@ class ErrorCode(_Enum):
     ShopNotFoundCouponData = 262040
     # [Description("使用済みのクーポンです。")]
     ShopAlreadyUsedCoupon = 262041
+    # [Description("利用できない商品タイプです。")]
+    ShopNotSupportShopProductType = 262042
     # [Description("ユーザーのステータスデータが見つかりません。")]
     ChatUserStatusDtoNotFound = 271000
     # [Description("ユーザーのアカウントデータが見つかりません。")]
@@ -7039,13 +7041,36 @@ class ShopProductType(_Enum):
     # [Description("全検索")]
     AllSearch = 99
 
+# [Description("一括ショップ商品情報")]
 # [MessagePackObject(True)]
 _ShopProductType = ShopProductType
 @_dataclass(slots=True)
-class AcquisitionShopRewardInfo():
+class BulkShopProductInfo():
+    Count: int = 0
+    MbId: int = 0
+    ProductId: str = ""
+    ShopProductType: _ShopProductType = _field(default_factory=lambda: _ShopProductType())
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserCharacter():
+    CharacterId: int = 0
+    CharacterRarityFlags: _Flags[_CharacterRarityFlags] = _field(default_factory=lambda: _Flags["_CharacterRarityFlags"]([]))
+    Guid: str = ""
+    ItemCount: int = 0
+    ItemId: int = 0
+    ItemType: _ItemType = _field(default_factory=lambda: _ItemType())
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class BulkShopRewardInfo():
     BonusItemList: list[UserItem] = _field(default_factory=list["UserItem"])
-    CharacterList: list[UserCharacterDtoInfo] = _field(default_factory=list["UserCharacterDtoInfo"])
+    CharacterList: list[UserCharacter] = _field(default_factory=list["UserCharacter"])
+    Count: int = 0
     ItemList: list[UserItem] = _field(default_factory=list["UserItem"])
+    Price: int = 0
+    ShopPoint: int = 0
+    ShopProductNameKey: str = ""
     ShopProductType: _ShopProductType = _field(default_factory=lambda: _ShopProductType())
 
 # [MessagePackObject(True)]
@@ -7517,6 +7542,7 @@ class UserStripePointHistoryInfo():
     CardSubInfo: str = ""
     ChargeBackDateTime: str = ""
     DiscountPrice: int = 0
+    IsBulkBuy: bool = False
     PlayerId: int = 0
     Price: int = 0
     ProductNameKey: str = ""
@@ -7526,6 +7552,14 @@ class UserStripePointHistoryInfo():
     StripePointType: _StripePointType = _field(default_factory=lambda: _StripePointType())
     TransactionId: str = ""
     UsePoint: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class AcquisitionShopRewardInfo():
+    BonusItemList: list[UserItem] = _field(default_factory=list["UserItem"])
+    CharacterList: list[UserCharacterDtoInfo] = _field(default_factory=list["UserCharacterDtoInfo"])
+    ItemList: list[UserItem] = _field(default_factory=list["UserItem"])
+    ShopProductType: _ShopProductType = _field(default_factory=lambda: _ShopProductType())
 
 # [Description("装飾データ")]
 # [MessagePackObject(True)]
@@ -7578,6 +7612,7 @@ class ShopProductSubInfo():
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class StripeShopProductInfo():
+    BulkShopProductInfos: list[BulkShopProductInfo] = _field(default_factory=list["BulkShopProductInfo"])
     GivePlayerId: int = 0
     IsStripePaidStatus: bool = False
     MbId: int = 0
@@ -7857,6 +7892,33 @@ class LimitedLoginBonusRewardItem():
     # [Description("キャラレアリティ")]
     RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
 
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class LocalRaidQuestInfo():
+    FirstBattleRewards: list[UserItem] = _field(default_factory=list["UserItem"])
+    FixedBattleRewards: list[UserItem] = _field(default_factory=list["UserItem"])
+    Id: int = 0
+    Level: int = 0
+    LocalRaidBannerId: int = 0
+    LocalRaidEnemyIds: list[int] = _field(default_factory=list["int"])
+    RecommendedBattlePower: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class LocalRaidEnemyInfo():
+    BattlePower: int = 0
+    CharacterRarityFlags: _Flags[_CharacterRarityFlags] = _field(default_factory=lambda: _Flags["_CharacterRarityFlags"]([]))
+    ElementType: _ElementType = _field(default_factory=lambda: _ElementType())
+    EnemyRank: int = 0
+    Id: int = 0
+    NameKey: str = ""
+    UnitIconId: int = 0
+    UnitIconType: _UnitIconType = _field(default_factory=lambda: _UnitIconType())
+
+class ILocalRaidInfoApiResponse(_Protocol):
+    LocalRaidEnemyInfos: list[LocalRaidEnemyInfo]
+    LocalRaidQuestInfos: list[LocalRaidQuestInfo]
+
 class LocalRaidRoomConditionsType(_Enum):
     None_ = 0
     BattlePower = 1
@@ -7898,29 +7960,6 @@ class LocalRaidBattleLogInfo():
     IsAutoStart: bool = False
     LocalRaidPartyInfo: _LocalRaidPartyInfo = _field(default_factory=lambda: _LocalRaidPartyInfo())
     QuestId: int = 0
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class LocalRaidQuestInfo():
-    FirstBattleRewards: list[UserItem] = _field(default_factory=list["UserItem"])
-    FixedBattleRewards: list[UserItem] = _field(default_factory=list["UserItem"])
-    Id: int = 0
-    Level: int = 0
-    LocalRaidBannerId: int = 0
-    LocalRaidEnemyIds: list[int] = _field(default_factory=list["int"])
-    RecommendedBattlePower: int = 0
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class LocalRaidEnemyInfo():
-    BattlePower: int = 0
-    CharacterRarityFlags: _Flags[_CharacterRarityFlags] = _field(default_factory=lambda: _Flags["_CharacterRarityFlags"]([]))
-    ElementType: _ElementType = _field(default_factory=lambda: _ElementType())
-    EnemyRank: int = 0
-    Id: int = 0
-    NameKey: str = ""
-    UnitIconId: int = 0
-    UnitIconType: _UnitIconType = _field(default_factory=lambda: _UnitIconType())
 
 # [MessagePackObject(True)]
 _UserCharacterInfo = UserCharacterInfo
@@ -8760,16 +8799,6 @@ class UserDungeonBattleGuestCharacterDtoInfo():
     Level: int = 0
     PlayerId: int = 0
     RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserCharacter():
-    CharacterId: int = 0
-    CharacterRarityFlags: _Flags[_CharacterRarityFlags] = _field(default_factory=lambda: _Flags["_CharacterRarityFlags"]([]))
-    Guid: str = ""
-    ItemCount: int = 0
-    ItemId: int = 0
-    ItemType: _ItemType = _field(default_factory=lambda: _ItemType())
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
