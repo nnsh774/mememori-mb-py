@@ -1172,6 +1172,48 @@ class EquipmentReinforcementParameterMB(MasterBookBase):
     # [PropertyOrder(1)]
     ReinforcementCoefficient: float = 0.0
 
+# [Description("アダマントボックス")]
+# [MessagePackObject(True)]
+_SecondaryFrameType = SecondaryFrameType
+@_dataclass(slots=True)
+class EquipmentSetMaterialBoxMB(MasterBookBase):
+    # [Description("アイテム名")]
+    # [PropertyOrder(1)]
+    NameKey: str = ""
+    # [Description("第2フレーム値")]
+    # [PropertyOrder(10)]
+    SecondaryFrameNum: int = 0
+    # [Description("開始時刻")]
+    # [PropertyOrder(11)]
+    StartTime: str = ""
+    # [Description("終了時刻")]
+    # [PropertyOrder(12)]
+    EndTime: str = ""
+    # [Description("表示名")]
+    # [PropertyOrder(2)]
+    DisplayNameKey: str = ""
+    # [Description("説明文")]
+    # [PropertyOrder(3)]
+    DescriptionKey: str = ""
+    # [Description("アイコンId")]
+    # [PropertyOrder(4)]
+    IconId: int = 0
+    # [Description("レアリティ")]
+    # [PropertyOrder(5)]
+    ItemRarityFlags: _Flags[_ItemRarityFlags] = _field(default_factory=lambda: _Flags["_ItemRarityFlags"]([]))
+    # [Description("レベルリスト")]
+    # [PropertyOrder(6)]
+    LevelList: list[int] = _field(default_factory=list["int"])
+    # [Description("部位種類リスト")]
+    # [PropertyOrder(7)]
+    EquipmentTypeList: list[int] = _field(default_factory=list["int"])
+    # [Description("所持数上限")]
+    # [PropertyOrder(8)]
+    MaxItemCount: int = 0
+    # [Description("第2フラーム種類")]
+    # [PropertyOrder(9)]
+    SecondaryFrameType: _SecondaryFrameType = _field(default_factory=lambda: _SecondaryFrameType())
+
 # [Description("武具進化素材")]
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -1200,6 +1242,9 @@ class EquipmentSetMaterialMB(MasterBookBase):
     # [Description("入手宝箱Id")]
     # [PropertyOrder(8)]
     TreasureChestId: int = 0
+    # [Description("入手アダマントボックスId")]
+    # [PropertyOrder(9)]
+    EquipmentSetMaterialBoxId: int = 0
 
 # [Description("武具セット")]
 # [MessagePackObject(True)]
@@ -1907,7 +1952,6 @@ class ItemMaxCountSwitchingQuestMB(MasterBookBase):
 
 # [Description("アイテムの表示情報")]
 # [MessagePackObject(True)]
-_SecondaryFrameType = SecondaryFrameType
 @_dataclass(slots=True)
 class ItemMB(MasterBookBase):
     # [Description("アイテム種別")]
@@ -3725,21 +3769,24 @@ class VipMB(MasterBookBase):
     # [Description("研磨時にロックが可能か否か​")]
     # [PropertyOrder(26)]
     IsLockEquipmentTrainingAvailable: bool = False
+    # [Description("1日の最大模擬戦回数")]
+    # [PropertyOrder(27)]
+    MaxFriendBattleDailyCount: int = 0
     # [Description("VIP到達時報酬リスト")]
     # [Nest(False, 0)]
-    # [PropertyOrder(27)]
+    # [PropertyOrder(28)]
     ReachRewardItemList: list[UserItem] = _field(default_factory=list["UserItem"])
     # [Description("VIPギフトリスト")]
     # [Nest(True, 0)]
-    # [PropertyOrder(28)]
-    VipGiftInfoList: list[VipGiftInfo] = _field(default_factory=list["VipGiftInfo"])
-    # [Description("VIPデイリー報酬リスト")]
-    # [Nest(False, 0)]
     # [PropertyOrder(29)]
-    DailyRewardItemList: list[UserItem] = _field(default_factory=list["UserItem"])
+    VipGiftInfoList: list[VipGiftInfo] = _field(default_factory=list["VipGiftInfo"])
     # [Description("放置バトル経験値ボーナス(%)")]
     # [PropertyOrder(3)]
     AutoBattlePlayerExpBonus: int = 0
+    # [Description("VIPデイリー報酬リスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(30)]
+    DailyRewardItemList: list[UserItem] = _field(default_factory=list["UserItem"])
     # [Description("仮想通貨で高速周回できる回数")]
     # [PropertyOrder(5)]
     MaxQuickUseCurrencyCount: int = 0

@@ -123,6 +123,8 @@ class ItemType(_Enum):
     LuckyChanceGachaTicket = 40
     # [Description("チャットふきだし")]
     ChatBalloon = 41
+    # [Description("アダマントボックス")]
+    EquipmentSetMaterialBox = 42
     # [Description("イベント交換所アイテム")]
     EventExchangePlaceItem = 50
     # [Description("Stripeクーポン")]
@@ -1419,6 +1421,19 @@ class EquipmentSlotType(_Enum):
     # [Description("ブーツ")]
     Shoes = 6
 
+# [Description("第2フレーム種類")]
+class SecondaryFrameType(_Enum):
+    # [Description("不明")]
+    None_ = 0
+    # [Description("属性アイコン")]
+    ElementIcon = 1
+    # [Description("効果時間表示")]
+    EffectTime = 2
+    # [Description("レベル")]
+    Level = 3
+    # [Description("キャラアイコン_中央")]
+    CenteredCharacterIcon = 4
+
 # [Description("セット装備の効果")]
 # [MessagePackObject(True)]
 _BaseParameterChangeInfo = BaseParameterChangeInfo
@@ -1864,19 +1879,6 @@ class MaxCountSwitchingQuest():
     # [PropertyOrder(2)]
     MaxCount: int = 0
 
-# [Description("第2フレーム種類")]
-class SecondaryFrameType(_Enum):
-    # [Description("不明")]
-    None_ = 0
-    # [Description("属性アイコン")]
-    ElementIcon = 1
-    # [Description("効果時間表示")]
-    EffectTime = 2
-    # [Description("レベル")]
-    Level = 3
-    # [Description("キャラアイコン_中央")]
-    CenteredCharacterIcon = 4
-
 # [Description("レジェンドリーグ階級の種類")]
 class LegendLeagueClassType(_Enum):
     None_ = 0
@@ -2237,6 +2239,8 @@ class OpenCommandType(_Enum):
     ShopGrandBattle = 51
     # [Description("時空の洞窟スキップ")]
     DungeonBattleSkip = 52
+    # [Description("武具一括研磨")]
+    EquipmentBulkRefine = 53
     # [Description("レベルリンク")]
     LevelLink = 80
     # [Description("チュートリアルスキップ")]
@@ -2283,6 +2287,8 @@ class OpenCommandType(_Enum):
     EventPortal = 460
     # [Description("アイテムボックス 消費タブ一括使用")]
     BulkUseItem = 480
+    # [Description("模擬戦")]
+    FriendBattle = 490
     # [Description("武具固定")]
     LockEquipment = 1000
     # [Description("武具固定(ギルドバトル用)")]
@@ -2496,6 +2502,8 @@ class PassiveTrigger(_Enum):
     NextCheckReceiveDamageSelf = 43
     # [Description("被ダメージ量判定")]
     NextCheckReceiveDamage = 44
+    # [Description("敵死亡時（条件なし）")]
+    AlwaysEnemyDead = 45
     # [Description("被致命的ダメージ時回復")]
     RecoveryFromInstantDeathDamage = 52
     # [Description("特殊ダメージ死亡(毒、共鳴など)")]
@@ -2748,6 +2756,8 @@ class BattleType(_Enum):
     GuildRaid = 11
     # [Description("ギルドツリー")]
     GuildTower = 12
+    # [Description("模擬戦")]
+    FriendBattle = 13
 
 # [Description("無窮の塔タイプ")]
 class TowerType(_Enum):
@@ -3030,6 +3040,7 @@ class PlayerInfo():
     GuildJoinTimeStamp: int = 0
     GuildName: str = ""
     GuildPeriodTotalFame: int = 0
+    IsAllowedFriendBattle: bool = False
     IsBlock: bool = False
     IsRecruit: bool = False
     LastLoginTime: _timedelta = _field(default_factory=lambda: _timedelta())
@@ -4054,12 +4065,16 @@ class TradeShopItem():
     ConsumeItem1: UserItem = _field(default_factory=lambda: UserItem())
     # [Description("消費アイテム2")]
     ConsumeItem2: UserItem = _field(default_factory=lambda: UserItem())
+    # [Description("TradeShopDedicatedItemMBのID")]
+    DedicatedItemId: int = 0
     # [Description("購入不可フラグ")]
     Disabled: bool = False
     # [Description("終了日時")]
     ExpirationTimeStamp: int = 0
     # [Description("獲得アイテム")]
     GiveItem: UserItem = _field(default_factory=lambda: UserItem())
+    # [IgnoreMember]
+    IsDedicated: bool = False
     # [Description("交換制限回数(0:無制限s)")]
     LimitTradeCount: int = 0
     # [Description("条件キャラID")]
@@ -4303,6 +4318,10 @@ class DeckUseContentType(_Enum):
     GreenTower = 13
     # [Description("渇（かつ）の塔")]
     YellowTower = 14
+    # [Description("模擬戦（攻撃）")]
+    FriendBattleOffense = 15
+    # [Description("模擬戦（防御）")]
+    FriendBattleDefense = 16
     # [Description("ギルドバトル")]
     GuildBattle = 1000
     # [Description("グランドバトル")]
@@ -4484,6 +4503,15 @@ class UserNotificationDtoInfo():
 @_dataclass(slots=True)
 class UserOpenContentDtoInfo():
     OpenContentId: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserFriendBattleOptionDtoInfo():
+    IsAllowedBattle: bool = False
+    IsUsedBattleLeagueDeckInDefenseParty: bool = False
+    IsUsedLockEquipmentInDefenseParty: bool = False
+    IsUsedLockEquipmentInOffenseParty: bool = False
+    PlayerId: int = 0
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -4722,6 +4750,7 @@ _UserBattleBossDtoInfo = UserBattleBossDtoInfo
 _UserBattleLegendLeagueDtoInfo = UserBattleLegendLeagueDtoInfo
 _UserBattlePvpDtoInfo = UserBattlePvpDtoInfo
 _UserBoxSizeDtoInfo = UserBoxSizeDtoInfo
+_UserFriendBattleOptionDtoInfo = UserFriendBattleOptionDtoInfo
 _UserItemDtoInfo = UserItemDtoInfo
 _UserLevelLinkDtoInfo = UserLevelLinkDtoInfo
 _UserMissionOccurrenceHistoryDtoInfo = UserMissionOccurrenceHistoryDtoInfo
@@ -4745,6 +4774,7 @@ class UserSyncData():
     ExistPurchasableOneWeekLimitedPack: bool | None = None
     ExistUnconfirmedRetrieveItemHistory: bool | None = None
     ExistVipDailyGift: bool | None = None
+    FriendBattleFavoritePlayerIdList: list[int] = _field(default_factory=list["int"])
     GivenItemCountInfoList: list[UserItem] = _field(default_factory=list["UserItem"])
     GuildJoinLimitCount: int | None = None
     HasTransitionedPanelPictureBook: bool | None = None
@@ -4770,6 +4800,7 @@ class UserSyncData():
     ShopProductGuerrillaPackList: list[ShopProductGuerrillaPack] = _field(default_factory=list["ShopProductGuerrillaPack"])
     StripePoint: int = 0
     TimeServerId: int | None = None
+    TodayChallengeFriendBattleCount: int | None = None
     TreasureChestCeilingCountMap: dict[int, int] = _field(default_factory=dict["int", "int"])
     UserBattleBossDtoInfo: _UserBattleBossDtoInfo = _field(default_factory=lambda: _UserBattleBossDtoInfo())
     UserBattleLegendLeagueDtoInfo: _UserBattleLegendLeagueDtoInfo = _field(default_factory=lambda: _UserBattleLegendLeagueDtoInfo())
@@ -4781,6 +4812,7 @@ class UserSyncData():
     UserCharacterRankReleaseDtoInfos: list[UserCharacterRankReleaseDtoInfo] = _field(default_factory=list["UserCharacterRankReleaseDtoInfo"])
     UserDeckDtoInfos: list[UserDeckDtoInfo] = _field(default_factory=list["UserDeckDtoInfo"])
     UserEquipmentDtoInfos: list[UserEquipmentDtoInfo] = _field(default_factory=list["UserEquipmentDtoInfo"])
+    UserFriendBattleOptionDtoInfo: _UserFriendBattleOptionDtoInfo = _field(default_factory=lambda: _UserFriendBattleOptionDtoInfo())
     UserFriendMissionDtoInfoList: list[UserFriendMissionDtoInfo] = _field(default_factory=list["UserFriendMissionDtoInfo"])
     UserGuidanceTimeMap: dict[GuidanceType, int] = _field(default_factory=dict["GuidanceType", "int"])
     UserItemDtoInfo: list[_UserItemDtoInfo] = _field(default_factory=list["_UserItemDtoInfo"])
@@ -5054,6 +5086,8 @@ class UserBattleAutoDtoInfo():
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class TradeShopItemInfo():
+    # [Description("TradeShopDedicatedItemMBのID")]
+    DedicatedItemId: int = 0
     # [Description("交換回数")]
     TradeCount: int = 0
     # [Description("TradeShopItemMBのId")]
@@ -5274,6 +5308,8 @@ class ErrorCode(_Enum):
     UserSyncGvgDeckInterval = 93109
     # [Description("パーティが同期されていないため同期を解除できません。")]
     UserUnsyncGvgDeckNotSyncGvgDeck = 93110
+    # [Description("不正なデッキ種別です。")]
+    UserSaveDeckInvalidDeckType = 93111
     # [Description("ユーザーのステータスデータが存在しません。")]
     BattleCommonUserStatusDtoNotFound = 96000
     # [Description("例外ケースサブスキルの条件データが存在しません。")]
@@ -5296,6 +5332,8 @@ class ErrorCode(_Enum):
     BattleCommonNotFoundStatusSubSubSkillEffectValueFormula = 97008
     # [Description("アクティブスキルの条件データが存在しません。")]
     BattleCommonNotFoundActiveSkillConditionFormula = 97009
+    # [Description("バトル種別が無効です。")]
+    BattleCommonInvalidBattleType = 97010
     # [Description("ユーザーの放置バトルデータがありません")]
     BattleAutoUserBattleAutoDtoNotFound = 101000
     # [Description("ユーザーのボスバトルデータがありません")]
@@ -5782,6 +5820,8 @@ class ErrorCode(_Enum):
     EquipmentUserBattleAutoDtoNotFound = 231008
     # [Description("ユーザーの固定キャラクターデータが存在しません。")]
     EquipmentUserLockCharacterDtoNotFound = 231009
+    # [Description("一括研磨結果データが存在しません。")]
+    EquipmentBulkTrainingResultDtoNotFound = 231010
     # [Description("同じ種類の宝石は装備できません。")]
     EquipmentCanNotEquipSameKindSpheres = 232000
     # [Description("その部位には装備できません。")]
@@ -5892,6 +5932,10 @@ class ErrorCode(_Enum):
     EquipmentOverMaxCustomCountPerCharacter = 232056
     # [Description("スフィアカスタムのデータが存在しません。")]
     EquipmentBulkSphereSetDtoNotFound = 232057
+    # [Description("武具一括研磨機能の解放条件を満たしていません。")]
+    EquipmentNotEnoughMaxQuestIdBulkRefine = 232058
+    # [Description("一括研磨対象となる武具の追加効果がロックされています。")]
+    EquipmentBulkRefineLockedAdditionalParameter = 232059
     # [Description("ユーザのフレンドデータが存在しません。")]
     FriendUserFriendDtoNotFound = 241000
     # [Description("ユーザのステータスデータが存在しません。")]
@@ -6588,6 +6632,26 @@ class ErrorCode(_Enum):
     LuckyChanceContainsHalfWidthCharacterBlockNumber = 471027
     # [Description("建物名を全角で入力してください。")]
     LuckyChanceContainsHalfWidthCharacterBuildingName = 471028
+    # [Description("ユーザーのフレンド情報が見つかりません。")]
+    FriendBattleUserFriendDtoNotFound = 480000
+    # [Description("ユーザーのステータス情報が見つかりません。")]
+    FriendBattleUserStatusDtoNotFound = 480001
+    # [Description("ユーザーのデッキ情報が見つかりません。")]
+    FriendBattleUserDeckDtoNotFound = 480002
+    # [Description("模擬戦の機能が解放されていません。")]
+    FriendBattleNotOpen = 481000
+    # [Description("対戦相手がフレンドではありません。")]
+    FriendBattleNotFriend = 481001
+    # [Description("対戦相手が模擬戦を許可していません。")]
+    FriendBattleNotAllowedByRival = 481002
+    # [Description("自分が模擬戦を許可していません。")]
+    FriendBattleNotAllowedBySelf = 481003
+    # [Description("既にお気に入り登録をしているプレイヤーです。")]
+    FriendBattleAlreadySetFavoritePlayer = 481004
+    # [Description("1日の挑戦回数の上限に達しています。")]
+    FriendBattleLimitChallengeCount = 481005
+    # [Description("模擬戦のバトル詳細ログが見つかりません。")]
+    FriendBattleNotFoundBattleDetailLog = 481006
     # [Description("存在しないTreasureChestです。")]
     ItemOpenTreasureChestIdNotFound = 602004
     # [Description("存在しないTreasureChestです。")]
@@ -6626,6 +6690,12 @@ class ErrorCode(_Enum):
     ItemBulkUseItemNotOpen = 602023
     # [Description("一括使用できないアイテムです。")]
     ItemBulkUseItemNotSupported = 602024
+    # [Description("指定できない武具タイプが指定されています")]
+    ItemOpenEquipmentSetMaterialBoxNotSupportedEquipmentType = 602025
+    # [Description("指定できないレベルが指定されています")]
+    ItemOpenEquipmentSetMaterialBoxNotSupportedLevel = 602026
+    # [Description("アダマントボックスが期限外です")]
+    ItemOpenEquipmentSetMaterialBoxNotOpen = 602027
     # [Description("LocalRaidで解散に失敗した")]
     MagicOnionLocalRaidDisbandRoomFailed = 900102
     # [Description("LocalRaidで他の部屋に参加しているので参加に失敗した")]
@@ -8519,6 +8589,25 @@ class GachaRarityRate():
     CharacterRarityFlags: _Flags[_CharacterRarityFlags] = _field(default_factory=lambda: _Flags["_CharacterRarityFlags"]([]))
     LotteryRate: float = 0.0
 
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class FriendBattleLogInfo():
+    BattleEndInfo: _BattleEndInfo = _field(default_factory=lambda: _BattleEndInfo())
+    BattleToken: str = ""
+    FriendStatusType: _FriendStatusType = _field(default_factory=lambda: _FriendStatusType())
+    IsAllowedFriendBattle: bool = False
+    PlayerGuildPositionType: _PlayerGuildPositionType = _field(default_factory=lambda: _PlayerGuildPositionType())
+    RivalBattlePower: int = 0
+    RivalComment: str = ""
+    RivalGuildId: int = 0
+    RivalGuildName: str = ""
+    RivalLatestQuestId: int = 0
+    RivalMainCharacterIconId: int = 0
+    RivalPlayerId: int = 0
+    RivalPlayerName: str = ""
+    RivalPlayerRank: int = 0
+    StartBattleTimestamp: int = 0
+
 # [Description("フレンド画面の取得データ")]
 class FriendInfoType(_Enum):
     # [Description("なし")]
@@ -8533,6 +8622,8 @@ class FriendInfoType(_Enum):
     Block = 4
     # [Description("おすすめ検索")]
     Recommend = 5
+    # [Description("模擬戦")]
+    FriendBattle = 6
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
