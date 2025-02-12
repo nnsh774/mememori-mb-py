@@ -1987,7 +1987,7 @@ class ItemMB(MasterBookBase):
     # [Description("レアリティ")]
     # [PropertyOrder(6)]
     ItemRarityFlags: _Flags[_ItemRarityFlags] = _field(default_factory=lambda: _Flags["_ItemRarityFlags"]([]))
-    # [Description("並び順（降順）")]
+    # [Description("並び順（昇順）")]
     # [PropertyOrder(7)]
     SortOrder: int = 0
     # [Description("開始時刻")]
@@ -3621,23 +3621,26 @@ class TreasureChestMB(MasterBookBase):
     # [Description("名称キー")]
     # [PropertyOrder(1)]
     NameKey: str = ""
-    # [Description("第2フラーム種類")]
+    # [Description("所持数上限")]
     # [PropertyOrder(10)]
+    MaxItemCount: int = 0
+    # [Description("第2フラーム種類")]
+    # [PropertyOrder(11)]
     SecondaryFrameType: _SecondaryFrameType = _field(default_factory=lambda: _SecondaryFrameType())
     # [Description("第2フレーム値")]
-    # [PropertyOrder(11)]
+    # [PropertyOrder(12)]
     SecondaryFrameNum: int = 0
     # [Description("TreasureChestItemMBのIdリスト")]
-    # [PropertyOrder(12)]
+    # [PropertyOrder(13)]
     TreasureChestItemIdList: list[int] = _field(default_factory=list["int"])
     # [Description("一括使用")]
-    # [PropertyOrder(13)]
+    # [PropertyOrder(14)]
     BulkUseEnabled: bool = False
     # [Description("終了日時")]
-    # [PropertyOrder(14)]
+    # [PropertyOrder(15)]
     EndTime: str = ""
     # [Description("開始日時")]
-    # [PropertyOrder(15)]
+    # [PropertyOrder(16)]
     StartTime: str = ""
     # [Description("表示名キー")]
     # [PropertyOrder(2)]
@@ -3651,18 +3654,18 @@ class TreasureChestMB(MasterBookBase):
     # [Description("レアリティ")]
     # [PropertyOrder(5)]
     ItemRarityFlags: _Flags[_ItemRarityFlags] = _field(default_factory=lambda: _Flags["_ItemRarityFlags"]([]))
-    # [Description("宝箱の報酬判定方法タイプ")]
+    # [Description("並び順（昇順）")]
     # [PropertyOrder(6)]
+    SortOrder: int = 0
+    # [Description("宝箱の報酬判定方法タイプ")]
+    # [PropertyOrder(7)]
     TreasureChestLotteryType: _TreasureChestLotteryType = _field(default_factory=lambda: _TreasureChestLotteryType())
     # [Description("開けるのに必要な鍵のID ※0の場合無効")]
-    # [PropertyOrder(7)]
+    # [PropertyOrder(8)]
     ChestKeyItemId: int = 0
     # [Description("必要個数")]
-    # [PropertyOrder(8)]
-    MinOpenCount: int = 0
-    # [Description("所持数上限")]
     # [PropertyOrder(9)]
-    MaxItemCount: int = 0
+    MinOpenCount: int = 0
 
 # [Description("チュートリアル詳細")]
 # [MessagePackObject(True)]

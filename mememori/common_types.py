@@ -2810,6 +2810,8 @@ class TradeShopType(_Enum):
     WeeklyTopicsFreeProduct = 6
     # [Description("週間トピックス有料商品")]
     WeeklyTopicsPaidProduct = 7
+    # [Description("専用武器")]
+    ExclusiveEquipment = 8
 
 # [Description("神器タイプ")]
 class SacredTreasureType(_Enum):
@@ -3569,13 +3571,13 @@ class EffectType(_Enum):
     ReduceAllBuffTurn = 3044
     # [Description("すべてのデバフ効果のターンを減らす")]
     ReduceAllDeBuffTurn = 3045
-    # [Description("指定した効果グループのターン数を1増やす")]
+    # [Description("指定した効果グループのターン数を増やす")]
     ExtendEffectGroup = 3046
-    # [Description("指定した効果グループのターン数を1減らす")]
+    # [Description("指定した効果グループのターン数を減らす")]
     ReduceEffectGroup = 3047
-    # [Description("指定したEffectのスタック数を1増やす")]
+    # [Description("指定したEffectのスタック数を増やす")]
     IncreaseEffectStack = 3048
-    # [Description("指定したEffectのスタック数を1減らす")]
+    # [Description("指定したEffectのスタック数を減らす")]
     DecreaseEffectStack = 3049
     # [Description("全てのバフを解除")]
     RemoveAllBuff = 3050
