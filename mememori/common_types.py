@@ -3027,6 +3027,7 @@ _PlayerGuildPositionType = PlayerGuildPositionType
 _PlayerRecruitType = PlayerRecruitType
 @_dataclass(slots=True)
 class PlayerInfo():
+    BackgroundCharacterId: int = 0
     BattleLeagueRankingToday: int = 0
     BattlePower: int = 0
     ChatBalloonItemId: int = 0
@@ -4638,33 +4639,10 @@ class UserShopSubscriptionDtoInfo():
     ProductId: str = ""
     TransactionId: str = ""
 
-class IUserStatusDtoInfo(_Protocol):
-    Birthday: int
-    BoardRank: int
-    Comment: str
-    Exp: int
-    FavoriteCharacterId1: int
-    FavoriteCharacterId2: int
-    FavoriteCharacterId3: int
-    FavoriteCharacterId4: int
-    FavoriteCharacterId5: int
-    IsAlreadyChangedName: bool
-    IsFirstVisitGuildAtDay: bool
-    IsReachBattleLeagueTop50: bool
-    LastLeaveGuildTime: int
-    LastLoginTime: int
-    LastLvUpTime: int
-    MainCharacterIconId: int
-    Name: str
-    PlayerId: int
-    PreviousLoginTime: int
-    Rank: int
-    Vip: int
-    VipExp: int
-
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class UserStatusDtoInfo():
+    BackgroundCharacterId: int = 0
     Birthday: int = 0
     BoardRank: int = 0
     Comment: str = ""
@@ -4786,6 +4764,8 @@ class UserSyncData():
     IsReceivedSnsShareReward: bool | None = None
     IsRetrievedItem: bool | None = None
     IsValidContractPrivilege: bool | None = None
+    LatestAnnounceChatRegistrationLocalTimestamp: int | None = None
+    LatestGuildSurveyCreationLocalTimestamp: int | None = None
     LeadLockEquipmentDialogInfoMap: dict[LockEquipmentDeckType, LeadLockEquipmentDialogInfo] = _field(default_factory=dict["LockEquipmentDeckType", "LeadLockEquipmentDialogInfo"])
     LegendLeagueClassType: _LegendLeagueClassType | None = None
     LocalRaidChallengeCount: int | None = None
@@ -5294,6 +5274,8 @@ class ErrorCode(_Enum):
     UserAlreadyClearedChangeNameTutorial = 92005
     # [Description("ユーザーデータが見つかりません。")]
     UserNotFoundPlayerInfo = 92006
+    # [Description("所持したことがないキャラクターは背景に設定できません。")]
+    UserInvalidBackgroundCharacterId = 92007
     # [Description("所持してないキャラクターです")]
     UserSetDeckNotFoundCharacter = 93101
     # [Description("デッキ内にキャラクターがいません。")]
@@ -5808,6 +5790,8 @@ class ErrorCode(_Enum):
     GachaUserGachaSelectListDtoNotFound = 200503
     # [Description("バトルログが見つかりません。")]
     BattleCommonBattleLogNotFound = 220000
+    # [Description("バトル詳細ログが見つかりません。")]
+    BattleCommonBattleDetailLogNotFound = 220001
     # [Description("ユーザの装備データが存在しません。")]
     EquipmentUserEquipmentDtoNotFound = 231000
     # [Description("ユーザのステータスデータが存在しません。")]
@@ -6654,6 +6638,32 @@ class ErrorCode(_Enum):
     FriendBattleLimitChallengeCount = 481005
     # [Description("模擬戦のバトル詳細ログが見つかりません。")]
     FriendBattleNotFoundBattleDetailLog = 481006
+    # [Description("アンケート情報が見つかりません。")]
+    GuildSurveyNotFoundGuildSurveyDto = 490000
+    # [Description("プレイヤーがギルドに参加していません。")]
+    GuildSurveyNotBelongToGuild = 491000
+    # [Description("権限が足りていません。")]
+    GuildSurveyHasNoPermission = 491001
+    # [Description("無効な投票期限が設定されています。")]
+    GuildSurveyInvalidVotingEndTimestamp = 491002
+    # [Description("本文が入力されていません。")]
+    GuildSurveyContentIsEmpty = 491003
+    # [Description("選択肢が入力されていません。")]
+    GuildSurveyContainsEmptyChoice = 491004
+    # [Description("無効な選択肢が設定されています。")]
+    GuildSurveyInvalidChoices = 491005
+    # [Description("無効な選択肢種別です。")]
+    GuildSurveyInvalidGuildSurveyChoiceType = 491006
+    # [Description("アンケートに存在しない選択肢です。")]
+    GuildSurveyNotFoundGuildSurveyChoiceType = 491007
+    # [Description("本文の文字数が上限を超えています。")]
+    GuildSurveyOverContentLength = 491008
+    # [Description("選択肢の文字数が上限を超えています。")]
+    GuildSurveyOverChoiceLength = 491009
+    # [Description("アンケートの登録件数がが上限に達しています。")]
+    GuildSurveyOverSurveyCount = 491010
+    # [Description("異なるギルドのアンケートが指定されています。")]
+    GuildSurveyDifferentGuildSurvey = 491011
     # [Description("存在しないTreasureChestです。")]
     ItemOpenTreasureChestIdNotFound = 602004
     # [Description("存在しないTreasureChestです。")]
@@ -8304,6 +8314,31 @@ class GuildTowerReinforcementJobRankingData():
     AfterJobLevel: int = 0
     RankingPlayerDataList: list[GuildTowerReinforcementJobRankingPlayerData] = _field(default_factory=list["GuildTowerReinforcementJobRankingPlayerData"])
 
+# [Description("ギルドアンケートの選択肢種別")]
+class GuildSurveyChoiceType(_Enum):
+    # [Description("不明")]
+    None_ = 0
+    # [Description("選択肢1")]
+    First = 1
+    # [Description("選択肢2")]
+    Second = 2
+    # [Description("選択肢3")]
+    Third = 3
+    # [Description("選択肢4")]
+    Fourth = 4
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class GuildSurveyInfo():
+    ChoiceMap: dict[GuildSurveyChoiceType, str] = _field(default_factory=dict["GuildSurveyChoiceType", "str"])
+    Content: str = ""
+    CreateLocalTimestamp: int = 0
+    CreateSurveyPlayerInfo: PlayerInfo = _field(default_factory=lambda: PlayerInfo())
+    IsVoted: bool = False
+    SurveyGuid: str = ""
+    VoteCountMap: dict[GuildSurveyChoiceType, int] = _field(default_factory=dict["GuildSurveyChoiceType", "int"])
+    VotingEndLocalTimestamp: int = 0
+
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class GuildRaidBossInfo():
@@ -8599,6 +8634,7 @@ class FriendBattleLogInfo():
     FriendStatusType: _FriendStatusType = _field(default_factory=lambda: _FriendStatusType())
     IsAllowedFriendBattle: bool = False
     PlayerGuildPositionType: _PlayerGuildPositionType = _field(default_factory=lambda: _PlayerGuildPositionType())
+    RivalBackgroundCharacterId: int = 0
     RivalBattlePower: int = 0
     RivalComment: str = ""
     RivalGuildId: int = 0
@@ -9007,6 +9043,13 @@ class AnnounceChatInfo(_ArrayPacked):
     GuildChatInfo: _GuildChatInfo = _field(default_factory=lambda: _GuildChatInfo())
     # [Key(1)]
     RegisterLocalTimestamp: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class ReactionPlayerInfo():
+    IconId: int = 0
+    LegendLeagueClassType: _LegendLeagueClassType = _field(default_factory=lambda: _LegendLeagueClassType())
+    PlayerName: str = ""
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
