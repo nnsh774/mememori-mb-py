@@ -125,6 +125,10 @@ class ItemType(_Enum):
     ChatBalloon = 41
     # [Description("アダマントボックス")]
     EquipmentSetMaterialBox = 42
+    # [Description("書庫整理マス解放アイテム")]
+    BookSortGridCellUnlockItem = 43
+    # [Description("書庫整理交換所アイテム")]
+    BookSortEventExchangePlaceItem = 44
     # [Description("イベント交換所アイテム")]
     EventExchangePlaceItem = 50
     # [Description("Stripeクーポン")]
@@ -441,6 +445,37 @@ class BoardRankConditionInfo():
     # [Description("累計必要クリア数")]
     TotalRequireCount: int = 0
 
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class BookSortBonusFloorSelectItems():
+    EndMaxClearQuestId: int = 0
+    # [Nest(True, 1)]
+    ItemList: list[UserItem] = _field(default_factory=list["UserItem"])
+    StartMaxClearQuestId: int = 0
+
+class StartEndTimeZoneType(_Enum):
+    LocalStartLocalEnd = 0
+    LocalStartJstEnd = 1
+    JstStartLocalEnd = 10
+    JstStartJstEnd = 11
+
+_StartEndTimeZoneType = StartEndTimeZoneType
+class IHasStartEndTimeZone(_Protocol):
+    # [DateTimeString]
+    EndTime: str
+    StartEndTimeZoneType: _StartEndTimeZoneType
+    # [DateTimeString]
+    StartTime: str
+
+# [Description("マイページアイコン表示場所タイプ")]
+class MypageIconDisplayLocationType(_Enum):
+    # [Description("マイページのみ")]
+    MypageOnly = 0
+    # [Description("イベントポータルのみ")]
+    EventPortalOnly = 1
+    # [Description("マイページとイベントポータル")]
+    MypageAndEventPortal = 2
+
 class IHasStartEndTime(_Protocol):
     # [DateTimeString]
     EndTime: str
@@ -745,29 +780,6 @@ class RankUpType(_Enum):
     ElementType = 1
     # [Description("同じキャラクターID")]
     SameName = 2
-
-class StartEndTimeZoneType(_Enum):
-    LocalStartLocalEnd = 0
-    LocalStartJstEnd = 1
-    JstStartLocalEnd = 10
-    JstStartJstEnd = 11
-
-_StartEndTimeZoneType = StartEndTimeZoneType
-class IHasStartEndTimeZone(_Protocol):
-    # [DateTimeString]
-    EndTime: str
-    StartEndTimeZoneType: _StartEndTimeZoneType
-    # [DateTimeString]
-    StartTime: str
-
-# [Description("マイページアイコン表示場所タイプ")]
-class MypageIconDisplayLocationType(_Enum):
-    # [Description("マイページのみ")]
-    MypageOnly = 0
-    # [Description("イベントポータルのみ")]
-    EventPortalOnly = 1
-    # [Description("マイページとイベントポータル")]
-    MypageAndEventPortal = 2
 
 # [Description("地域タイプ")]
 class CountryCodeType(_Enum):
@@ -1100,6 +1112,12 @@ class MissionAchievementType(_Enum):
     WeeklyTopicsTransitionCount = 24010100
     # [Description("人気投票チケットの消費数")]
     ConsumePopularityVoteTicket = 25010100
+    # [Description("魔女の書庫整理 マス解放数")]
+    BookSortUnlockGridCell = 26010100
+    # [Description("魔女の書庫整理 最大到達フロア")]
+    BookSortMaxFloor = 26010200
+    # [Description("魔女の書庫整理 アイテムの消費量")]
+    BookSortConsumeItemCount = 26010300
 
 # [Description("SNS情報")]
 # [MessagePackObject(True)]
@@ -1195,6 +1213,8 @@ class TransferSpotType(_Enum):
     PopularityVote = 270
     # [Description("イベントポータル")]
     EventPortal = 280
+    # [Description("書庫整理")]
+    BookSort = 290
     # [Description("フレンド")]
     Friend = 4
 
@@ -1554,6 +1574,8 @@ class MissionTransitionDestinationType(_Enum):
     WeeklyTopics = 2401
     # [Description("人気投票メイン画面")]
     PopularityVote = 2501
+    # [Description("魔女の書庫整理")]
+    BookSort = 2601
 
 # [Description("ガチャカテゴリータイプ")]
 class GachaCategoryType(_Enum):
@@ -2046,6 +2068,8 @@ class MissionGroupType(_Enum):
     Collab = 12
     # [Description("人気投票")]
     PopularityVote = 13
+    # [Description("魔女の書庫整理")]
+    BookSort = 14
     # [Description("デイリー追加報酬")]
     DailyBonus = 1000
 
@@ -2130,6 +2154,7 @@ class MissionType(_Enum):
     GuildTower = 11
     Collab = 12
     PopularityVote = 13
+    BookSort = 14
 
 # [Description("解放されるコマンドの種類")]
 class OpenCommandType(_Enum):
@@ -2289,6 +2314,8 @@ class OpenCommandType(_Enum):
     BulkUseItem = 480
     # [Description("模擬戦")]
     FriendBattle = 490
+    # [Description("書庫整理")]
+    BookSort = 500
     # [Description("武具固定")]
     LockEquipment = 1000
     # [Description("武具固定(ギルドバトル用)")]
@@ -5016,6 +5043,38 @@ class ErrorLogInfo():
     LocalTimeStamp: int = 0
     Message: str = ""
 
+# [Description("楽曲再生時の操作イベント種別")]
+class MusicPlayerPlayEventType(_Enum):
+    # [Description("不明")]
+    None_ = 0
+    # [Description("シーク操作_操作前の位置")]
+    SeekFrom = 1
+    # [Description("シーク操作_操作後の位置")]
+    SeekTo = 2
+    # [Description("一時停止の位置")]
+    Pause = 3
+    # [Description("再開の位置")]
+    Resume = 4
+    # [Description("次の楽曲にスキップした位置")]
+    Skip = 5
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MusicPlayerPlayEventData():
+    EventType: MusicPlayerPlayEventType = _field(default_factory=lambda: MusicPlayerPlayEventType())
+    Position: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MusicPlayerPlayLogInfo():
+    EventDataList: list[MusicPlayerPlayEventData] = _field(default_factory=list["MusicPlayerPlayEventData"])
+    IsComplete: bool = False
+    IsMySelect: bool = False
+    IsShuffle: bool = False
+    MusicMBId: int = 0
+    PlayListGuid: str = ""
+    TotalPlaySeconds: int = 0
+
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class GvgDeckInfo():
@@ -6500,6 +6559,8 @@ class ErrorCode(_Enum):
     GuildTowerAlreadyReceivedFloorReward = 412201
     # [Description("イベント終了後にギルドに加入したため階層報酬を受け取ることができません。")]
     GuildTowerJoinedGuildAfterEndEvent = 412202
+    # [Description("本日の挑戦時間を過ぎています。")]
+    GuildTowerOverTodayChallengeTime = 412203
     # [Description("個別通知キャッシュ情報が存在しません")]
     IndividualNotificationCacheDtoNotFound = 421000
     # [Description("ユーザーの個別通知情報が存在しません")]
@@ -6546,6 +6607,8 @@ class ErrorCode(_Enum):
     SerialCodeAlreadyUsedSameCodeGroup = 450004
     # [Description("利用条件を満たしていないシリアルコードが入力されました。入力条件をご確認ください。")]
     SerialCodeAlreadyUsedOtherCodeGroup = 450005
+    # [Description("入力されたシリアルコードはBOI版アプリ内のコード入力でのみ使用可能です。")]
+    SerialCodeOnlyBoiAvailable = 450006
     # [Description("バトルリーグの集計データが存在しません。")]
     WeeklyTopicsNotFoundWeeklyTopicsBattleLeagueDto = 460001
     # [Description("ボスバトルの集計データが存在しません。")]
@@ -6664,6 +6727,32 @@ class ErrorCode(_Enum):
     GuildSurveyOverSurveyCount = 491010
     # [Description("異なるギルドのアンケートが指定されています。")]
     GuildSurveyDifferentGuildSurvey = 491011
+    # [Description("魔女の書庫整理情報が見つかりません。")]
+    BookSortNotFoundUserBookSortDto = 500000
+    # [Description("魔女の書庫整理が解放されていません。")]
+    BookSortEventNotOpen = 501000
+    # [Description("魔女の書庫整理が開催されていません。")]
+    BookSortEventNotHeld = 501001
+    # [Description("すでに当たりマスを解放済みです。")]
+    BookSortEventCurrentFloorAlreadyFinished = 501002
+    # [Description("ボーナスフロア報酬が未選択です。")]
+    BookSortEventNotSelectBonusFloorReward = 501003
+    # [Description("ボーナスフロア報酬のラインナップが更新されました。")]
+    BookSortEventChangeBonusFloorRewardLineup = 501004
+    # [Description("ボーナスフロアではないフロアです。")]
+    BookSortEventNotBonusFloor = 501005
+    # [Description("まだ当たりマスを解放していません。")]
+    BookSortEventCurrentFloorNotFinish = 501006
+    # [Description("枠外が解放対象に指定されています。")]
+    BookSortEventUnlockOutsideFrame = 501007
+    # [Description("対象の範囲に、解放可能なマスがありません。")]
+    BookSortEventNotExistAvailableGridCell = 501008
+    # [Description("一マス解放アイテムが足りないため、一括解放できません。")]
+    BookSortEventNotEnoughBulkUnlockItem = 501009
+    # [Description("残りマスが3つ未満のため、一括解放できません。")]
+    BookSortEventNotEnoughLockedGridCellBulkUnlock = 501010
+    # [Description("選択できないボーナスフロア報酬です。")]
+    BookSortEventNotSelectableBonusFloorReward = 501011
     # [Description("存在しないTreasureChestです。")]
     ItemOpenTreasureChestIdNotFound = 602004
     # [Description("存在しないTreasureChestです。")]
@@ -7008,6 +7097,10 @@ class ErrorCode(_Enum):
     SteamNotFoundUserAgreementInfo = 6000306
     # [Description("Steamでのサブスク情報取得に失敗しました。")]
     SteamAgreementInfoIsNull = 6000307
+    # [Description("既にサブスク契約済みです。")]
+    SteamAlreadyExistAgreement = 6000308
+    # [Description("次回支払日が存在しません。")]
+    SteamNotFoundNextPayment = 6000309
 
 # [MessagePackObject(True)]
 _ErrorCode = ErrorCode
@@ -9176,6 +9269,60 @@ class BountyQuestStartInfo():
     BountyQuestId: int = 0
     # [Description("懸賞カウンタークエスト派遣メンバー情報")]
     BountyQuestMemberInfos: list[BountyQuestMemberInfo] = _field(default_factory=list["BountyQuestMemberInfo"])
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UnlockedGridCellInfo():
+    GridCellIndex: int = 0
+    IsWin: bool = False
+
+# [MessagePackObject(True)]
+_UnlockedGridCellInfo = UnlockedGridCellInfo
+@_dataclass(slots=True)
+class UnlockGridCellResult():
+    RewardUserItemList: list[UserItem] = _field(default_factory=list["UserItem"])
+    UnlockedGridCellInfo: _UnlockedGridCellInfo = _field(default_factory=lambda: _UnlockedGridCellInfo())
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class BookSortFloorHistory():
+    Floor: int = 0
+    SelectedBonusFloorRewardIndex: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class BookSortSyncData():
+    CurrentFloor: int = 0
+    FloorHistoryList: list[BookSortFloorHistory] = _field(default_factory=list["BookSortFloorHistory"])
+    IsExistReceivableMission: bool | None = None
+    LastUnlockGridCellDateIntYearMonthDay: int | None = None
+    SelectedBonusFloorRewardIndex: int = 0
+    UnlockedGridCellInfoList: list[UnlockedGridCellInfo] = _field(default_factory=list["UnlockedGridCellInfo"])
+
+# [Description("書庫整理報酬タイプ")]
+class BookSortRewardType(_Enum):
+    # [Description("None")]
+    None_ = 0
+    # [Description("通常フロア当たりマス報酬")]
+    Win = 1
+    # [Description("外れマス確定ドロップ報酬")]
+    LoseFixed = 2
+    # [Description("外れマス低確率ドロップ報酬")]
+    LoseRare = 3
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class BookSortRewardItemsRate():
+    ItemList: list[UserItem] = _field(default_factory=list["UserItem"])
+    LotteryRate: float = 0.0
+
+# [MessagePackObject(True)]
+_BookSortRewardType = BookSortRewardType
+@_dataclass(slots=True)
+class BookSortReward():
+    BookSortRewardItemsRateList: list[BookSortRewardItemsRate] = _field(default_factory=list["BookSortRewardItemsRate"])
+    BookSortRewardType: _BookSortRewardType = _field(default_factory=lambda: _BookSortRewardType())
+    DropRate: float = 0.0
 
 # [Description("ボスバトルクリアパーティー情報")]
 # [MessagePackObject(True)]

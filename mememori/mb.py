@@ -239,6 +239,52 @@ class BoardRankMB(MasterBookBase):
     # [PropertyOrder(5)]
     QuestLotteryInfoListId: int = 0
 
+# [Description("書庫整理ボーナスフロア報酬")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class BookSortBonusFloorRewardMB(MasterBookBase):
+    # [Description("開始フロア")]
+    # [PropertyOrder(1)]
+    StartFloor: int = 0
+    # [Description("終了フロア")]
+    # [PropertyOrder(2)]
+    EndFloor: int = 0
+    # [Description("選択報酬ラインナップリスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(3)]
+    SelectItemsList: list[BookSortBonusFloorSelectItems] = _field(default_factory=list["BookSortBonusFloorSelectItems"])
+
+# [Description("書庫整理イベント")]
+# [MessagePackObject(True)]
+_MypageIconDisplayLocationType = MypageIconDisplayLocationType
+_StartEndTimeZoneType = StartEndTimeZoneType
+@_dataclass(slots=True)
+class BookSortEventMB(MasterBookBase):
+    # [Description("時間タイプ")]
+    # [PropertyOrder(1)]
+    StartEndTimeZoneType: _StartEndTimeZoneType = _field(default_factory=lambda: _StartEndTimeZoneType())
+    # [Description("開始日時")]
+    # [PropertyOrder(2)]
+    StartTime: str = ""
+    # [Description("終了日時")]
+    # [PropertyOrder(3)]
+    EndTime: str = ""
+    # [Description("対象ミッションIDリスト")]
+    # [PropertyOrder(4)]
+    TargetMissionIdList: list[int] = _field(default_factory=list["int"])
+    # [Description("ショップボタン遷移先ID")]
+    # [PropertyOrder(5)]
+    TransferShopTabId: int = 0
+    # [Description("ボーナスフロア繰り返し設定")]
+    # [PropertyOrder(6)]
+    BonusFloorRepeat: int = 0
+    # [Description("ボーナスフロア個別設定")]
+    # [PropertyOrder(7)]
+    BonusFloorList: list[int] = _field(default_factory=list["int"])
+    # [Description("アイコン表示箇所")]
+    # [PropertyOrder(8)]
+    MypageIconDisplayLocationType: _MypageIconDisplayLocationType = _field(default_factory=lambda: _MypageIconDisplayLocationType())
+
 # [Description("ボスデータ")]
 # [MessagePackObject(True)]
 # [NotUseOnBatch]
@@ -745,8 +791,6 @@ class ChatEffectKeywordMB(MasterBookBase):
 
 # [Description("コラボミッション")]
 # [MessagePackObject(True)]
-_MypageIconDisplayLocationType = MypageIconDisplayLocationType
-_StartEndTimeZoneType = StartEndTimeZoneType
 @_dataclass(slots=True)
 class CollabMissionMB(MasterBookBase):
     # [Description("時間タイプ")]
@@ -3144,28 +3188,25 @@ class TermsMB(MasterBookBase):
     # [Description("TimeServerMBのID")]
     # [PropertyOrder(1)]
     TimeServerId: int = 0
-    # [Description("DMM用か？")]
-    # [PropertyOrder(2)]
-    IsDmm: bool = False
     # [Description("利用規約")]
     # [Nest(False, 0)]
-    # [PropertyOrder(3)]
+    # [PropertyOrder(2)]
     Terms: TermsButtonInfo = _field(default_factory=lambda: TermsButtonInfo())
     # [Description("プライバシーポリシー")]
     # [Nest(False, 0)]
-    # [PropertyOrder(4)]
+    # [PropertyOrder(3)]
     PrivacyPolicy: TermsButtonInfo = _field(default_factory=lambda: TermsButtonInfo())
     # [Description("サブスク規約")]
     # [Nest(False, 0)]
-    # [PropertyOrder(5)]
+    # [PropertyOrder(4)]
     Subscription: TermsButtonInfo = _field(default_factory=lambda: TermsButtonInfo())
     # [Description("その他")]
     # [Nest(False, 0)]
-    # [PropertyOrder(6)]
+    # [PropertyOrder(5)]
     TermsButtonInfos: list[TermsButtonInfo] = _field(default_factory=list["TermsButtonInfo"])
     # [DateTimeString]
     # [Description("開始日時")]
-    # [PropertyOrder(7)]
+    # [PropertyOrder(6)]
     StartTime: str = ""
 
 # [Description("テキスト言語")]
