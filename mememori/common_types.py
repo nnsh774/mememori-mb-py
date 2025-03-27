@@ -1215,6 +1215,8 @@ class TransferSpotType(_Enum):
     EventPortal = 280
     # [Description("書庫整理")]
     BookSort = 290
+    # [Description("ワールド誘導")]
+    WorldGuidance = 300
     # [Description("フレンド")]
     Friend = 4
 
@@ -3525,6 +3527,8 @@ class EffectType(_Enum):
     DamageBlock = 2016
     # [Description("持続ダメージ遮断")]
     TransientDamageBlock = 2017
+    # [Description("バフカバー")]
+    BuffCover = 2018
     # [Description("スキル1強化")]
     ActiveSkill1Enhance = 2100
     # [Description("スキル2強化")]
@@ -4404,6 +4408,8 @@ class GuidanceType(_Enum):
     GuildJoining = 2
     # [Description("勧誘設定")]
     RecruitSetting2 = 3
+    # [Description("ワールド誘導")]
+    WorldGuidance = 4
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -5027,6 +5033,27 @@ class UserFriendDtoInfo():
     IsReceived: bool = False
     OtherPlayerId: int = 0
     RegistrationDate: int = 0
+
+# [Description("誘導タイプ")]
+class WorldGuidanceType(_Enum):
+    # [Description("なし")]
+    None_ = 0
+    # [Description("汎用新ワールド")]
+    GenericNewWorld = 1
+    # [Description("VIPワールド")]
+    VIPWorld = 2
+
+# [Description("ワールド誘導情報")]
+# [MessagePackObject(True)]
+_WorldGuidanceType = WorldGuidanceType
+@_dataclass(slots=True)
+class WorldGuidanceInfo():
+    # [Description("ワールド誘導ダイアログタイプ")]
+    # [PropertyOrder(1)]
+    WorldGuidanceType: _WorldGuidanceType = _field(default_factory=lambda: _WorldGuidanceType())
+    # [Description("誘導先ワールドID")]
+    # [PropertyOrder(2)]
+    WorldGuidanceId: int = 0
 
 class ErrorLogType(_Enum):
     None_ = 0
