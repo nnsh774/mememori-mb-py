@@ -796,45 +796,58 @@ class CollabMissionMB(MasterBookBase):
     # [Description("時間タイプ")]
     # [PropertyOrder(1)]
     StartEndTimeZoneType: _StartEndTimeZoneType = _field(default_factory=lambda: _StartEndTimeZoneType())
-    # [Description("対象ミッションIDリスト")]
+    # [Description("応募券アイテムID")]
     # [PropertyOrder(10)]
-    TargetMissionIdList: list[int] = _field(default_factory=list["int"])
-    # [Description("Url1")]
+    SweepstakesTicketItemId: int = 0
+    # [Description("応募対象アイテムリスト")]
+    # [Nest(False, 0)]
     # [PropertyOrder(11)]
+    SweepstakesItemList: list[SweepstakesItem] = _field(default_factory=list["SweepstakesItem"])
+    # [Description("説明文")]
+    # [PropertyOrder(12)]
+    DescriptionTextKey: str = ""
+    # [Description("ミッションタイトル")]
+    # [PropertyOrder(13)]
+    TitleTextKey: str = ""
+    # [Description("対象ミッションIDリスト")]
+    # [PropertyOrder(14)]
+    TargetMissionIdList: list[int] = _field(default_factory=list["int"])
+    # [Description("お知らせタブ")]
+    # [PropertyOrder(15)]
+    NoticeGroupId: int = 0
+    # [Description("Url1")]
+    # [PropertyOrder(16)]
     Url1: str = ""
     # [Description("Url2")]
-    # [PropertyOrder(12)]
+    # [PropertyOrder(17)]
     Url2: str = ""
     # [Description("キャラクターID(楽曲開放ミッション用)")]
-    # [PropertyOrder(13)]
+    # [PropertyOrder(18)]
     CharacterId: int = 0
-    # [Description("アイコン表示箇所")]
-    # [PropertyOrder(14)]
-    MypageIconDisplayLocationType: _MypageIconDisplayLocationType = _field(default_factory=lambda: _MypageIconDisplayLocationType())
     # [Description("開始日時")]
     # [PropertyOrder(2)]
     StartTime: str = ""
     # [Description("終了日時")]
     # [PropertyOrder(3)]
     EndTime: str = ""
-    # [Description("メイン画像Id")]
+    # [Description("懸賞応募対象の時間サーバーIdのリスト")]
     # [PropertyOrder(4)]
+    SweepstakesTargetTimeServerIdList: list[int] = _field(default_factory=list["int"])
+    # [Description("アイコン表示箇所")]
+    # [PropertyOrder(5)]
+    MypageIconDisplayLocationType: _MypageIconDisplayLocationType = _field(default_factory=lambda: _MypageIconDisplayLocationType())
+    # [Description("メイン画像Id")]
+    # [PropertyOrder(6)]
     ImageId: int = 0
     # [Description("メイン画像座標X")]
-    # [PropertyOrder(5)]
+    # [PropertyOrder(7)]
     ImageX: float = 0.0
     # [Description("メイン画像座標Y")]
-    # [PropertyOrder(6)]
+    # [PropertyOrder(8)]
     ImageY: float = 0.0
     # [Description("メイン画像サイズ")]
-    # [PropertyOrder(7)]
-    ImageSize: float = 0.0
-    # [Description("説明文")]
-    # [PropertyOrder(8)]
-    DescriptionTextKey: str = ""
-    # [Description("ミッションタイトル")]
     # [PropertyOrder(9)]
-    TitleTextKey: str = ""
+    ImageSize: float = 0.0
 
 # [Description("コミュニティ")]
 # [MessagePackObject(True)]
@@ -3427,25 +3440,31 @@ class TotalActivityMedalRewardMB(MasterBookBase):
     # [Description("ミッション種別")]
     # [PropertyOrder(1)]
     MissionGroupType: _MissionGroupType = _field(default_factory=lambda: _MissionGroupType())
-    # [Description("MissionGroupTypeごとの指定値")]
-    # [PropertyOrder(2)]
-    Value: int = 0
     # [Description("必要貢献メダル")]
-    # [PropertyOrder(3)]
+    # [PropertyOrder(2)]
     RequiredActivityMedalCount: int = 0
+    # [Description("時間サーバーIdのリスト")]
+    # [PropertyOrder(3)]
+    TimeServerIdList: list[int] = _field(default_factory=list["int"])
+    # [Description("宝箱表示画像ID")]
+    # [PropertyOrder(4)]
+    ImageId: int = 0
     # [Description("報酬リスト")]
     # [Nest(False, 0)]
-    # [PropertyOrder(4)]
+    # [PropertyOrder(5)]
     RewardList: list[MissionReward] = _field(default_factory=list["MissionReward"])
     # [Description("開始時刻")]
-    # [PropertyOrder(5)]
+    # [PropertyOrder(6)]
     StartTime: str = ""
     # [Description("終了時刻")]
-    # [PropertyOrder(6)]
+    # [PropertyOrder(7)]
     EndTime: str = ""
     # [Description("表示順(昇順)")]
-    # [PropertyOrder(7)]
+    # [PropertyOrder(8)]
     SortOrder: int = 0
+    # [Description("MissionGroupTypeごとの指定値")]
+    # [PropertyOrder(9)]
+    Value: int = 0
 
 # [Description("無窮の塔　敵データ")]
 # [MessagePackObject(True)]
@@ -3857,6 +3876,9 @@ class WorldGroupMB(MasterBookBase):
     # [Description("タイムサーバー")]
     # [PropertyOrder(1)]
     TimeServerId: int = 0
+    # [Description("グランドバトル開催頻度")]
+    # [PropertyOrder(10)]
+    MonthlyOpenCount: int = 0
     # [Description("WorldIdのリスト")]
     # [PropertyOrder(3)]
     WorldIdList: list[int] = _field(default_factory=list["int"])

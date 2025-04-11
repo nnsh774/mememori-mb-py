@@ -129,6 +129,12 @@ class ItemType(_Enum):
     BookSortGridCellUnlockItem = 43
     # [Description("書庫整理交換所アイテム")]
     BookSortEventExchangePlaceItem = 44
+    # [Description("チャット限定絵文字")]
+    ChatEmoticon = 45
+    # [Description("ミッションパスポイント")]
+    MissionPassPoint = 46
+    # [Description("懸賞チケット")]
+    SweepstakesTicket = 47
     # [Description("イベント交換所アイテム")]
     EventExchangePlaceItem = 50
     # [Description("Stripeクーポン")]
@@ -780,6 +786,17 @@ class RankUpType(_Enum):
     ElementType = 1
     # [Description("同じキャラクターID")]
     SameName = 2
+
+# [Description("懸賞応募対象アイテム")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class SweepstakesItem():
+    # [Description("アイテムの種類")]
+    # [PropertyOrder(1)]
+    ItemType: _ItemType = _field(default_factory=lambda: _ItemType())
+    # [Description("アイテムのID")]
+    # [PropertyOrder(2)]
+    ItemId: int = 0
 
 # [Description("地域タイプ")]
 class CountryCodeType(_Enum):
@@ -1865,6 +1882,8 @@ class HelpParameterType(_Enum):
     GrandBattleMinPlacement = 3
     # [Description("人気投票期間情報")]
     PopularityVoteTimeInfo = 4
+    # [Description("グランドバトルの開催が月2回かどうかを表示")]
+    GrandBattleMonthlyOpenCount = 5
 
 # [Description("ヘルプパート")]
 # [MessagePackObject(True)]
@@ -2533,6 +2552,8 @@ class PassiveTrigger(_Enum):
     NextCheckReceiveDamage = 44
     # [Description("敵死亡時（条件なし）")]
     AlwaysEnemyDead = 45
+    # [Description("敵が攻撃した時")]
+    EnemyAttack = 50
     # [Description("被致命的ダメージ時回復")]
     RecoveryFromInstantDeathDamage = 52
     # [Description("特殊ダメージ死亡(毒、共鳴など)")]
@@ -4577,6 +4598,8 @@ class PlayerSettingsType(_Enum):
     WeeklyTopicsBattleLeaguePostingPermission = 2
     # [Description("週間トピックスのレジェンドリーグ掲載許可")]
     WeeklyTopicsLegendLeaguePostingPermission = 3
+    # [Description("ギルドバトルパーティ保護")]
+    GuildBattlePartyMemberProtect = 4
 
 # [MessagePackObject(True)]
 _PlayerSettingsType = PlayerSettingsType
@@ -6780,6 +6803,12 @@ class ErrorCode(_Enum):
     BookSortEventNotEnoughLockedGridCellBulkUnlock = 501010
     # [Description("選択できないボーナスフロア報酬です。")]
     BookSortEventNotSelectableBonusFloorReward = 501011
+    # [Description("開催中のコラボミッションがありません。")]
+    SweepstakesCollabMissionNotHeld = 510000
+    # [Description("懸賞対象の時間サーバーではありません。")]
+    SweepstakesNotTargetTimeServer = 510001
+    # [Description("応募対象でないアイテムです。")]
+    SweepstakesNotAvailableEntryItem = 510002
     # [Description("存在しないTreasureChestです。")]
     ItemOpenTreasureChestIdNotFound = 602004
     # [Description("存在しないTreasureChestです。")]
@@ -7128,6 +7157,8 @@ class ErrorCode(_Enum):
     SteamAlreadyExistAgreement = 6000308
     # [Description("次回支払日が存在しません。")]
     SteamNotFoundNextPayment = 6000309
+    # [Description("レート制限により課金処理が失敗しました。")]
+    SteamRateLimited = 6000310
 
 # [MessagePackObject(True)]
 _ErrorCode = ErrorCode
@@ -7200,6 +7231,29 @@ class BattleRewardResult():
     PlayerExp: int = 0
     RankUp: int = 0
 
+# [Description("懸賞応募データ")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class SweepstakesEntryData():
+    # [Description("応募アイテムのインデックス")]
+    # [PropertyOrder(1)]
+    SweepstakesItemIndex: int = 0
+    # [Description("応募口数")]
+    # [PropertyOrder(2)]
+    EntryCount: int = 0
+
+# [Description("懸賞応募状況")]
+# [MessagePackObject(True)]
+_SweepstakesItem = SweepstakesItem
+@_dataclass(slots=True)
+class SweepstakesEntryInfo():
+    # [Description("応募アイテム")]
+    # [PropertyOrder(1)]
+    SweepstakesItem: _SweepstakesItem = _field(default_factory=lambda: _SweepstakesItem())
+    # [Description("応募回数")]
+    # [PropertyOrder(2)]
+    EntryCount: int = 0
+
 # [Description("交換元アイテム情報")]
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -7240,6 +7294,8 @@ class ShopProductType(_Enum):
     ChargeBonus = 10
     # [Description("ゲリラパック")]
     GuerrillaPack = 11
+    # [Description("ミッションパス")]
+    MissionPass = 12
     # [Description("全検索")]
     AllSearch = 99
 
@@ -7797,10 +7853,78 @@ class ShopTabInfo():
     ImageId: int = 0
     # [Description("ダイヤタブかどうか")]
     IsCurrencyTab: bool = False
+    # [Description("Newバッジ表示フラグ")]
+    IsNew: bool = False
+    # [Description("Newバッジ表示対象かどうか")]
+    IsNewBadgeTarget: bool = False
     # [Description("タブ名キー")]
     NameKey: str = ""
     # [Description("商品一覧")]
     ShopProductInfoList: list[ShopProductInfo] = _field(default_factory=list["ShopProductInfo"])
+
+# [Description("ミッションパス報酬情報")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class ShopMissionPassRewardInfo():
+    # [Description("ノーマル報酬を受け取りずみか")]
+    IsReceivedNormalItem: bool = False
+    # [Description("プリミアム報酬を受け取りずみか")]
+    IsReceivedPremiumItem: bool = False
+    # [Description("レベル")]
+    Level: int = 0
+    # [Description("ノーマル報酬")]
+    NormalItemList: list[UserItem] = _field(default_factory=list["UserItem"])
+    # [Description("プリミアム報酬")]
+    PremiumItemList: list[UserItem] = _field(default_factory=list["UserItem"])
+    # [Description("要求ポイント")]
+    RequiredPoint: int = 0
+
+# [Description("ミッションパス情報")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class ShopProductMissionPassInfo():
+    # [Description("詳細ダイアログの補足説明キー")]
+    AdditionalDescriptionKey: str = ""
+    # [Description("有償ダイヤ数")]
+    CurrencyCount: int = 0
+    # [Description("ダイアログベース画像ID")]
+    DialogBaseImageId: int = 0
+    # [Description("終了日時")]
+    EndTime: str = ""
+    # [Description("ヘルプID")]
+    HelpId: int = 0
+    # [Description("ミッションパスを購入ずみか")]
+    IsBuyMissionPass: bool = False
+    # [Description("ポイント購入可能か")]
+    IsBuyPoint: bool = False
+    # [Description("強制非表示フラグ")]
+    IsHide: bool = False
+    # [Description("レベル")]
+    Level: int = 0
+    # [Description("商品名キー")]
+    NameKey: str = ""
+    # [Description("解放についての説明キー")]
+    OpenDescriptionKey: str = ""
+    # [Description("詳細ダイアログの概要説明キー")]
+    OverviewDescriptionKey: str = ""
+    # [Description("所持ポイント")]
+    Point: int = 0
+    # [Description("付与する有償ダイヤの数")]
+    PointUpCurrency: int = 0
+    # [Description("プレミアム解放ダイアログベース画像ID")]
+    PremiumOpenDialogImageId: int = 0
+    # [Description("ProductId")]
+    ProductId: str = ""
+    # [Description("報酬表示画像ID")]
+    RewardDisplayImageId: int = 0
+    # [Description("報酬情報")]
+    ShopMissionPassRewardInfoList: list[ShopMissionPassRewardInfo] = _field(default_factory=list["ShopMissionPassRewardInfo"])
+    # [Description("商品値段")]
+    ShopProductPrice: int = 0
+    # [Description("シンボル画像ID")]
+    SymbolImageId: int = 0
+    # [Description("遷移タイプ")]
+    TransferDetailInfo: _TransferDetailInfo = _field(default_factory=lambda: _TransferDetailInfo())
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
