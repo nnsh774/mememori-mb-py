@@ -548,9 +548,9 @@ class BattleParameterType(_Enum):
     Hp = 1
     # [Description("攻撃力")]
     AttackPower = 2
-    # [Description("物理ダメージ緩和")]
+    # [Description("物理防御力")]
     PhysicalDamageRelax = 3
-    # [Description("魔法ダメージ緩和")]
+    # [Description("魔法防御力")]
     MagicDamageRelax = 4
     # [Description("命中")]
     Hit = 5
@@ -576,7 +576,7 @@ class BattleParameterType(_Enum):
     DebuffHit = 15
     # [Description("弱体効果耐性")]
     DebuffResist = 16
-    # [Description("リフレクト")]
+    # [Description("カウンタ")]
     DamageReflect = 17
     # [Description("HP吸収")]
     HpDrain = 18
