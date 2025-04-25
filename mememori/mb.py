@@ -799,34 +799,46 @@ class CollabMissionMB(MasterBookBase):
     # [Description("応募券アイテムID")]
     # [PropertyOrder(10)]
     SweepstakesTicketItemId: int = 0
+    # [Description("応募上限")]
+    # [PropertyOrder(11)]
+    SweepstakesEntryUpperLimit: int = 0
     # [Description("応募対象アイテムリスト")]
     # [Nest(False, 0)]
-    # [PropertyOrder(11)]
+    # [PropertyOrder(12)]
     SweepstakesItemList: list[SweepstakesItem] = _field(default_factory=list["SweepstakesItem"])
     # [Description("説明文")]
-    # [PropertyOrder(12)]
-    DescriptionTextKey: str = ""
-    # [Description("ミッションタイトル")]
     # [PropertyOrder(13)]
-    TitleTextKey: str = ""
-    # [Description("対象ミッションIDリスト")]
+    DescriptionTextKey: str = ""
+    # [Description("説明文(応募有り)")]
     # [PropertyOrder(14)]
+    SweepstakesDescriptionTextKey: str = ""
+    # [Description("ミッションタイトル")]
+    # [PropertyOrder(15)]
+    TitleTextKey: str = ""
+    # [Description("ミッションタイトル(応募有り)")]
+    # [PropertyOrder(16)]
+    SweepstakesTitleTextKey: str = ""
+    # [Description("規約")]
+    # [PropertyOrder(17)]
+    TermsTextKey: str = ""
+    # [Description("対象ミッションIDリスト")]
+    # [PropertyOrder(18)]
     TargetMissionIdList: list[int] = _field(default_factory=list["int"])
     # [Description("お知らせタブ")]
-    # [PropertyOrder(15)]
+    # [PropertyOrder(19)]
     NoticeGroupId: int = 0
-    # [Description("Url1")]
-    # [PropertyOrder(16)]
-    Url1: str = ""
-    # [Description("Url2")]
-    # [PropertyOrder(17)]
-    Url2: str = ""
-    # [Description("キャラクターID(楽曲開放ミッション用)")]
-    # [PropertyOrder(18)]
-    CharacterId: int = 0
     # [Description("開始日時")]
     # [PropertyOrder(2)]
     StartTime: str = ""
+    # [Description("Url1")]
+    # [PropertyOrder(20)]
+    Url1: str = ""
+    # [Description("Url2")]
+    # [PropertyOrder(21)]
+    Url2: str = ""
+    # [Description("キャラクターID(楽曲開放ミッション用)")]
+    # [PropertyOrder(22)]
+    CharacterId: int = 0
     # [Description("終了日時")]
     # [PropertyOrder(3)]
     EndTime: str = ""
@@ -1674,37 +1686,40 @@ class GuildRaidBossMB(MasterBookBase):
     # [Description("パッシブスキルIDのリスト")]
     # [PropertyOrder(18)]
     PassiveSkillIds: list[int] = _field(default_factory=list["int"])
-    # [Description("通常ダメージバー")]
-    # [Nest(False, 0)]
+    # [Description("敵の専用武器レアリティ")]
     # [PropertyOrder(19)]
-    NormalDamageBar: list[GuildRaidDamageBar] = _field(default_factory=list["GuildRaidDamageBar"])
+    ExclusiveEquipmentRarityFlags: _Flags[EquipmentRarityFlags] = _field(default_factory=lambda: _Flags["EquipmentRarityFlags"]([]))
     # [Description("ユニットアイコンID")]
     # [PropertyOrder(2)]
     UnitIconId: int = 0
-    # [Description("ギルドダメージバー")]
+    # [Description("通常ダメージバー")]
     # [Nest(False, 0)]
     # [PropertyOrder(20)]
+    NormalDamageBar: list[GuildRaidDamageBar] = _field(default_factory=list["GuildRaidDamageBar"])
+    # [Description("ギルドダメージバー")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(21)]
     GuildDamageBar: list[GuildRaidDamageBar] = _field(default_factory=list["GuildRaidDamageBar"])
     # [Description("バナーテキスト")]
-    # [PropertyOrder(21)]
+    # [PropertyOrder(22)]
     BannerText: str = ""
     # [Description("ギルドレイドボタン座標U")]
-    # [PropertyOrder(22)]
+    # [PropertyOrder(23)]
     GuildRaidButtonU: float = 0.0
     # [Description("ギルドレイドボタン座標V")]
-    # [PropertyOrder(23)]
+    # [PropertyOrder(24)]
     GuildRaidButtonV: float = 0.0
     # [Description("ワールド報酬キャラ画像座標X")]
-    # [PropertyOrder(24)]
+    # [PropertyOrder(25)]
     WorldDamageBarRewardCharacterImageX: float = 0.0
     # [Description("ワールド報酬キャラ画像座標Y")]
-    # [PropertyOrder(25)]
+    # [PropertyOrder(26)]
     WorldDamageBarRewardCharacterImageY: float = 0.0
     # [Description("ワールド報酬キャラ画像サイズ")]
-    # [PropertyOrder(26)]
+    # [PropertyOrder(27)]
     WorldDamageBarRewardCharacterImageSize: float = 0.0
     # [Description("マイページ表示タイプ")]
-    # [PropertyOrder(27)]
+    # [PropertyOrder(28)]
     IsActiveMypageIcon: bool = False
     # [Description("ボス種別")]
     # [PropertyOrder(3)]
@@ -1952,17 +1967,20 @@ class HelpMB(MasterBookBase):
     # [PropertyOrder(1)]
     HelpTitle: str = ""
     # [Description("ヘルプパートリスト")]
-    # [Nest(False, 0)]
+    # [Nest(True, 1)]
     # [PropertyOrder(2)]
     HelpPartInfoList: list[HelpPartInfo] = _field(default_factory=list["HelpPartInfo"])
     # [Description("チュートリアル説明ID")]
     # [PropertyOrder(3)]
     TutorialDescriptionId: int = 0
-    # [Description("表示フラグ")]
+    # [Description("ダイアログタイプ")]
     # [PropertyOrder(4)]
+    DialogType: int = 0
+    # [Description("表示フラグ")]
+    # [PropertyOrder(5)]
     IsDisplayed: bool = False
     # [Description("表示デバイスタイプ")]
-    # [PropertyOrder(5)]
+    # [PropertyOrder(6)]
     DisplayDeviceTypes: list[int] = _field(default_factory=list["int"])
 
 # [Description("お問い合わせボタン")]
@@ -2414,9 +2432,6 @@ class LuckyChanceMB(MasterBookBase):
     # [Description("タイトルキー")]
     # [PropertyOrder(6)]
     TitleTextKey: str = ""
-    # [Description("ボタンIdリスト")]
-    # [PropertyOrder(7)]
-    LuckyChanceButtonIdList: list[int] = _field(default_factory=list["int"])
     # [Description("同一ユーザーの抽選上限回数")]
     # [PropertyOrder(8)]
     LimitUserDrawCount: int = 0
@@ -3040,6 +3055,17 @@ class RequiredCurrencyMB(MasterBookBase):
     # [Description("レベルリンク枠開放に必要な仮想通貨")]
     # [PropertyOrder(7)]
     LevelLinkMember: int = 0
+
+# [Description("スキルのリンクテキスト")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class SkillDescriptionLinkTextMB(MasterBookBase):
+    # [Description("リンクワード")]
+    # [PropertyOrder(1)]
+    TargetTextKey: str = ""
+    # [Description("リンク先表示テキストリスト")]
+    # [PropertyOrder(2)]
+    LinkTextKeys: list[str] = _field(default_factory=list["str"])
 
 # [Description("特別アイコンアイテム")]
 # [MessagePackObject(True)]

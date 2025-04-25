@@ -1870,6 +1870,14 @@ class GuildTowerDebuffParameter():
     Hit: int = 0
     Speed: int = 0
 
+# [Description("ヘルプ本文")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class HelpMainText():
+    # [Description("本文")]
+    # [PropertyOrder(1)]
+    MainText: str = ""
+
 # [Description("ヘルプ付加情報タイプ")]
 class HelpParameterType(_Enum):
     # [Description("無し")]
@@ -1893,12 +1901,16 @@ class HelpPartInfo():
     # [Description("見出し")]
     # [PropertyOrder(1)]
     HeadLine: str = ""
-    # [Description("本文")]
+    # [Description("本文リスト")]
+    # [Nest(True, 1)]
     # [PropertyOrder(2)]
-    MainText: str = ""
+    MainTextList: list[HelpMainText] = _field(default_factory=list["HelpMainText"])
     # [Description("付加情報")]
     # [PropertyOrder(3)]
     HelpParameterType: _HelpParameterType = _field(default_factory=lambda: _HelpParameterType())
+    # [Description("本文")]
+    # [PropertyOrder(4)]
+    MainText: str = ""
 
 # [Description("問い合わせボタンタイプ")]
 class InquiryButtonType(_Enum):
@@ -3550,6 +3562,8 @@ class EffectType(_Enum):
     TransientDamageBlock = 2017
     # [Description("バフカバー")]
     BuffCover = 2018
+    # [Description("指定作用無効")]
+    NegateEffect = 2019
     # [Description("スキル1強化")]
     ActiveSkill1Enhance = 2100
     # [Description("スキル2強化")]
@@ -5233,6 +5247,8 @@ class ErrorCode(_Enum):
     InvalidRequestHeader = 2
     # [Description("アプリバージョンデータに異常が検出されました。")]
     InvalidDataAppVersionMB = 3
+    # [Description("マスターデータ更新(クライアントで使っている同じエラーメッセージを出すときに利用)")]
+    MasterDataVersionUp = 5
     # [Description("メンテナンス")]
     CommonMaintenance = 100
     # [Description("部分メンテナンス")]
@@ -6809,6 +6825,8 @@ class ErrorCode(_Enum):
     SweepstakesNotTargetTimeServer = 510001
     # [Description("応募対象でないアイテムです。")]
     SweepstakesNotAvailableEntryItem = 510002
+    # [Description("同一アカウントで応募できる上限に達しています。")]
+    SweepstakesOverEntryUpperLimit = 510003
     # [Description("存在しないTreasureChestです。")]
     ItemOpenTreasureChestIdNotFound = 602004
     # [Description("存在しないTreasureChestです。")]
@@ -9517,18 +9535,12 @@ class LegendLeagueRankingPlayerInfo():
 @_dataclass(slots=True)
 class LegendLeagueLogInfo():
     AttackBattlePower: int = 0
-    AttackCharacterBaseParameterMap: dict[str, BaseParameter] = _field(default_factory=dict["str", "BaseParameter"])
-    AttackCharacterBattleParameterMap: dict[str, BattleParameter] = _field(default_factory=dict["str", "BattleParameter"])
     AttackCharacterDtoInfoList: list[UserCharacterDtoInfo] = _field(default_factory=list["UserCharacterDtoInfo"])
-    AttackEquipmentDtoInfoListMap: dict[str, list[UserEquipmentDtoInfo]] = _field(default_factory=dict["str", "list[UserEquipmentDtoInfo]"])
     BattleEndInfo: _BattleEndInfo = _field(default_factory=lambda: _BattleEndInfo())
     BattleTime: int = 0
     BattleToken: str = ""
     DefenseBattlePower: int = 0
-    DefenseCharacterBaseParameterMap: dict[str, BaseParameter] = _field(default_factory=dict["str", "BaseParameter"])
-    DefenseCharacterBattleParameterMap: dict[str, BattleParameter] = _field(default_factory=dict["str", "BattleParameter"])
     DefenseCharacterDtoInfoList: list[UserCharacterDtoInfo] = _field(default_factory=list["UserCharacterDtoInfo"])
-    DefenseEquipmentDtoInfoListMap: dict[str, list[UserEquipmentDtoInfo]] = _field(default_factory=dict["str", "list[UserEquipmentDtoInfo]"])
     GetPoint: int = 0
     RivalPlayerInfo: PlayerInfo = _field(default_factory=lambda: PlayerInfo())
     TargetConsecutiveVictoryCount: int = 0
@@ -9538,18 +9550,12 @@ class LegendLeagueLogInfo():
 @_dataclass(slots=True)
 class PvpBattleLogInfo():
     AttackBattlePower: int = 0
-    AttackCharacterBaseParameterMap: dict[str, BaseParameter] = _field(default_factory=dict["str", "BaseParameter"])
-    AttackCharacterBattleParameterMap: dict[str, BattleParameter] = _field(default_factory=dict["str", "BattleParameter"])
     AttackCharacterInfoList: list[UserCharacterInfo] = _field(default_factory=list["UserCharacterInfo"])
-    AttackEquipmentDtoInfoListMap: dict[str, list[UserEquipmentDtoInfo]] = _field(default_factory=dict["str", "list[UserEquipmentDtoInfo]"])
     BattleEndInfo: _BattleEndInfo = _field(default_factory=lambda: _BattleEndInfo())
     BattleTime: int = 0
     BattleToken: str = ""
     DefenseBattlePower: int = 0
-    DefenseCharacterBaseParameterMap: dict[str, BaseParameter] = _field(default_factory=dict["str", "BaseParameter"])
-    DefenseCharacterBattleParameterMap: dict[str, BattleParameter] = _field(default_factory=dict["str", "BattleParameter"])
     DefenseCharacterInfoList: list[UserCharacterInfo] = _field(default_factory=list["UserCharacterInfo"])
-    DefenseEquipmentDtoInfoListMap: dict[str, list[UserEquipmentDtoInfo]] = _field(default_factory=dict["str", "list[UserEquipmentDtoInfo]"])
     NewRank: int = 0
     OldRank: int = 0
     RivalPlayerInfo: PlayerInfo = _field(default_factory=lambda: PlayerInfo())
