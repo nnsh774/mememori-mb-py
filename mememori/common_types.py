@@ -1216,6 +1216,8 @@ class TransferSpotType(_Enum):
     GuildMemberRecruit = 200
     # [Description("個別通知ダイアログ")]
     IndividualNotification = 210
+    # [Description("個別通知_シリアルコード通知ダイアログ")]
+    IndividualNotificationLiveTicketCode = 211
     # [Description("星導交換所")]
     StarsGuidanceTradeShop = 220
     # [Description("初回インストール時のワールド指定")]
@@ -6631,6 +6633,12 @@ class ErrorCode(_Enum):
     IndividualNotificationCacheDtoNotFound = 421000
     # [Description("ユーザーの個別通知情報が存在しません")]
     IndividualNotificationDtoNotFound = 421001
+    # [Description("指定された個別通知情報が存在しません")]
+    AuthIndividualNotificationDtoNotFound = 421002
+    # [Description("個別通知コード情報が存在しません")]
+    IndividualNotificationCodeDtoNotFound = 421003
+    # [Description("個別通知コードを受け取り済みです")]
+    IndividualNotificationCodeAlreadyReceived = 421004
     # [Description("星導交換所情報が存在しません")]
     StarsGuidanceTradeShopDtoNotFound = 431000
     # [Description("星導交換所が開催されていません。")]
