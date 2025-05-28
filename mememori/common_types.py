@@ -1135,6 +1135,8 @@ class MissionAchievementType(_Enum):
     BookSortMaxFloor = 26010200
     # [Description("魔女の書庫整理 アイテムの消費量")]
     BookSortConsumeItemCount = 26010300
+    # [Description("動画再生機能の再生回数（全サーバー合算）")]
+    PlayVideoTotalCount = 27010100
 
 # [Description("SNS情報")]
 # [MessagePackObject(True)]
@@ -1236,6 +1238,8 @@ class TransferSpotType(_Enum):
     BookSort = 290
     # [Description("ワールド誘導")]
     WorldGuidance = 300
+    # [Description("動画再生")]
+    PlayVideo = 330
     # [Description("フレンド")]
     Friend = 4
 
@@ -2117,6 +2121,16 @@ class MissionReward():
     # [PropertyOrder(2)]
     RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
 
+# [Description("ミッションクリア個数の報酬情報")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MissionClearCountRewardInfo():
+    # [Description("クリアクエストID")]
+    ClearQuestId: int = 0
+    # [Description("報酬アイテムリスト")]
+    # [Nest(True, 0)]
+    QuestProgressItemList: list[MissionReward] = _field(default_factory=list["MissionReward"])
+
 # [Description("ミッションタイプ")]
 class MissionType(_Enum):
     Main = 0
@@ -2445,6 +2459,16 @@ class BingoType(_Enum):
     # [Description("右列")]
     RightColumn = 6
 
+# [Description("パネルミッションの報酬情報")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class PanelMissionRewardInfo():
+    # [Description("クリアクエストID")]
+    ClearQuestId: int = 0
+    # [Description("報酬アイテムリスト")]
+    # [Nest(True, 3)]
+    QuestProgressItemList: list[UserItem] = _field(default_factory=list["UserItem"])
+
 # [Description("ビンゴ報酬情報")]
 # [MessagePackObject(True)]
 _BingoType = BingoType
@@ -2452,6 +2476,9 @@ _BingoType = BingoType
 class BingoRewardInfo():
     # [Description("ビンゴ種別")]
     BingoType: _BingoType = _field(default_factory=lambda: _BingoType())
+    # [Description("報酬情報リスト")]
+    # [Nest(True, 2)]
+    RewardInfoList: list[PanelMissionRewardInfo] = _field(default_factory=list["PanelMissionRewardInfo"])
     # [Description("報酬アイテムリスト")]
     # [Nest(True, 2)]
     RewardItemList: list[UserItem] = _field(default_factory=list["UserItem"])
@@ -3676,6 +3703,10 @@ class EffectType(_Enum):
     MoveBuffToMeFromEnemy = 3204
     # [Description("自分のデバフを敵に移す")]
     MoveDebuffToEnemyFromMe = 3205
+    # [Description("ターゲットのバフを指定数コピー")]
+    CopyBuffTargetToSelf = 3206
+    # [Description("自分のデバフをターゲットに指定数コピー")]
+    CopyDeBuffSelfToTarget = 3207
     # [Description("スピード減少")]
     SpeedDown = 5001
     # [Description("最大HP減少")]
@@ -6301,6 +6332,8 @@ class ErrorCode(_Enum):
     ChatUserAccountDtoNotFound = 271001
     # [Description("ユーザーのギルドデータが見つかりません。")]
     ChatUserGuildDtoNotFound = 271002
+    # [Description("ギルドデータが見つかりません。")]
+    ChatGuildDtoNotFound = 271003
     # [Description("対象ユーザにブロックされています。")]
     ChatBlockedByTargetPlayer = 272000
     # [Description("時間の指定が無効です。")]
@@ -6335,6 +6368,18 @@ class ErrorCode(_Enum):
     ChatSettingNotHaveBackground = 272015
     # [Description("設定できない文字サイズです。")]
     ChatSettingNotAllowedFontSize = 272016
+    # [Description("共有できないバトルタイプです。")]
+    ChatInvalidBattleType = 272017
+    # [Description("バトルログのダウンロードに失敗しました。")]
+    ChatFailDownloadBattleLog = 272018
+    # [Description("バトルログが存在しません。")]
+    ChatNotFoundBattleLog = 272019
+    # [Description("共有できないチャットタイプです。")]
+    ChatInvalidChatType = 272020
+    # [Description("クリアパーティ情報が存在しません。")]
+    ChatNotFoundClearPartyInfo = 272021
+    # [Description("バトル情報が存在しません。")]
+    ChatNotFoundBattleLogInfo = 272022
     # [Description("未受け取りのプレゼントは削除できません。")]
     PresentDeleteNotReceivedPresent = 282001
     # [Description("削除済みのプレゼントは受け取れません。")]
@@ -6835,6 +6880,14 @@ class ErrorCode(_Enum):
     SweepstakesNotAvailableEntryItem = 510002
     # [Description("同一アカウントで応募できる上限に達しています。")]
     SweepstakesOverEntryUpperLimit = 510003
+    # [Description("開催中の動画再生がありません。")]
+    PlayVideoNotHeld = 520000
+    # [Description("本日分の動画再生のコメントを投稿済みです。")]
+    PlayVideoOverDailyCommentLimit = 520001
+    # [Description("チャット禁止中はコメントの投稿ができません。")]
+    PlayVideoCommentBanChat = 520002
+    # [Description("コメント内容を入力してください。")]
+    PlayVideoCommentEmpty = 520003
     # [Description("存在しないTreasureChestです。")]
     ItemOpenTreasureChestIdNotFound = 602004
     # [Description("存在しないTreasureChestです。")]
@@ -8088,6 +8141,17 @@ class PopularityVoteRewardInfo():
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
+class UserPlayVideoCommentInfo():
+    ChatBalloonItemId: int = 0
+    Comment: str = ""
+    Guid: str = ""
+    LikeCount: int = 0
+    MainCharacterIconId: int = 0
+    PlayerId: int = 0
+    PlayerName: str = ""
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
 class ClearNotificationInfo():
     NotificationType: _NotificationType = _field(default_factory=lambda: _NotificationType())
     Value: int = 0
@@ -9225,6 +9289,39 @@ class ChatIdentityInfo(_ArrayPacked):
     # [Key(1)]
     SendPlayerId: int = 0
 
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class ChatBattlePropertyInfo():
+    BattleId: int = 0
+    BattleToken: str = ""
+    BattleType: _BattleType = _field(default_factory=lambda: _BattleType())
+    TowerType: _TowerType = _field(default_factory=lambda: _TowerType())
+
+# [MessagePackObject(False)]
+@_dataclass(slots=True)
+class ChatBattlePartyInfo(_ArrayPacked):
+    # [Key(0)]
+    BattlePower: int = 0
+    # [Key(1)]
+    GuildName: str = ""
+    # [Key(2)]
+    PlayerName: str = ""
+    # [Key(3)]
+    BattleFieldCharacterGroupType: _BattleFieldCharacterGroupType = _field(default_factory=lambda: _BattleFieldCharacterGroupType())
+    # [Key(4)]
+    IsWin: bool = False
+    # [Key(5)]
+    CharacterIdList: list[int] = _field(default_factory=list["int"])
+
+# [MessagePackObject(False)]
+_ChatBattlePropertyInfo = ChatBattlePropertyInfo
+@_dataclass(slots=True)
+class ChatBattleInfo(_ArrayPacked):
+    # [Key(0)]
+    ChatBattlePropertyInfo: _ChatBattlePropertyInfo = _field(default_factory=lambda: _ChatBattlePropertyInfo())
+    # [Key(1)]
+    ChatBattlePartyInfoList: list[ChatBattlePartyInfo] = _field(default_factory=list["ChatBattlePartyInfo"])
+
 # [Description("システムチャット種別")]
 class SystemChatType(_Enum):
     None_ = 0
@@ -9246,6 +9343,7 @@ class SystemChatType(_Enum):
     ChangePlayerName = 8
 
 # [MessagePackObject(False)]
+_ChatBattleInfo = ChatBattleInfo
 _ChatType = ChatType
 _SystemChatMessageIdType = SystemChatMessageIdType
 _SystemChatType = SystemChatType
@@ -9277,6 +9375,8 @@ class ChatInfo(_ArrayPacked):
     GuildName: str = ""
     # [Key(12)]
     BalloonItemId: int = 0
+    # [Key(13)]
+    ChatBattleInfo: _ChatBattleInfo = _field(default_factory=lambda: _ChatBattleInfo())
 
 class ChatReactionType(_Enum):
     # [Description("リアクションなし")]
@@ -9646,17 +9746,6 @@ class WorldInfo():
     # [Description("ワールド設立日")]
     StartTime: _datetime = _datetime.min
 
-# [Description("メインテナンス突破ユーザー情報")]
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class MaintenanceDebugUserInfo():
-    # [Description("デバックユーザー状態")]
-    IsDebugUser: bool = False
-    # [Description("プレイヤーID")]
-    PlayerId: int = 0
-    # [Description("ユーザーID")]
-    UserId: int = 0
-
 # [Description("ターゲットサーバータイプ")]
 class MaintenanceServerType(_Enum):
     # [Description("全て")]
@@ -9761,6 +9850,17 @@ class SelectShopProductInfo():
     MbId: int = 0
     ProductId: str = ""
     ShopProductType: _ShopProductType = _field(default_factory=lambda: _ShopProductType())
+
+# [Description("メインテナンス突破ユーザー情報")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MaintenanceDebugUserInfo():
+    # [Description("デバックユーザー状態")]
+    IsDebugUser: bool = False
+    # [Description("プレイヤーID")]
+    PlayerId: int = 0
+    # [Description("ユーザーID")]
+    UserId: int = 0
 
 # [Description("ユーザー設定タイプ")]
 class UserSettingsType(_Enum):

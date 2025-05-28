@@ -2455,6 +2455,10 @@ class MissionClearCountRewardMB(MasterBookBase):
     # [Nest(False, 0)]
     # [PropertyOrder(3)]
     RewardList: list[MissionReward] = _field(default_factory=list["MissionReward"])
+    # [Description("報酬情報リスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(4)]
+    RewardInfoList: list[MissionClearCountRewardInfo] = _field(default_factory=list["MissionClearCountRewardInfo"])
 
 # [Description("ミッションガイド")]
 # [MessagePackObject(True)]
