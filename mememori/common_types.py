@@ -6564,6 +6564,8 @@ class ErrorCode(_Enum):
     RankingAlreadyReceivedRankingReward = 372002
     # [Description("ランキング到達報酬が解放されていません。")]
     RankingNotOpenAchieveRankingReward = 372003
+    # [Description("バトルデータがありません。")]
+    RankingNotFoundRankingBattleLog = 372004
     # [Description("パネル図鑑表示期間外です。")]
     PanelNotStarted = 382000
     # [Description("無条件で解放されているパネルです。")]
