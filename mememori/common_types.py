@@ -481,6 +481,10 @@ class MypageIconDisplayLocationType(_Enum):
     EventPortalOnly = 1
     # [Description("マイページとイベントポータル")]
     MypageAndEventPortal = 2
+    # [Description("サブイベントポータルのみ")]
+    SubEventPortalOnly = 3
+    # [Description("マイページとサブイベントポータル")]
+    MypageAndSubEventPortal = 4
 
 class IHasStartEndTime(_Protocol):
     # [DateTimeString]
@@ -1137,6 +1141,8 @@ class MissionAchievementType(_Enum):
     BookSortConsumeItemCount = 26010300
     # [Description("動画再生機能の再生回数（全サーバー合算）")]
     PlayVideoTotalCount = 27010100
+    # [Description("動画再生機能の再生回数（個人）")]
+    PlayVideoCount = 27010200
 
 # [Description("SNS情報")]
 # [MessagePackObject(True)]
@@ -1180,6 +1186,8 @@ class TransferSpotType(_Enum):
     TradeShop = 100
     # [Description("外部ウェブサイト")]
     OuterWebSite = 110
+    # [Description("外部ウェブサイトwith確認ダイアログ")]
+    OuterWebSiteWithDialog = 111
     # [Description("月間ログインボーナス")]
     MonthlyLoginBonus = 120
     # [Description("期間限定ログインボーナス")]
@@ -1234,6 +1242,8 @@ class TransferSpotType(_Enum):
     PopularityVote = 270
     # [Description("イベントポータル")]
     EventPortal = 280
+    # [Description("イベントポータル（サブ）")]
+    SubEventPortal = 281
     # [Description("書庫整理")]
     BookSort = 290
     # [Description("ワールド誘導")]
@@ -1601,6 +1611,8 @@ class MissionTransitionDestinationType(_Enum):
     PopularityVote = 2501
     # [Description("魔女の書庫整理")]
     BookSort = 2601
+    # [Description("動画再生")]
+    PlayVideo = 2701
 
 # [Description("ガチャカテゴリータイプ")]
 class GachaCategoryType(_Enum):
@@ -1964,6 +1976,8 @@ class LimitedEventType(_Enum):
     ElementTowerAllRelease = 1
     # [Description("シリアルコード入力")]
     SerialCode = 2
+    # [Description("動画再生コメント投稿")]
+    PlayVideoComment = 3
     # [Description("通知強制削除")]
     NotificationForceCancel = 10000
     # [Description("GooglePlayのレシート消費をクライアントで行う")]
@@ -4595,6 +4609,14 @@ class NotificationType(_Enum):
     RankRelease = 23
     # [Description("新規獲得したチャットふきだしがあるとき")]
     ChatBalloon = 24
+    # [Description("外部サイトへ遷移できるマイページアイコンをタップしていない場合")]
+    MyPageIconWithOuterWebSite = 25
+    # [Description("外部サイトへ遷移できるイベントポータルをタップしていない場合")]
+    EventPortalWithOuterWebSite = 26
+    # [Description("動画を一度も再生していない場合（マイページから遷移される動画）")]
+    PlayVideoFromMyPage = 27
+    # [Description("動画を一度も再生していない場合（イベントポータルから遷移される動画）")]
+    PlayVideoFromEventPortal = 28
 
 # [MessagePackObject(True)]
 _NotificationType = NotificationType
@@ -6890,6 +6912,8 @@ class ErrorCode(_Enum):
     PlayVideoCommentBanChat = 520002
     # [Description("コメント内容を入力してください。")]
     PlayVideoCommentEmpty = 520003
+    # [Description("コメント機能は使えません。")]
+    PlayVideoCommentNotAvailable = 520004
     # [Description("存在しないTreasureChestです。")]
     ItemOpenTreasureChestIdNotFound = 602004
     # [Description("存在しないTreasureChestです。")]
@@ -9024,6 +9048,8 @@ class EventPortalBannerInfo():
     IsDisplayBadge: bool = False
     # [Description("開放されているか")]
     IsOpen: bool = False
+    # [Description("残り日数表示")]
+    IsRemainingDaysDisplayed: bool = False
     # [Description("ソート順")]
     SortOrder: int = 0
     # [Description("開始日時")]
@@ -9042,6 +9068,20 @@ class OutsideEventPortalBannerInfo():
     # [Description("タイトル画像ID")]
     TitleImageId: int = 0
     # [Description("タイトル名(TextResourceのStringKey)")]
+    TitleTextKey: str = ""
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class EventPortalVideoInfo():
+    # [Description("動画終了日時")]
+    EndTime: str = ""
+    # [Description("再生回数更新頻度")]
+    PlaybackUpdateFrequencySeconds: int = 0
+    # [Description("時間タイプ")]
+    StartEndTimeZoneType: _StartEndTimeZoneType = _field(default_factory=lambda: _StartEndTimeZoneType())
+    # [Description("動画開始日時")]
+    StartTime: str = ""
+    # [Description("タイトルテキストキー")]
     TitleTextKey: str = ""
 
 class IAdditionalParameter(_Protocol):
