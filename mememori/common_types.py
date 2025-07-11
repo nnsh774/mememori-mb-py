@@ -137,6 +137,8 @@ class ItemType(_Enum):
     SweepstakesTicket = 47
     # [Description("イベント交換所アイテム")]
     EventExchangePlaceItem = 50
+    # [Description("シンクロハンマー")]
+    SynchroCellUnlockItem = 52
     # [Description("Stripeクーポン")]
     StripeCoupon = 1001
 
@@ -2379,10 +2381,22 @@ class OpenCommandType(_Enum):
     FriendBattle = 490
     # [Description("書庫整理")]
     BookSort = 500
+    # [Description("武具Lvを超える強化Lv継承")]
+    EquipmentOverReinforceLevelInheritance = 520
+    # [Description("選択継承")]
+    EquipmentSelectInheritance = 530
+    # [Description("武具比較")]
+    EquipmentComparison = 540
+    # [Description("武器シンクロ")]
+    EquipmentSynchro = 570
+    # [Description("武具リセット")]
+    EquipmentReset = 580
     # [Description("武具固定")]
     LockEquipment = 1000
     # [Description("武具固定(ギルドバトル用)")]
     LockEquipmentGuildBattle = 1001
+    # [Description("武具固定(属性の塔用)")]
+    LockEquipmentElementTower = 1002
 
 class MonologueTextType(_Enum):
     None_ = 0
@@ -2448,6 +2462,8 @@ class OpenContentType(_Enum):
     QuestClear = 1
     # [Description("パーティレベル")]
     PartyLevel = 2
+    # [Description("UR以上専用武器レアリティ数")]
+    ExclusiveEquipmentURRarityCount = 3
 
 # [Description("パネル図鑑のタブタイプ")]
 class PanelTabType(_Enum):
@@ -3176,6 +3192,8 @@ class IReadOnlyEquipment(_Protocol):
     AdditionalParameterIntelligence: int
     # [Description("付与パラメータ(筋力)")]
     AdditionalParameterMuscle: int
+    # [Description("シンクロ反映前の武具ID")]
+    BeforeSynchroEquipmentId: int
     # [Description("武具ID")]
     EquipmentId: int
     # [Description("固有ID")]
@@ -3190,6 +3208,8 @@ class IReadOnlyEquipment(_Protocol):
     MatchlessSacredTreasureLv: int
     # [Description("強化レベル")]
     ReinforcementLv: int
+    # [Description("ベース枠に設定中のシンクログループID")]
+    SetBaseSynchroGroupId: int
     # [Description("宝石ID1")]
     SphereId1: int
     # [Description("宝石ID2")]
@@ -3212,6 +3232,8 @@ class UserEquipmentDtoInfo():
     AdditionalParameterIntelligence: int = 0
     # [Description("付与パラメータ(筋力)")]
     AdditionalParameterMuscle: int = 0
+    # [Description("シンクロ反映前の武具ID")]
+    BeforeSynchroEquipmentId: int = 0
     # [Description("キャラクター固有ID")]
     CharacterGuid: str = ""
     # [Description("作成時刻")]
@@ -3232,6 +3254,8 @@ class UserEquipmentDtoInfo():
     PlayerId: int = 0
     # [Description("強化レベル")]
     ReinforcementLv: int = 0
+    # [Description("ベース枠に設定中のシンクログループID")]
+    SetBaseSynchroGroupId: int = 0
     # [Description("宝石ID1")]
     SphereId1: int = 0
     # [Description("宝石ID2")]
@@ -4241,6 +4265,10 @@ class LockEquipmentDeckType(_Enum):
     GuildTowerLatestBattle = 2
     GuildTowerLatestRegistration = 3
     GuildBattle = 4
+    ElementTowerBlue = 5
+    ElementTowerRed = 6
+    ElementTowerGreen = 7
+    ElementTowerYellow = 8
 
 # [Description("装備固定誘導ダイアログタイプ")]
 class LeadLockEquipmentDialogType(_Enum):
@@ -4460,6 +4488,14 @@ class UserDeckDtoInfo():
     UserCharacterGuid3: str = ""
     UserCharacterGuid4: str = ""
     UserCharacterGuid5: str = ""
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserEquipmentStatusDtoInfo():
+    LastResetCountUpdateTime: int = 0
+    SynchroMaxPossessionCount: int = 0
+    SynchroMissionRewardedCount: int = 0
+    UseResetCount: int = 0
 
 # [Description("ミッション状態種別")]
 class MissionStatusType(_Enum):
@@ -4855,6 +4891,7 @@ _UserBattleBossDtoInfo = UserBattleBossDtoInfo
 _UserBattleLegendLeagueDtoInfo = UserBattleLegendLeagueDtoInfo
 _UserBattlePvpDtoInfo = UserBattlePvpDtoInfo
 _UserBoxSizeDtoInfo = UserBoxSizeDtoInfo
+_UserEquipmentStatusDtoInfo = UserEquipmentStatusDtoInfo
 _UserFriendBattleOptionDtoInfo = UserFriendBattleOptionDtoInfo
 _UserItemDtoInfo = UserItemDtoInfo
 _UserLevelLinkDtoInfo = UserLevelLinkDtoInfo
@@ -4919,6 +4956,7 @@ class UserSyncData():
     UserCharacterRankReleaseDtoInfos: list[UserCharacterRankReleaseDtoInfo] = _field(default_factory=list["UserCharacterRankReleaseDtoInfo"])
     UserDeckDtoInfos: list[UserDeckDtoInfo] = _field(default_factory=list["UserDeckDtoInfo"])
     UserEquipmentDtoInfos: list[UserEquipmentDtoInfo] = _field(default_factory=list["UserEquipmentDtoInfo"])
+    UserEquipmentStatusDtoInfo: _UserEquipmentStatusDtoInfo = _field(default_factory=lambda: _UserEquipmentStatusDtoInfo())
     UserFriendBattleOptionDtoInfo: _UserFriendBattleOptionDtoInfo = _field(default_factory=lambda: _UserFriendBattleOptionDtoInfo())
     UserFriendMissionDtoInfoList: list[UserFriendMissionDtoInfo] = _field(default_factory=list["UserFriendMissionDtoInfo"])
     UserGuidanceTimeMap: dict[GuidanceType, int] = _field(default_factory=dict["GuidanceType", "int"])
@@ -5988,6 +6026,8 @@ class ErrorCode(_Enum):
     EquipmentUserLockCharacterDtoNotFound = 231009
     # [Description("一括研磨結果データが存在しません。")]
     EquipmentBulkTrainingResultDtoNotFound = 231010
+    # [Description("武具情報データが存在しません。")]
+    EquipmentUserEquipmentStatusDtoNotFound = 231011
     # [Description("同じ種類の宝石は装備できません。")]
     EquipmentCanNotEquipSameKindSpheres = 232000
     # [Description("その部位には装備できません。")]
@@ -6102,6 +6142,54 @@ class ErrorCode(_Enum):
     EquipmentNotEnoughMaxQuestIdBulkRefine = 232058
     # [Description("一括研磨対象となる武具の追加効果がロックされています。")]
     EquipmentBulkRefineLockedAdditionalParameter = 232059
+    # [Description("装備固定(属性の塔用)機能が解放されていません。")]
+    EquipmentLockEquipmentElementTowerNotOpen = 232060
+    # [Description("選択継承機能が解放されていません。")]
+    EquipmentSelectInheritanceNotOpen = 232061
+    # [Description("選択継承の対象が選択されていません。")]
+    EquipmentSelectInheritanceNotSelected = 232062
+    # [Description("選択継承で継承できない項目が選択されています。")]
+    EquipmentSelectInheritanceNotAllowed = 232063
+    # [Description("武具リセットの条件が足りません。")]
+    EquipmentInvalidResetCondition = 232064
+    # [Description("武具リセット機能が解放されていません。")]
+    EquipmentNotOpenReset = 232065
+    # [Description("武具リセット制限回数を超えています。")]
+    EquipmentOverMaxResetCount = 232066
+    # [Description("未開放の武器シンクログループです。")]
+    EquipmentSynchroGroupNotUnlocked = 232067
+    # [Description("武器シンクロ機能が解放されていません。")]
+    EquipmentSynchroNotOpen = 232068
+    # [Description("シンクロ枠が設定済みです。")]
+    EquipmentSynchroAlreadySetSynchroCell = 232069
+    # [Description("シンクロ対象外の武器です。")]
+    EquipmentSynchroNotAllowedEquipment = 232070
+    # [Description("他の枠に設定済みの武具です。")]
+    EquipmentSynchroAlreadySetAnotherCell = 232071
+    # [Description("解除対象のシンクロ枠に武器が設定されていません。")]
+    EquipmentSynchroNotSetSynchroCell = 232072
+    # [Description("シンクロ枠がクールタイム中です。")]
+    EquipmentSynchroIsInCoolTime = 232073
+    # [Description("ベース枠は0か、枠数分の武具を設定してください。")]
+    EquipmentSynchroNotAllowedBaseCellCount = 232074
+    # [Description("ベース枠の武具Guidが重複しています。")]
+    EquipmentSynchroDuplicateBaseCellGuid = 232075
+    # [Description("すでに解放済みのシンクログループです。")]
+    EquipmentSynchroGroupAlreadyUnlocked = 232076
+    # [Description("解放出来ないシンクログループです。")]
+    EquipmentSynchroGroupNotAllowedUnlock = 232077
+    # [Description("ベース枠が空のため、一括進化ができません。")]
+    EquipmentSynchroBulkEvolutionBaseCellEmpty = 232078
+    # [Description("一括進化出来ないレベルが指定されています。")]
+    EquipmentSynchroBulkEvolutionNotAllowedLevel = 232079
+    # [Description("受け取れるシンクロミッション報酬がありません。")]
+    EquipmentSynchroMissionUnavailableReward = 232080
+    # [Description("武器シンクロのシンクロ枠にセットされている武具は進化できません。")]
+    EquipmentSynchroSynchroCellEquipmentEvolutionNotAllowed = 232081
+    # [Description("武器シンクロにセットされている武具は分解できません。")]
+    EquipmentSynchroEquipmentTakeApartNotAllowed = 232082
+    # [Description("武器シンクロベース枠にセットされている武具はリセットできません。")]
+    EquipmentSynchroBaseEquipmentResetNotAllowed = 232083
     # [Description("ユーザのフレンドデータが存在しません。")]
     FriendUserFriendDtoNotFound = 241000
     # [Description("ユーザのステータスデータが存在しません。")]
@@ -9084,6 +9172,14 @@ class EventPortalVideoInfo():
     # [Description("タイトルテキストキー")]
     TitleTextKey: str = ""
 
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserEquipmentSynchroGroupDtoInfo():
+    BaseCellEquipmentGuidList: list[str] = _field(default_factory=list["str"])
+    EquipmentSynchroGroupId: int = 0
+    SynchroCellEquipmentGuid: str = ""
+    UnavailableTime: int = 0
+
 class IAdditionalParameter(_Protocol):
     AdditionalParameterEnergy: int
     AdditionalParameterHealth: int
@@ -9097,6 +9193,7 @@ class UserEquipment():
     AdditionalParameterHealth: int = 0
     AdditionalParameterIntelligence: int = 0
     AdditionalParameterMuscle: int = 0
+    BeforeSynchroEquipmentId: int = 0
     CharacterGuid: str = ""
     EquipmentId: int = 0
     Guid: str = ""
@@ -9109,11 +9206,25 @@ class UserEquipment():
     MatchlessSacredTreasureExp: int = 0
     MatchlessSacredTreasureLv: int = 0
     ReinforcementLv: int = 0
+    SetBaseSynchroGroupId: int = 0
     SphereId1: int = 0
     SphereId2: int = 0
     SphereId3: int = 0
     SphereId4: int = 0
     SphereUnlockedCount: int = 0
+
+# [Description("武具継承項目")]
+class EquipmentInheritanceType(_Enum):
+    # [Description("None")]
+    None_ = 0
+    # [Description("強化Lv")]
+    ReinforcementLv = 1
+    # [Description("魔装Lv")]
+    MatchlessSacredTreasureLv = 2
+    # [Description("聖装LV")]
+    LegendSacredTreasureLv = 3
+    # [Description("ルーン")]
+    Sphere = 4
 
 # [Description("武具変更情報")]
 # [MessagePackObject(True)]
@@ -9122,6 +9233,7 @@ _EquipmentSlotType = EquipmentSlotType
 class EquipmentChangeInfo():
     EquipmentGuid: str = ""
     EquipmentId: int = 0
+    EquipmentInheritanceTypeList: list[EquipmentInheritanceType] = _field(default_factory=list["EquipmentInheritanceType"])
     EquipmentSlotType: _EquipmentSlotType = _field(default_factory=lambda: _EquipmentSlotType())
     IsInherit: bool = False
 

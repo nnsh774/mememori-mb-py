@@ -1327,6 +1327,24 @@ class EquipmentSetMB(MasterBookBase):
     # [PropertyOrder(2)]
     EffectList: list[EquipmentSetEffect] = _field(default_factory=list["EquipmentSetEffect"])
 
+# [Description("武器シンクログループ")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class EquipmentSynchroGroupMB(MasterBookBase):
+    # [Description("ベース枠の枠数")]
+    # [PropertyOrder(1)]
+    BaseCellCount: int = 0
+    # [Description("無料枠フラグ")]
+    # [PropertyOrder(2)]
+    IsFree: bool = False
+    # [Description("解放に必要なアイテム")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(3)]
+    UnlockItemList: list[UserItem] = _field(default_factory=list["UserItem"])
+    # [Description("表示順(昇順)")]
+    # [PropertyOrder(4)]
+    DisplayOrder: int = 0
+
 # [Description("APIエラーコード")]
 # [MessagePackObject(True)]
 _ErrorMessageType = ErrorMessageType
@@ -3865,20 +3883,23 @@ class VipMB(MasterBookBase):
     # [Description("1日の最大模擬戦回数")]
     # [PropertyOrder(27)]
     MaxFriendBattleDailyCount: int = 0
+    # [Description("１か月の最大武具リセット回数")]
+    # [PropertyOrder(28)]
+    MaxEquipmentResetCount: int = 0
     # [Description("VIP到達時報酬リスト")]
     # [Nest(False, 0)]
-    # [PropertyOrder(28)]
-    ReachRewardItemList: list[UserItem] = _field(default_factory=list["UserItem"])
-    # [Description("VIPギフトリスト")]
-    # [Nest(True, 0)]
     # [PropertyOrder(29)]
-    VipGiftInfoList: list[VipGiftInfo] = _field(default_factory=list["VipGiftInfo"])
+    ReachRewardItemList: list[UserItem] = _field(default_factory=list["UserItem"])
     # [Description("放置バトル経験値ボーナス(%)")]
     # [PropertyOrder(3)]
     AutoBattlePlayerExpBonus: int = 0
+    # [Description("VIPギフトリスト")]
+    # [Nest(True, 0)]
+    # [PropertyOrder(30)]
+    VipGiftInfoList: list[VipGiftInfo] = _field(default_factory=list["VipGiftInfo"])
     # [Description("VIPデイリー報酬リスト")]
     # [Nest(False, 0)]
-    # [PropertyOrder(30)]
+    # [PropertyOrder(31)]
     DailyRewardItemList: list[UserItem] = _field(default_factory=list["UserItem"])
     # [Description("仮想通貨で高速周回できる回数")]
     # [PropertyOrder(5)]
