@@ -1466,6 +1466,12 @@ class GachaCaseMB(MasterBookBase):
     # [Description("ガチャの日数制限(プレイヤー生成時から計算、０は無視)")]
     # [PropertyOrder(13)]
     GachaLimitDayFromCreatePlayer: int = 0
+    # [Description("ガチャの日数制限（開始条件を満たしてからの日数）、０は無視)")]
+    # [PropertyOrder(14)]
+    GachaLimitDay: int = 0
+    # [Description("ガチャを開始するプレイヤー生成時からの日数。生成日が1、翌4時以降が2。0は無視")]
+    # [PropertyOrder(15)]
+    GachaOpenDayFromCreatePlayer: int = 0
     # [Description("カテゴリー")]
     # [PropertyOrder(2)]
     GachaCategoryType: _GachaCategoryType = _field(default_factory=lambda: _GachaCategoryType())

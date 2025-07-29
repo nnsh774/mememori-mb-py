@@ -360,6 +360,8 @@ class UnitIconType(_Enum):
     EnemyCharacter = 1
     # [Description("魔女クリファ")]
     WitchQlipha = 2
+    # [Description("協力キャラクター")]
+    ShareCharacter = 3
 
 _BaseParameter = BaseParameter
 _BattleParameter = BattleParameter
@@ -1145,6 +1147,10 @@ class MissionAchievementType(_Enum):
     PlayVideoTotalCount = 27010100
     # [Description("動画再生機能の再生回数（個人）")]
     PlayVideoCount = 27010200
+    # [Description("レンタルレイド 前半レイドステージ制限編成の達成ダメージ")]
+    RentalRaidFirstHalfLimitFormation = 28010100
+    # [Description("レンタルレイド 後半レイドステージ制限編成の達成ダメージ")]
+    RentalRaidSecondHalfLimitFormation = 28010200
 
 # [Description("SNS情報")]
 # [MessagePackObject(True)]
@@ -1252,6 +1258,8 @@ class TransferSpotType(_Enum):
     WorldGuidance = 300
     # [Description("動画再生")]
     PlayVideo = 330
+    # [Description("レンタルレイド")]
+    RentalRaid = 340
     # [Description("フレンド")]
     Friend = 4
 
@@ -1615,6 +1623,8 @@ class MissionTransitionDestinationType(_Enum):
     BookSort = 2601
     # [Description("動画再生")]
     PlayVideo = 2701
+    # [Description("レンタルレイド")]
+    RentalRaid = 2801
 
 # [Description("ガチャカテゴリータイプ")]
 class GachaCategoryType(_Enum):
@@ -1674,6 +1684,8 @@ class GachaSelectListType(_Enum):
     StarsGuidance = 3
     # [Description("選択ピックアップ")]
     SelectablePickUp = 4
+    # [Description("スペシャルセレクト")]
+    SpecialSelectablePickUp = 5
 
 # [Description("ガチャ表示用フラグ")]
 # [Flags]
@@ -1814,9 +1826,14 @@ class GlobalGvgFixedRewards():
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
-class GuildRaidDamageBar():
+class DamageBar():
     DamageBarCount: int = 0
     DamageBarMaxValue: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class GuildRaidDamageBar(DamageBar):
+    pass
 
 class GuildRaidBossType(_Enum):
     # [Description("通常ボス")]
@@ -2125,6 +2142,8 @@ class MissionGroupType(_Enum):
     PopularityVote = 13
     # [Description("魔女の書庫整理")]
     BookSort = 14
+    # [Description("レンタルレイド")]
+    RentalRaid = 15
     # [Description("デイリー追加報酬")]
     DailyBonus = 1000
 
@@ -2220,6 +2239,7 @@ class MissionType(_Enum):
     Collab = 12
     PopularityVote = 13
     BookSort = 14
+    RentalRaid = 15
 
 # [Description("解放されるコマンドの種類")]
 class OpenCommandType(_Enum):
@@ -2387,6 +2407,8 @@ class OpenCommandType(_Enum):
     EquipmentSelectInheritance = 530
     # [Description("武具比較")]
     EquipmentComparison = 540
+    # [Description("レンタルレイド")]
+    RentalRaid = 560
     # [Description("武器シンクロ")]
     EquipmentSynchro = 570
     # [Description("武具リセット")]
@@ -2879,6 +2901,10 @@ class BattleType(_Enum):
     GuildTower = 12
     # [Description("模擬戦")]
     FriendBattle = 13
+    # [Description("レンタルレイド通常バトル")]
+    RentalRaidNormalBattle = 14
+    # [Description("レンタルレイドボスバトル")]
+    RentalRaidBossBattle = 15
 
 # [Description("無窮の塔タイプ")]
 class TowerType(_Enum):
@@ -3206,6 +3232,8 @@ class IReadOnlyEquipment(_Protocol):
     MatchlessSacredTreasureExp: int
     # [Description("魔装レベル")]
     MatchlessSacredTreasureLv: int
+    # [Description("プレイヤーID")]
+    PlayerId: int
     # [Description("強化レベル")]
     ReinforcementLv: int
     # [Description("ベース枠に設定中のシンクログループID")]
@@ -3318,6 +3346,10 @@ class UnitType(_Enum):
     LocalRaidEnemy = 6
     # [Description("ギルドツリーの敵")]
     GuildTowerEnemy = 7
+    # [Description("レンタルレイドの敵")]
+    RentalRaidEnemy = 8
+    # [Description("協力キャラクター")]
+    ShareCharacter = 9
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -3400,6 +3432,7 @@ class BattleField():
     AttackTeamTotalKillCount: int = 0
     BattleType: _BattleType = _field(default_factory=lambda: _BattleType())
     Characters: list[BattleFieldCharacter] = _field(default_factory=list["BattleFieldCharacter"])
+    DamageBarList: list[DamageBar] = _field(default_factory=list["DamageBar"])
     # [Obsolete("TODO 2019-12-05 takeda 使わないなら削除、使うならLinq排除")]
     JoinPlayerIds: list[int] = _field(default_factory=list["int"])
     ReceiveTeamPassiveSkillIds: list[int] = _field(default_factory=list["int"])
@@ -3454,6 +3487,8 @@ class SkillDisplayType(_Enum):
     SelfInjuryDamage = 15
     # [Description("復活")]
     Resurrection = 20
+    # [Description("回復(演出なし)")]
+    SilenceHeal = 101
 
 # [Description("スキルカテゴリー")]
 class SkillCategory(_Enum):
@@ -3487,6 +3522,8 @@ class SkillCategory(_Enum):
     SelfInjuryDamage = 18
     # [Description("復活")]
     Resurrection = 50
+    # [Description("回復(演出なし)")]
+    SilenceHeal = 51
     # [Description("ステータス吸収")]
     StatusDrain = 100
     # [Description("印の効果")]
@@ -4083,9 +4120,19 @@ class BattleCharacterReport():
     UnitType: _UnitType = _field(default_factory=lambda: _UnitType())
 
 # [MessagePackObject(True)]
+@_dataclass(slots=True)
+class ShareCharacterOwnerInfo():
+    CharacterGuid: str = ""
+    MainCharacterIconId: int = 0
+    PlayerName: str = ""
+    PrevLegendLeagueClass: LegendLeagueClassType = _field(default_factory=lambda: LegendLeagueClassType())
+    WorldId: int = 0
+
+# [MessagePackObject(True)]
 _BattleEndInfo = BattleEndInfo
 _BattleField = BattleField
 _BattleLog = BattleLog
+_ShareCharacterOwnerInfo = ShareCharacterOwnerInfo
 @_dataclass(slots=True)
 class BattleSimulationResult():
     BattleCharacterReports: list[BattleCharacterReport] = _field(default_factory=list["BattleCharacterReport"])
@@ -4093,6 +4140,7 @@ class BattleSimulationResult():
     BattleField: _BattleField = _field(default_factory=lambda: _BattleField())
     BattleLog: _BattleLog = _field(default_factory=lambda: _BattleLog())
     BattleToken: str = ""
+    ShareCharacterOwnerInfo: _ShareCharacterOwnerInfo = _field(default_factory=lambda: _ShareCharacterOwnerInfo())
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -4412,6 +4460,12 @@ class UserCharacterCollectionDtoInfo():
     CharacterCollectionId: int = 0
     CollectionLevel: int = 0
 
+class ICharacterInfo(_Protocol):
+    CharacterId: int
+    Guid: str
+    Level: int
+    RarityFlags: _Flags[CharacterRarityFlags]
+
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class UserCharacterDtoInfo():
@@ -4466,6 +4520,8 @@ class DeckUseContentType(_Enum):
     FriendBattleOffense = 15
     # [Description("模擬戦（防御）")]
     FriendBattleDefense = 16
+    # [Description("レンタルレイド")]
+    RentalRaid = 17
     # [Description("ギルドバトル")]
     GuildBattle = 1000
     # [Description("グランドバトル")]
@@ -6006,6 +6062,8 @@ class ErrorCode(_Enum):
     GachaUserTutorialDtoNotFound = 200502
     # [Description("ユーザーのセレクトリストデータが存在しません。")]
     GachaUserGachaSelectListDtoNotFound = 200503
+    # [Description("ユーザーのスペシャルセレクトガチャ開催期間データが存在しません。")]
+    GachaUserGachaPeriodDtoNotFound = 200504
     # [Description("バトルログが見つかりません。")]
     BattleCommonBattleLogNotFound = 220000
     # [Description("バトル詳細ログが見つかりません。")]
@@ -6028,6 +6086,8 @@ class ErrorCode(_Enum):
     EquipmentBulkTrainingResultDtoNotFound = 231010
     # [Description("武具情報データが存在しません。")]
     EquipmentUserEquipmentStatusDtoNotFound = 231011
+    # [Description("武具シンクログループデータが存在しません。")]
+    EquipmentUserEquipmentSynchroGroupDtoNotFound = 231012
     # [Description("同じ種類の宝石は装備できません。")]
     EquipmentCanNotEquipSameKindSpheres = 232000
     # [Description("その部位には装備できません。")]
@@ -7002,6 +7062,42 @@ class ErrorCode(_Enum):
     PlayVideoCommentEmpty = 520003
     # [Description("コメント機能は使えません。")]
     PlayVideoCommentNotAvailable = 520004
+    # [Description("レンタルレイドのユーザーデータが見つかりません。")]
+    RentalRaidNotFoundUserRentalRaidDto = 530000
+    # [Description("レンタルレイドのユーザーデイリーデータが見つかりません。")]
+    RentalRaidNotFoundUserRentalRaidDailyDto = 530001
+    # [Description("レンタルレイドの協力ポイントデータが見つかりません。")]
+    RentalRaidNotFoundUserRentalRaidSharePointDto = 530002
+    # [Description("レベルリンクデータが見つかりません。")]
+    RentalRaidNotFoundUserLevelLinkDto = 530003
+    # [Description("協力キャラデータが見つかりません。")]
+    RentalRaidNotFoundUserRentalRaidShareCharacterDto = 530004
+    # [Description("キャラクターデータが見つかりません。")]
+    RentalRaidNotFoundUserCharacterDto = 530005
+    # [Description("開催中のレンタルレイドがありません。")]
+    RentalRaidNotHeld = 531000
+    # [Description("指定した協力報酬がありません。")]
+    RentalRaidInvalidShareReward = 531001
+    # [Description("指定した協力報酬はすでに受け取っています。")]
+    RentalRaidAlreadyReceivedShareReward = 531002
+    # [Description("協力ポイントが不足しています。")]
+    RentalRaidNotEnoughSharePoint = 531003
+    # [Description("レンタルレイドが未解放です。")]
+    RentalRaidNotOpen = 531004
+    # [Description("利用できないバトルです。")]
+    RentalRaidInvalidBattleType = 532010
+    # [Description("クリア済みの通常ステージバトルです。")]
+    RentalRaidAlreadyClearedNormalStage = 532011
+    # [Description("後半ステージはまだ解放されていません。")]
+    RentalRaidNotOpenSecondHalfStage = 532012
+    # [Description("挑戦できないボスステージです。")]
+    RentalRaidInvalidBossStage = 532013
+    # [Description("ボスステージがまだ解放されていません。")]
+    RentalRaidNotOpenBossStage = 532014
+    # [Description("バトル挑戦期間が終了しています。")]
+    RentalRaidNotOpenBattle = 532015
+    # [Description("バトルデータがありません。")]
+    RentalRaidNotFoundRankingBattleLog = 532016
     # [Description("存在しないTreasureChestです。")]
     ItemOpenTreasureChestIdNotFound = 602004
     # [Description("存在しないTreasureChestです。")]
@@ -8178,6 +8274,137 @@ class RetrieveItemHistory():
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
+class ShareCharacterInfo():
+    BaseParameter: _BaseParameter = _field(default_factory=lambda: _BaseParameter())
+    BattleParameter: _BattleParameter = _field(default_factory=lambda: _BattleParameter())
+    BattlePower: int = 0
+    CharacterId: int = 0
+    ElementType: _ElementType = _field(default_factory=lambda: _ElementType())
+    Guid: str = ""
+    Level: int = 0
+    MainCharacterIconId: int = 0
+    PlayerName: str = ""
+    PrevLegendLeagueClass: LegendLeagueClassType = _field(default_factory=lambda: LegendLeagueClassType())
+    RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
+    UserEquipmentDtoInfos: list[UserEquipmentDtoInfo] = _field(default_factory=list["UserEquipmentDtoInfo"])
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class EnemyInfo():
+    BattlePower: int = 0
+    CharacterRarityFlags: _Flags[_CharacterRarityFlags] = _field(default_factory=lambda: _Flags["_CharacterRarityFlags"]([]))
+    ElementType: _ElementType = _field(default_factory=lambda: _ElementType())
+    EnemyRank: int = 0
+    Id: int = 0
+    NameKey: str = ""
+    UnitIconId: int = 0
+    UnitIconType: _UnitIconType = _field(default_factory=lambda: _UnitIconType())
+
+class IStageInfo(_Protocol):
+    BaseBattlePower: int
+    EnemyList: list[EnemyInfo]
+    StageId: int
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class NormalStageInfo():
+    BaseBattlePower: int = 0
+    EnemyList: list[EnemyInfo] = _field(default_factory=list["EnemyInfo"])
+    RewardItems: list[UserItem] = _field(default_factory=list["UserItem"])
+    StageId: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class BossDamageBar(DamageBar):
+    # [Description("報酬リスト")]
+    # [Nest(True, 1)]
+    RewardItems: list[UserItem] = _field(default_factory=list["UserItem"])
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class BossStageInfo():
+    BaseBattlePower: int = 0
+    DamageBarList: list[BossDamageBar] = _field(default_factory=list["BossDamageBar"])
+    DamageRewardLimitLocalDateTime: _datetime = _datetime.min
+    EnemyList: list[EnemyInfo] = _field(default_factory=list["EnemyInfo"])
+    IsClear: bool = False
+    IsExistsReceivableMission: bool = False
+    StageId: int = 0
+    TodayMaxDamage: int = 0
+
+class RentalRaidRankingServerType(_Enum):
+    None_ = 0
+    # [Description("ワールドランキング")]
+    World = 1
+    # [Description("サーバーランキング")]
+    Server = 2
+
+class RentalRaidRankingFetchType(_Enum):
+    None_ = 0
+    # [Description("前半レイド")]
+    FirstHalf = 1
+    # [Description("後半レイド")]
+    SecondHalf = 2
+
+class RentalRaidRankingType(_Enum):
+    # [Description("前半レイドステージの編成制限ランキング")]
+    FirstHalfLimitFormationRanking = 0
+    # [Description("前半レイドステージの最大ダメージランキング")]
+    FirstHalfMaxDamageRanking = 1
+    # [Description("後半レイドステージの編成制限ランキング")]
+    SecondHalfLimitFormationRanking = 2
+    # [Description("後半レイドステージの最大ダメージランキング")]
+    SecondHalfMaxDamageRanking = 3
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class RankingPlayer():
+    BattleToken: str = ""
+    MaxDamage: int = 0
+    PartyCharacterInfoList: list[UserCharacterDtoInfo] = _field(default_factory=list["UserCharacterDtoInfo"])
+    PlayerInfo: _PlayerInfo = _field(default_factory=lambda: _PlayerInfo())
+    Rank: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class RankingRewardInfo():
+    HigherLimit: int = 0
+    LowerLimit: int = 0
+    RewardItems: list[UserItem] = _field(default_factory=list["UserItem"])
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class RankingInfo():
+    CurrentRank: int = 0
+    CurrentRankingTotalCount: int = 0
+    MaxDamage: int = 0
+    RankingPlayerList: list[RankingPlayer] = _field(default_factory=list["RankingPlayer"])
+    RewardInfoList: list[RankingRewardInfo] = _field(default_factory=list["RankingRewardInfo"])
+    TodayRank: int = 0
+    TodayRankingTotalCount: int = 0
+
+class IRewardGaugeIconData(_Protocol):
+    pass
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class ShareRewardInfo():
+    IsReceived: bool = False
+    RequiredSharePoint: int = 0
+    RewardItems: list[UserItem] = _field(default_factory=list["UserItem"])
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class ShareHistory():
+    CharacterId: int = 0
+    CharacterRarityFlags: _Flags[_CharacterRarityFlags] = _field(default_factory=lambda: _Flags["_CharacterRarityFlags"]([]))
+    GetSharePoint: int = 0
+    Level: int = 0
+    SharedPlayerInfo: PlayerInfo = _field(default_factory=lambda: PlayerInfo())
+    SharedTimestamp: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
 class AchieveRankingPlayerInfo():
     AchieveLocalTimeStamp: int = 0
     PlayerInfo: _PlayerInfo = _field(default_factory=lambda: _PlayerInfo())
@@ -9002,6 +9229,7 @@ _GachaSelectListType = GachaSelectListType
 @_dataclass(slots=True)
 class GachaCaseInfo():
     DisplayOrder: int = 0
+    DrawStartTime: int = 0
     ElementType: _ElementType = _field(default_factory=lambda: _ElementType())
     EndTime: int = 0
     GachaBonusDrawCount: int = 0
@@ -9015,7 +9243,6 @@ class GachaCaseInfo():
     GachaDrawCount: int = 0
     GachaGroupType: _GachaGroupType = _field(default_factory=lambda: _GachaGroupType())
     GachaRelicType: _GachaRelicType = _field(default_factory=lambda: _GachaRelicType())
-    GachaSelectCharacterIdList: list[int] = _field(default_factory=list["int"])
     GachaSelectListType: _GachaSelectListType = _field(default_factory=lambda: _GachaSelectListType())
     MaxDrawGold: int = 0
     RemainingDrawGold: int = 0
@@ -9205,6 +9432,7 @@ class UserEquipment():
     LegendSacredTreasureLv: int = 0
     MatchlessSacredTreasureExp: int = 0
     MatchlessSacredTreasureLv: int = 0
+    PlayerId: int = 0
     ReinforcementLv: int = 0
     SetBaseSynchroGroupId: int = 0
     SphereId1: int = 0
