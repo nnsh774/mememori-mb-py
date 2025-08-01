@@ -3054,7 +3054,9 @@ class IFormattable(_Protocol):
 # [Serializable]
 @_dataclass(slots=True)
 class TimeSpan():
-    pass
+    MaxValue: _timedelta = _field(default_factory=lambda: _timedelta())
+    MinValue: _timedelta = _field(default_factory=lambda: _timedelta())
+    Zero: _timedelta = _field(default_factory=lambda: _timedelta())
 
 class PlayerGuildPositionType(_Enum):
     None_ = 0
@@ -4695,7 +4697,9 @@ class ISerializable(_Protocol):
 # [Serializable]
 @_dataclass(slots=True)
 class DateTime():
-    pass
+    MaxValue: _datetime = _datetime.min
+    MinValue: _datetime = _datetime.min
+    UnixEpoch: _datetime = _datetime.min
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -7323,10 +7327,35 @@ class ApiErrorResponse(ApiResponseBase):
     # [Obsolete("ErrorCodeに移行します")]
     MessageParams: list[str] = _field(default_factory=list["str"])
 
+# [Description("パーティー")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class ClearPartyCharacterInfo():
+    # [Description("ベースパラメータ")]
+    BaseParameter: _BaseParameter = _field(default_factory=lambda: _BaseParameter())
+    # [Description("バトルパラメータ")]
+    BattleParameter: _BattleParameter = _field(default_factory=lambda: _BattleParameter())
+    # [Description("戦闘力")]
+    BattlePower: int = 0
+    # [Description("Character固有キー")]
+    CharacterGuid: str = ""
+    # [Description("CharacterMBのID")]
+    CharacterId: int = 0
+    # [Description("レベルリンク可否")]
+    IsLevelLink: bool = False
+    # [Description("レベル")]
+    Level: int = 0
+    # [Description("レアリティ")]
+    RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
+    # [Description("キャラクターが装着している武具情報")]
+    UserEquipmentDtoInfos: list[UserEquipmentDtoInfo] = _field(default_factory=list["UserEquipmentDtoInfo"])
+
 # [Description("無窮の塔クリアパーティー情報")]
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class TowerBattleClearPartyInfo():
+    # [Description("クリア当時のキャラクター情報")]
+    ClearPartyCharacterInfos: list[ClearPartyCharacterInfo] = _field(default_factory=list["ClearPartyCharacterInfo"])
     # [Description("クリア日")]
     ClearTimestamp: int = 0
     # [Description("クリア当時デッキの総合戦闘力")]
@@ -8249,29 +8278,6 @@ class AchieveRankingPlayerInfo():
 class AchieveRewardReceivedPlayerInfo():
     PlayerId: int = 0
     PlayerName: str = ""
-
-# [Description("パーティー")]
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class ClearPartyCharacterInfo():
-    # [Description("ベースパラメータ")]
-    BaseParameter: _BaseParameter = _field(default_factory=lambda: _BaseParameter())
-    # [Description("バトルパラメータ")]
-    BattleParameter: _BattleParameter = _field(default_factory=lambda: _BattleParameter())
-    # [Description("戦闘力")]
-    BattlePower: int = 0
-    # [Description("Character固有キー")]
-    CharacterGuid: str = ""
-    # [Description("CharacterMBのID")]
-    CharacterId: int = 0
-    # [Description("レベルリンク可否")]
-    IsLevelLink: bool = False
-    # [Description("レベル")]
-    Level: int = 0
-    # [Description("レアリティ")]
-    RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
-    # [Description("キャラクターが装着している武具情報")]
-    UserEquipmentDtoInfos: list[UserEquipmentDtoInfo] = _field(default_factory=list["UserEquipmentDtoInfo"])
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -9841,6 +9847,8 @@ class BookSortReward():
 class ClearPartyInfo():
     # [Description("バトルタイプ")]
     BattleType: _BattleType = _field(default_factory=lambda: _BattleType())
+    # [Description("クリア当時のキャラクター情報")]
+    ClearPartyCharacterInfos: list[ClearPartyCharacterInfo] = _field(default_factory=list["ClearPartyCharacterInfo"])
     # [Description("クリア日")]
     ClearTimestamp: int = 0
     # [Description("クリア当時デッキの総合戦闘力")]
