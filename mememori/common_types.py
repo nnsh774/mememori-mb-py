@@ -37,6 +37,11 @@ class RankingDataType(_Enum):
     # [Description("属性の塔 黄")]
     TowerYellow = 8
 
+# [Description("全てのアイテムが実装するインターフェース")]
+# [Union(0, typeof)]
+class IUserItem(_Protocol):
+    pass
+
 # [Description("アイテムの種類")]
 class ItemType(_Enum):
     # [Description("なし")]
@@ -142,21 +147,8 @@ class ItemType(_Enum):
     # [Description("Stripeクーポン")]
     StripeCoupon = 1001
 
-# [Description("全てのアイテムが実装するインターフェース")]
-# [Union(0, typeof)]
-_ItemType = ItemType
-class IUserItem(_Protocol):
-    # [Description("アイテムの種類")]
-    # [PropertyOrder(1)]
-    ItemType: _ItemType
-    # [Description("アイテムのID")]
-    # [PropertyOrder(2)]
-    ItemId: int
-    # [Description("アイテムの数")]
-    # [PropertyOrder(3)]
-    ItemCount: int
-
 # [MessagePackObject(True)]
+_ItemType = ItemType
 @_dataclass(slots=True)
 class UserItem():
     ItemCount: int = 0
@@ -222,6 +214,9 @@ class DeviceType(_Enum):
     Steam = 6
     # [Description("Apk")]
     Apk = 7
+
+class IBattleEnemy(_Protocol):
+    pass
 
 # [Description("基礎パラメータ")]
 # [MessagePackObject(True)]
@@ -363,31 +358,6 @@ class UnitIconType(_Enum):
     # [Description("協力キャラクター")]
     ShareCharacter = 3
 
-_BaseParameter = BaseParameter
-_BattleParameter = BattleParameter
-_CharacterRarityFlags = CharacterRarityFlags
-_ElementType = ElementType
-_JobFlags = JobFlags
-_UnitIconType = UnitIconType
-class IBattleEnemy(_Protocol):
-    ActiveSkillIds: list[int]
-    BaseParameter: _BaseParameter
-    BattleEnemyCharacterId: int
-    BattleParameter: _BattleParameter
-    BattlePower: int
-    CharacterRarityFlags: _Flags[_CharacterRarityFlags]
-    ElementType: _ElementType
-    EnemyAdjustId: int
-    EnemyEquipmentId: int
-    EnemyRank: int
-    ExclusiveEquipmentRarityFlags: _Flags[EquipmentRarityFlags]
-    JobFlags: _Flags[_JobFlags]
-    NameKey: str
-    NormalSkillId: int
-    PassiveSkillIds: list[int]
-    UnitIconId: int
-    UnitIconType: _UnitIconType
-
 # [Description("バトルタイプ")]
 class BattleScheduleType(_Enum):
     # [Description("バトルタイプなし")]
@@ -463,19 +433,14 @@ class BookSortBonusFloorSelectItems():
     ItemList: list[UserItem] = _field(default_factory=list["UserItem"])
     StartMaxClearQuestId: int = 0
 
+class IHasStartEndTimeZone(_Protocol):
+    pass
+
 class StartEndTimeZoneType(_Enum):
     LocalStartLocalEnd = 0
     LocalStartJstEnd = 1
     JstStartLocalEnd = 10
     JstStartJstEnd = 11
-
-_StartEndTimeZoneType = StartEndTimeZoneType
-class IHasStartEndTimeZone(_Protocol):
-    # [DateTimeString]
-    EndTime: str
-    StartEndTimeZoneType: _StartEndTimeZoneType
-    # [DateTimeString]
-    StartTime: str
 
 # [Description("マイページアイコン表示場所タイプ")]
 class MypageIconDisplayLocationType(_Enum):
@@ -491,10 +456,7 @@ class MypageIconDisplayLocationType(_Enum):
     MypageAndSubEventPortal = 4
 
 class IHasStartEndTime(_Protocol):
-    # [DateTimeString]
-    EndTime: str
-    # [DateTimeString]
-    StartTime: str
+    pass
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -607,10 +569,7 @@ class BattleParameterChangeInfo():
     Value: float = 0.0
 
 class IHasJstStartEndTime(_Protocol):
-    # [DateTimeString]
-    EndTimeFixJST: str
-    # [DateTimeString]
-    StartTimeFixJST: str
+    pass
 
 # [Description("キャラクターボイスの分類")]
 class CharacterVoiceCategory(_Enum):
@@ -1524,14 +1483,7 @@ class ErrorMessageType(_Enum):
     Toast = 3
 
 class ICharacterImage(_Protocol):
-    # [Description("キャラ画像Id")]
-    CharacterImageId: int
-    # [Description("キャラ画像サイズ")]
-    CharacterImageSize: float
-    # [Description("キャラ画像座標X")]
-    CharacterImageX: float
-    # [Description("キャラ画像座標Y")]
-    CharacterImageY: float
+    pass
 
 # [Description("ミッション遷移先タイプ")]
 class MissionTransitionDestinationType(_Enum):
@@ -2004,8 +1956,7 @@ class LimitedEventType(_Enum):
 
 # [Description("キャラクターレアリティを持つ可能性があるアイテムが実装するインターフェース")]
 class IUserCharacterItem(_Protocol):
-    Item: UserItem
-    RarityFlags: _Flags[CharacterRarityFlags]
+    pass
 
 # [Description("期間限定ログボの日別報酬アイテム")]
 # [MessagePackObject(True)]
@@ -2090,7 +2041,7 @@ class LocalRaidQuestGroupType(_Enum):
     Fifth = 5
 
 class ILotteryWeight(_Protocol):
-    LotteryWeight: int
+    pass
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -2839,8 +2790,7 @@ class LanguageType(_Enum):
     deDE = 13
 
 class ITextResource(_Protocol):
-    StringKey: str
-    Text: str
+    pass
 
 # [Description("時差グループ")]
 class TimeServerType(_Enum):
@@ -3104,19 +3054,7 @@ class IFormattable(_Protocol):
 # [Serializable]
 @_dataclass(slots=True)
 class TimeSpan():
-    Days: int = 0
-    Hours: int = 0
-    MaxValue: _timedelta = _field(default_factory=lambda: _timedelta())
-    MinValue: _timedelta = _field(default_factory=lambda: _timedelta())
-    Minutes: int = 0
-    Seconds: int = 0
-    Ticks: int = 0
-    TotalDays: float = 0.0
-    TotalHours: float = 0.0
-    TotalMilliseconds: float = 0.0
-    TotalMinutes: float = 0.0
-    TotalSeconds: float = 0.0
-    Zero: _timedelta = _field(default_factory=lambda: _timedelta())
+    pass
 
 class PlayerGuildPositionType(_Enum):
     None_ = 0
@@ -3210,44 +3148,7 @@ class PlayerInfo():
     RecruitGuildMemberTimeStamp: int = 0
 
 class IReadOnlyEquipment(_Protocol):
-    # [Description("付与パラメータ(技力)")]
-    AdditionalParameterEnergy: int
-    # [Description("付与パラメータ(体力)")]
-    AdditionalParameterHealth: int
-    # [Description("付与パラメータ(知力)")]
-    AdditionalParameterIntelligence: int
-    # [Description("付与パラメータ(筋力)")]
-    AdditionalParameterMuscle: int
-    # [Description("シンクロ反映前の武具ID")]
-    BeforeSynchroEquipmentId: int
-    # [Description("武具ID")]
-    EquipmentId: int
-    # [Description("固有ID")]
-    Guid: str
-    # [Description("聖装経験値")]
-    LegendSacredTreasureExp: int
-    # [Description("聖装レベル")]
-    LegendSacredTreasureLv: int
-    # [Description("魔装経験値")]
-    MatchlessSacredTreasureExp: int
-    # [Description("魔装レベル")]
-    MatchlessSacredTreasureLv: int
-    # [Description("プレイヤーID")]
-    PlayerId: int
-    # [Description("強化レベル")]
-    ReinforcementLv: int
-    # [Description("ベース枠に設定中のシンクログループID")]
-    SetBaseSynchroGroupId: int
-    # [Description("宝石ID1")]
-    SphereId1: int
-    # [Description("宝石ID2")]
-    SphereId2: int
-    # [Description("宝石ID3")]
-    SphereId3: int
-    # [Description("宝石ID4")]
-    SphereId4: int
-    # [Description("宝石スロット解放数")]
-    SphereUnlockedCount: int
+    pass
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -3296,6 +3197,8 @@ class UserEquipmentDtoInfo():
     SphereUnlockedCount: int = 0
 
 # [MessagePackObject(True)]
+_BaseParameter = BaseParameter
+_BattleParameter = BattleParameter
 @_dataclass(slots=True)
 class CharacterDetailInfo():
     BaseParameter: _BaseParameter = _field(default_factory=lambda: _BaseParameter())
@@ -3356,7 +3259,6 @@ class UnitType(_Enum):
 class BattlePosition():
     DeckIndex: int = 0
     GroupType: BattleFieldCharacterGroupType = _field(default_factory=lambda: BattleFieldCharacterGroupType())
-    IsAttacker: bool = False
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -3396,7 +3298,10 @@ class DungeonBattleInfo():
     UseDungeonRelicCountDict: dict[int, int] = _field(default_factory=dict["int", "int"])
 
 # [MessagePackObject(True)]
+_CharacterRarityFlags = CharacterRarityFlags
 _DungeonBattleInfo = DungeonBattleInfo
+_ElementType = ElementType
+_JobFlags = JobFlags
 _UnitType = UnitType
 @_dataclass(slots=True)
 class BattleFieldCharacter():
@@ -3413,7 +3318,6 @@ class BattleFieldCharacter():
     EquipmentDtoInfos: list[UserEquipmentDtoInfo] = _field(default_factory=list["UserEquipmentDtoInfo"])
     EquipmentMaxLevel: int = 0
     ExclusiveEquipmentRarityFlags: _Flags[EquipmentRarityFlags] = _field(default_factory=lambda: _Flags["EquipmentRarityFlags"]([]))
-    Guid: int = 0
     JobFlags: _Flags[_JobFlags] = _field(default_factory=lambda: _Flags["_JobFlags"]([]))
     NormalSkill: BattleActiveSkill = _field(default_factory=lambda: BattleActiveSkill())
     OnStartHP: int = 0
@@ -3433,8 +3337,6 @@ class BattleField():
     BattleType: _BattleType = _field(default_factory=lambda: _BattleType())
     Characters: list[BattleFieldCharacter] = _field(default_factory=list["BattleFieldCharacter"])
     DamageBarList: list[DamageBar] = _field(default_factory=list["DamageBar"])
-    # [Obsolete("TODO 2019-12-05 takeda 使わないなら削除、使うならLinq排除")]
-    JoinPlayerIds: list[int] = _field(default_factory=list["int"])
     ReceiveTeamPassiveSkillIds: list[int] = _field(default_factory=list["int"])
     ReceiveTeamTotalKillCount: int = 0
 
@@ -4261,8 +4163,6 @@ class TradeShopItem():
     ExpirationTimeStamp: int = 0
     # [Description("獲得アイテム")]
     GiveItem: UserItem = _field(default_factory=lambda: UserItem())
-    # [IgnoreMember]
-    IsDedicated: bool = False
     # [Description("交換制限回数(0:無制限s)")]
     LimitTradeCount: int = 0
     # [Description("条件キャラID")]
@@ -4283,6 +4183,9 @@ class TradeShopItem():
 class WeeklyTopicsShopData():
     ExpirationTimeStamp: int = 0
     TradeShopItemList: list[TradeShopItem] = _field(default_factory=list["TradeShopItem"])
+
+class IUserSyncApiResponse(_Protocol):
+    pass
 
 # [Description("アイテム所持上限確認済みクエスト")]
 # [MessagePackObject(True)]
@@ -4461,10 +4364,7 @@ class UserCharacterCollectionDtoInfo():
     CollectionLevel: int = 0
 
 class ICharacterInfo(_Protocol):
-    CharacterId: int
-    Guid: str
-    Level: int
-    RarityFlags: _Flags[CharacterRarityFlags]
+    pass
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -4791,42 +4691,11 @@ class IConvertible(_Protocol):
 class ISerializable(_Protocol):
     pass
 
-class DayOfWeek(_Enum):
-    Sunday = 0
-    Monday = 1
-    Tuesday = 2
-    Wednesday = 3
-    Thursday = 4
-    Friday = 5
-    Saturday = 6
-
-class DateTimeKind(_Enum):
-    Unspecified = 0
-    Utc = 1
-    Local = 2
-
 # [IsReadOnly]
 # [Serializable]
-_DayOfWeek = DayOfWeek
 @_dataclass(slots=True)
 class DateTime():
-    Date: _datetime = _datetime.min
-    Day: int = 0
-    DayOfWeek: _DayOfWeek = _field(default_factory=lambda: _DayOfWeek())
-    Hour: int = 0
-    Kind: DateTimeKind = _field(default_factory=lambda: DateTimeKind())
-    MaxValue: _datetime = _datetime.min
-    Millisecond: int = 0
-    MinValue: _datetime = _datetime.min
-    Minute: int = 0
-    Month: int = 0
-    Now: _datetime = _datetime.min
-    Second: int = 0
-    Ticks: int = 0
-    TimeOfDay: _timedelta = _field(default_factory=lambda: _timedelta())
-    UnixEpoch: _datetime = _datetime.min
-    UtcNow: _datetime = _datetime.min
-    Year: int = 0
+    pass
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -5037,12 +4906,8 @@ class UserSyncData():
     UserTowerBattleDtoInfos: list[UserTowerBattleDtoInfo] = _field(default_factory=list["UserTowerBattleDtoInfo"])
     UserVipGiftDtoInfos: list[UserVipGiftDtoInfo] = _field(default_factory=list["UserVipGiftDtoInfo"])
 
-_UserSyncData = UserSyncData
-class IUserSyncApiResponse(_Protocol):
-    UserSyncData: _UserSyncData
-
 class IHasSteamTicketApiRequest(_Protocol):
-    SteamTicket: str
+    pass
 
 # [Description("アカウント停止タイプ")]
 class AccountSuspensionType(_Enum):
@@ -5069,6 +4934,69 @@ class BanChatInfo():
     AccountSuspensionType: _AccountSuspensionType = _field(default_factory=lambda: _AccountSuspensionType())
     BanChatType: _BanChatType = _field(default_factory=lambda: _BanChatType())
     LiftDateTime: str = ""
+
+class IGuildSyncApiResponse(_Protocol):
+    pass
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MissionGuideInfo():
+    GuideId: int = 0
+    MissionGroupType: _MissionGroupType = _field(default_factory=lambda: _MissionGroupType())
+    MissionStatus: MissionStatusType = _field(default_factory=lambda: MissionStatusType())
+
+# [MessagePackObject(True)]
+_TransferDetailInfo = TransferDetailInfo
+@_dataclass(slots=True)
+class MypageBannerInfo():
+    DisplayPriority: int = 0
+    ImageId: int = 0
+    MBId: int = 0
+    SortOrder: int = 0
+    TransferDetailInfo: _TransferDetailInfo = _field(default_factory=lambda: _TransferDetailInfo())
+
+# [Description("バッジタイプ")]
+class BadgeType(_Enum):
+    # [Description("通常バッジ")]
+    Normal = 0
+    # [Description("豪華バッジ")]
+    Special = 1
+
+# [MessagePackObject(True)]
+_BadgeType = BadgeType
+@_dataclass(slots=True)
+class MypageIconInfo():
+    BadgeType: _BadgeType = _field(default_factory=lambda: _BadgeType())
+    DisplayPriority: int = 0
+    HidePriority: int = 0
+    IconNameKey: str = ""
+    Id: int = 0
+    ImageId: int = 0
+    IsBlackout: bool = False
+    IsDisplayBadge: bool = False
+    NotOpenEventStoreIconId: int = 0
+    OpenContentLocalTimestamp: int = 0
+    SortOrder: int = 0
+    StoreIconId: int = 0
+    StoredIconInfoList: list[MypageIconInfo] = _field(default_factory=list["MypageIconInfo"])
+    TransferDetailInfo: _TransferDetailInfo = _field(default_factory=lambda: _TransferDetailInfo())
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class DisplayMypageInfo():
+    MypageBannerInfos: list[MypageBannerInfo] = _field(default_factory=list["MypageBannerInfo"])
+    MypageIconInfos: list[MypageIconInfo] = _field(default_factory=list["MypageIconInfo"])
+
+# [MessagePackObject(True)]
+_FriendStatusType = FriendStatusType
+@_dataclass(slots=True)
+class UserFriendDtoInfo():
+    FriendPointSendDate: int = 0
+    FriendStatusType: _FriendStatusType = _field(default_factory=lambda: _FriendStatusType())
+    IsChecked: bool = False
+    IsReceived: bool = False
+    OtherPlayerId: int = 0
+    RegistrationDate: int = 0
 
 class GlobalGvgGroupType(_Enum):
     All = 0
@@ -5156,70 +5084,6 @@ class GuildSyncData():
     MatchingNumber: int = 0
     PlayerGuildPositionType: _PlayerGuildPositionType = _field(default_factory=lambda: _PlayerGuildPositionType())
 
-_GuildSyncData = GuildSyncData
-class IGuildSyncApiResponse(_Protocol):
-    GuildSyncData: _GuildSyncData
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class MissionGuideInfo():
-    GuideId: int = 0
-    MissionGroupType: _MissionGroupType = _field(default_factory=lambda: _MissionGroupType())
-    MissionStatus: MissionStatusType = _field(default_factory=lambda: MissionStatusType())
-
-# [MessagePackObject(True)]
-_TransferDetailInfo = TransferDetailInfo
-@_dataclass(slots=True)
-class MypageBannerInfo():
-    DisplayPriority: int = 0
-    ImageId: int = 0
-    MBId: int = 0
-    SortOrder: int = 0
-    TransferDetailInfo: _TransferDetailInfo = _field(default_factory=lambda: _TransferDetailInfo())
-
-# [Description("バッジタイプ")]
-class BadgeType(_Enum):
-    # [Description("通常バッジ")]
-    Normal = 0
-    # [Description("豪華バッジ")]
-    Special = 1
-
-# [MessagePackObject(True)]
-_BadgeType = BadgeType
-@_dataclass(slots=True)
-class MypageIconInfo():
-    BadgeType: _BadgeType = _field(default_factory=lambda: _BadgeType())
-    DisplayPriority: int = 0
-    HidePriority: int = 0
-    IconNameKey: str = ""
-    Id: int = 0
-    ImageId: int = 0
-    IsBlackout: bool = False
-    IsDisplayBadge: bool = False
-    NotOpenEventStoreIconId: int = 0
-    OpenContentLocalTimestamp: int = 0
-    SortOrder: int = 0
-    StoreIconId: int = 0
-    StoredIconInfoList: list[MypageIconInfo] = _field(default_factory=list["MypageIconInfo"])
-    TransferDetailInfo: _TransferDetailInfo = _field(default_factory=lambda: _TransferDetailInfo())
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class DisplayMypageInfo():
-    MypageBannerInfos: list[MypageBannerInfo] = _field(default_factory=list["MypageBannerInfo"])
-    MypageIconInfos: list[MypageIconInfo] = _field(default_factory=list["MypageIconInfo"])
-
-# [MessagePackObject(True)]
-_FriendStatusType = FriendStatusType
-@_dataclass(slots=True)
-class UserFriendDtoInfo():
-    FriendPointSendDate: int = 0
-    FriendStatusType: _FriendStatusType = _field(default_factory=lambda: _FriendStatusType())
-    IsChecked: bool = False
-    IsReceived: bool = False
-    OtherPlayerId: int = 0
-    RegistrationDate: int = 0
-
 # [Description("誘導タイプ")]
 class WorldGuidanceType(_Enum):
     # [Description("なし")]
@@ -5297,7 +5161,6 @@ class GvgDeckInfo():
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class BattleTime():
-    EndBattle: int = 0
     StartBattle: int = 0
     TotalCommand: int = 0
     TotalCommandOrMinBattleTime: int = 0
@@ -5365,26 +5228,8 @@ class TowerBattleLotteryRewardInfo():
     Floor: int = 0
     LotteryRewardItemList: list[UserItem] = _field(default_factory=list["UserItem"])
 
-# [Description("エラーに対する挙動")]
-class ErrorHandlingType(_Enum):
-    # [Description("何もしない")]
-    None_ = 0
-    # [Description("トーストを表示する")]
-    Toast = 1
-    # [Description("ダイアログを表示する")]
-    OpenErrorDialog = 2
-    # [Description("タイトルに戻るダイアログを表示する")]
-    BackToTitle = 3
-    # [Description("MagicOnionの再接続を行う")]
-    MagicOnionReconnect = 4
-    # [Description("MyPageに戻るダイアログを表示する")]
-    BackToMyPage = 5
-
-_ErrorHandlingType = ErrorHandlingType
 class IErrorResponse(_Protocol):
-    ErrorHandlingType: _ErrorHandlingType
-    ErrorMessageId: int
-    MessageParams: list[str]
+    pass
 
 # [Description("エラーコード")]
 class ErrorCode(_Enum):
@@ -7449,8 +7294,24 @@ class ErrorCode(_Enum):
     # [Description("レート制限により課金処理が失敗しました。")]
     SteamRateLimited = 6000310
 
+# [Description("エラーに対する挙動")]
+class ErrorHandlingType(_Enum):
+    # [Description("何もしない")]
+    None_ = 0
+    # [Description("トーストを表示する")]
+    Toast = 1
+    # [Description("ダイアログを表示する")]
+    OpenErrorDialog = 2
+    # [Description("タイトルに戻るダイアログを表示する")]
+    BackToTitle = 3
+    # [Description("MagicOnionの再接続を行う")]
+    MagicOnionReconnect = 4
+    # [Description("MyPageに戻るダイアログを表示する")]
+    BackToMyPage = 5
+
 # [MessagePackObject(True)]
 _ErrorCode = ErrorCode
+_ErrorHandlingType = ErrorHandlingType
 @_dataclass(slots=True)
 class ApiErrorResponse(ApiResponseBase):
     ErrorCode: _ErrorCode = _field(default_factory=lambda: _ErrorCode())
@@ -7462,35 +7323,10 @@ class ApiErrorResponse(ApiResponseBase):
     # [Obsolete("ErrorCodeに移行します")]
     MessageParams: list[str] = _field(default_factory=list["str"])
 
-# [Description("パーティー")]
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class ClearPartyCharacterInfo():
-    # [Description("ベースパラメータ")]
-    BaseParameter: _BaseParameter = _field(default_factory=lambda: _BaseParameter())
-    # [Description("バトルパラメータ")]
-    BattleParameter: _BattleParameter = _field(default_factory=lambda: _BattleParameter())
-    # [Description("戦闘力")]
-    BattlePower: int = 0
-    # [Description("Character固有キー")]
-    CharacterGuid: str = ""
-    # [Description("CharacterMBのID")]
-    CharacterId: int = 0
-    # [Description("レベルリンク可否")]
-    IsLevelLink: bool = False
-    # [Description("レベル")]
-    Level: int = 0
-    # [Description("レアリティ")]
-    RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
-    # [Description("キャラクターが装着している武具情報")]
-    UserEquipmentDtoInfos: list[UserEquipmentDtoInfo] = _field(default_factory=list["UserEquipmentDtoInfo"])
-
 # [Description("無窮の塔クリアパーティー情報")]
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class TowerBattleClearPartyInfo():
-    # [Description("クリア当時のキャラクター情報")]
-    ClearPartyCharacterInfos: list[ClearPartyCharacterInfo] = _field(default_factory=list["ClearPartyCharacterInfo"])
     # [Description("クリア日")]
     ClearTimestamp: int = 0
     # [Description("クリア当時デッキの総合戦闘力")]
@@ -7601,7 +7437,6 @@ class BulkShopProductInfo():
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class UserCharacter():
-    CharacterId: int = 0
     CharacterRarityFlags: _Flags[_CharacterRarityFlags] = _field(default_factory=lambda: _Flags["_CharacterRarityFlags"]([]))
     Guid: str = ""
     ItemCount: int = 0
@@ -8288,7 +8123,11 @@ class ShareCharacterInfo():
     RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
     UserEquipmentDtoInfos: list[UserEquipmentDtoInfo] = _field(default_factory=list["UserEquipmentDtoInfo"])
 
+class IStageInfo(_Protocol):
+    pass
+
 # [MessagePackObject(True)]
+_UnitIconType = UnitIconType
 @_dataclass(slots=True)
 class EnemyInfo():
     BattlePower: int = 0
@@ -8299,11 +8138,6 @@ class EnemyInfo():
     NameKey: str = ""
     UnitIconId: int = 0
     UnitIconType: _UnitIconType = _field(default_factory=lambda: _UnitIconType())
-
-class IStageInfo(_Protocol):
-    BaseBattlePower: int
-    EnemyList: list[EnemyInfo]
-    StageId: int
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -8415,6 +8249,29 @@ class AchieveRankingPlayerInfo():
 class AchieveRewardReceivedPlayerInfo():
     PlayerId: int = 0
     PlayerName: str = ""
+
+# [Description("パーティー")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class ClearPartyCharacterInfo():
+    # [Description("ベースパラメータ")]
+    BaseParameter: _BaseParameter = _field(default_factory=lambda: _BaseParameter())
+    # [Description("バトルパラメータ")]
+    BattleParameter: _BattleParameter = _field(default_factory=lambda: _BattleParameter())
+    # [Description("戦闘力")]
+    BattlePower: int = 0
+    # [Description("Character固有キー")]
+    CharacterGuid: str = ""
+    # [Description("CharacterMBのID")]
+    CharacterId: int = 0
+    # [Description("レベルリンク可否")]
+    IsLevelLink: bool = False
+    # [Description("レベル")]
+    Level: int = 0
+    # [Description("レアリティ")]
+    RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
+    # [Description("キャラクターが装着している武具情報")]
+    UserEquipmentDtoInfos: list[UserEquipmentDtoInfo] = _field(default_factory=list["UserEquipmentDtoInfo"])
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -8649,6 +8506,50 @@ class LimitedLoginBonusRewardItem():
     # [Description("キャラレアリティ")]
     RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
 
+class ILocalRaidInfoApiResponse(_Protocol):
+    pass
+
+class LocalRaidRoomConditionsType(_Enum):
+    None_ = 0
+    BattlePower = 1
+    Password = 2
+    All = 3
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class LocalRaidBattleLogPlayerInfo():
+    IsInvite: bool = False
+    IsLeader: bool = False
+    IsReady: bool = False
+    PlayerInfo: _PlayerInfo = _field(default_factory=lambda: _PlayerInfo())
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class LocalRaidPartyInfo():
+    ConditionsType: LocalRaidRoomConditionsType = _field(default_factory=lambda: LocalRaidRoomConditionsType())
+    IsAutoStart: bool = False
+    LeaderPlayerId: int = 0
+    LeaderPlayerName: str = ""
+    LocalRaidBattleLogPlayerInfoList: list[LocalRaidBattleLogPlayerInfo] = _field(default_factory=list["LocalRaidBattleLogPlayerInfo"])
+    Password: int = 0
+    QuestId: int = 0
+    RequiredBattlePower: int = 0
+    RoomId: str = ""
+    TotalBattlePower: int = 0
+    WorldId: int = 0
+
+# [MessagePackObject(True)]
+_LocalRaidPartyInfo = LocalRaidPartyInfo
+@_dataclass(slots=True)
+class LocalRaidBattleLogInfo():
+    BattleEndInfo: _BattleEndInfo = _field(default_factory=lambda: _BattleEndInfo())
+    BattleTime: int = 0
+    BattleToken: str = ""
+    ClearLevel: int = 0
+    IsAutoStart: bool = False
+    LocalRaidPartyInfo: _LocalRaidPartyInfo = _field(default_factory=lambda: _LocalRaidPartyInfo())
+    QuestId: int = 0
+
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class LocalRaidQuestInfo():
@@ -8671,52 +8572,6 @@ class LocalRaidEnemyInfo():
     NameKey: str = ""
     UnitIconId: int = 0
     UnitIconType: _UnitIconType = _field(default_factory=lambda: _UnitIconType())
-
-class ILocalRaidInfoApiResponse(_Protocol):
-    LocalRaidEnemyInfos: list[LocalRaidEnemyInfo]
-    LocalRaidQuestInfos: list[LocalRaidQuestInfo]
-
-class LocalRaidRoomConditionsType(_Enum):
-    None_ = 0
-    BattlePower = 1
-    Password = 2
-    All = 3
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class LocalRaidBattleLogPlayerInfo():
-    IsInvite: bool = False
-    IsLeader: bool = False
-    IsReady: bool = False
-    PlayerInfo: _PlayerInfo = _field(default_factory=lambda: _PlayerInfo())
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class LocalRaidPartyInfo():
-    ConditionsType: LocalRaidRoomConditionsType = _field(default_factory=lambda: LocalRaidRoomConditionsType())
-    IsAutoStart: bool = False
-    IsReady: bool = False
-    LeaderPlayerId: int = 0
-    LeaderPlayerName: str = ""
-    LocalRaidBattleLogPlayerInfoList: list[LocalRaidBattleLogPlayerInfo] = _field(default_factory=list["LocalRaidBattleLogPlayerInfo"])
-    Password: int = 0
-    QuestId: int = 0
-    RequiredBattlePower: int = 0
-    RoomId: str = ""
-    TotalBattlePower: int = 0
-    WorldId: int = 0
-
-# [MessagePackObject(True)]
-_LocalRaidPartyInfo = LocalRaidPartyInfo
-@_dataclass(slots=True)
-class LocalRaidBattleLogInfo():
-    BattleEndInfo: _BattleEndInfo = _field(default_factory=lambda: _BattleEndInfo())
-    BattleTime: int = 0
-    BattleToken: str = ""
-    ClearLevel: int = 0
-    IsAutoStart: bool = False
-    LocalRaidPartyInfo: _LocalRaidPartyInfo = _field(default_factory=lambda: _LocalRaidPartyInfo())
-    QuestId: int = 0
 
 # [MessagePackObject(True)]
 _UserCharacterInfo = UserCharacterInfo
@@ -9386,6 +9241,7 @@ class OutsideEventPortalBannerInfo():
     TitleTextKey: str = ""
 
 # [MessagePackObject(True)]
+_StartEndTimeZoneType = StartEndTimeZoneType
 @_dataclass(slots=True)
 class EventPortalVideoInfo():
     # [Description("動画終了日時")]
@@ -9408,10 +9264,7 @@ class UserEquipmentSynchroGroupDtoInfo():
     UnavailableTime: int = 0
 
 class IAdditionalParameter(_Protocol):
-    AdditionalParameterEnergy: int
-    AdditionalParameterHealth: int
-    AdditionalParameterIntelligence: int
-    AdditionalParameterMuscle: int
+    pass
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -9422,7 +9275,6 @@ class UserEquipment():
     AdditionalParameterMuscle: int = 0
     BeforeSynchroEquipmentId: int = 0
     CharacterGuid: str = ""
-    EquipmentId: int = 0
     Guid: str = ""
     HasParameter: bool = False
     ItemCount: int = 0
@@ -9534,7 +9386,7 @@ class BulkSphereSetInfo():
     PlayerId: int = 0
 
 class IDungeonBattleRequest(_Protocol):
-    CurrentTermId: int
+    pass
 
 # [Description("時空の洞窟 味方情報")]
 # [MessagePackObject(True)]
@@ -9989,8 +9841,6 @@ class BookSortReward():
 class ClearPartyInfo():
     # [Description("バトルタイプ")]
     BattleType: _BattleType = _field(default_factory=lambda: _BattleType())
-    # [Description("クリア当時のキャラクター情報")]
-    ClearPartyCharacterInfos: list[ClearPartyCharacterInfo] = _field(default_factory=list["ClearPartyCharacterInfo"])
     # [Description("クリア日")]
     ClearTimestamp: int = 0
     # [Description("クリア当時デッキの総合戦闘力")]
