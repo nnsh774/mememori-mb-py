@@ -3251,10 +3251,12 @@ class UnitType(_Enum):
     LocalRaidEnemy = 6
     # [Description("ギルドツリーの敵")]
     GuildTowerEnemy = 7
-    # [Description("レンタルレイドの敵")]
-    RentalRaidEnemy = 8
+    # [Description("レンタルレイドの通常敵")]
+    RentalRaidNormalEnemy = 8
+    # [Description("レンタルレイドのボス")]
+    RentalRaidBossEnemy = 9
     # [Description("協力キャラクター")]
-    ShareCharacter = 9
+    ShareCharacter = 10
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -8109,6 +8111,16 @@ class PresentItem():
     # [Description("キャラクターレアリティ")]
     # [PropertyOrder(2)]
     RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
+
+class ReviewGuidanceActionType(_Enum):
+    # [Description("操作なし")]
+    None_ = 0
+    # [Description("不満")]
+    Negative = 1
+    # [Description("レビュー作成")]
+    WriteReview = 2
+    # [Description("レビュースキップ")]
+    ReviewSkipped = 3
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)

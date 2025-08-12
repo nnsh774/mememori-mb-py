@@ -821,23 +821,26 @@ class CollabMissionMB(MasterBookBase):
     # [Description("規約")]
     # [PropertyOrder(17)]
     TermsTextKey: str = ""
-    # [Description("対象ミッションIDリスト")]
+    # [Description("貢献メダルタイプ")]
     # [PropertyOrder(18)]
-    TargetMissionIdList: list[int] = _field(default_factory=list["int"])
-    # [Description("お知らせタブ")]
+    ActivityMedalType: int = 0
+    # [Description("対象ミッションIDリスト")]
     # [PropertyOrder(19)]
-    NoticeGroupId: int = 0
+    TargetMissionIdList: list[int] = _field(default_factory=list["int"])
     # [Description("開始日時")]
     # [PropertyOrder(2)]
     StartTime: str = ""
-    # [Description("Url1")]
+    # [Description("お知らせタブ")]
     # [PropertyOrder(20)]
+    NoticeGroupId: int = 0
+    # [Description("Url1")]
+    # [PropertyOrder(21)]
     Url1: str = ""
     # [Description("Url2")]
-    # [PropertyOrder(21)]
+    # [PropertyOrder(22)]
     Url2: str = ""
     # [Description("キャラクターID(楽曲開放ミッション用)")]
-    # [PropertyOrder(22)]
+    # [PropertyOrder(23)]
     CharacterId: int = 0
     # [Description("終了日時")]
     # [PropertyOrder(3)]
