@@ -140,6 +140,8 @@ class ItemType(_Enum):
     MissionPassPoint = 46
     # [Description("懸賞チケット")]
     SweepstakesTicket = 47
+    # [Description("グループ投票チケット")]
+    GroupVotingTicket = 48
     # [Description("イベント交換所アイテム")]
     EventExchangePlaceItem = 50
     # [Description("シンクロハンマー")]
@@ -1062,6 +1064,8 @@ class MissionAchievementType(_Enum):
     GuildGuildRaidChallengeCount = 16020100
     # [Description("ワールドチャット発言回数")]
     ChatSayWorldChatCount = 17010100
+    # [Description("ギルドチャット発言回数")]
+    ChatSayGuildChatCount = 17010200
     # [Description("アップデート回数")]
     OsStoreUpdateCount = 18010100
     # [Description("パネル図鑑遷移")]
@@ -1096,6 +1100,8 @@ class MissionAchievementType(_Enum):
     WeeklyTopicsTransitionCount = 24010100
     # [Description("人気投票チケットの消費数")]
     ConsumePopularityVoteTicket = 25010100
+    # [Description("グループ投票チケットの消費数")]
+    ConsumeGroupVotingTicket = 25010200
     # [Description("魔女の書庫整理 マス解放数")]
     BookSortUnlockGridCell = 26010100
     # [Description("魔女の書庫整理 最大到達フロア")]
@@ -1553,6 +1559,8 @@ class MissionTransitionDestinationType(_Enum):
     GuildRaid = 1602
     # [Description("チャット")]
     Chat = 1701
+    # [Description("チャット（ギルドタブ）")]
+    ChatGuild = 1702
     # [Description("各OSのストア")]
     OsStore = 1801
     # [Description("キャラ詳細")]
@@ -2021,6 +2029,10 @@ class LocalNotificationType(_Enum):
     BattleLeagueReward = 3
     # [Description("一週間パック終了")]
     OneWeekLimitedPack = 4
+    # [Description("GvG布告時間")]
+    GvGDeclaration = 5
+    # [Description("GvG戦闘時間")]
+    GvGBattle = 6
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -2600,6 +2612,8 @@ class PassiveTrigger(_Enum):
     EnemyAttack = 50
     # [Description("被致命的ダメージ時回復")]
     RecoveryFromInstantDeathDamage = 52
+    # [Description("被致命的ダメージ時（即時戦闘不能無効）")]
+    InstantDeathDamageIgnoreFixDamage = 53
     # [Description("特殊ダメージ死亡(毒、共鳴など)")]
     SpecialDamageDead = 62
 
@@ -2654,6 +2668,24 @@ class PatternSettingType(_Enum):
     # [Description("一週間限定パックの購入期限プッシュ通知")]
     OneWeekLimitedPackPushNotification = 7
 
+# [Description("人気投票形式タイプ")]
+class PopularityVoteVotingType(_Enum):
+    # [Description("なし")]
+    None_ = 0
+    # [Description("シンプル投票形式")]
+    Simple = 1
+    # [Description("グループ投票形式")]
+    Group = 2
+
+# [Description("人気投票キャラソートタイプ")]
+class PopularityVoteSortType(_Enum):
+    # [Description("なし")]
+    None_ = 0
+    # [Description("キャラID順")]
+    Id = 1
+    # [Description("ランダム順")]
+    Random = 2
+
 # [Description("発表タイプ")]
 class PopularityPresentationVoteType(_Enum):
     # [Description("なし")]
@@ -2680,7 +2712,21 @@ class ResultPresentationSetting():
 @_dataclass(slots=True)
 class EntryCharacter():
     EntryCharacterId: int = 0
+    GroupId: int = 0
     SubDisplayCharacterIdList: list[int] = _field(default_factory=list["int"])
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class PastChampionCharacter():
+    CharacterId: int = 0
+    EventNo: int = 0
+    SubDisplayCharacterIdList: list[int] = _field(default_factory=list["int"])
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class EntryGroup():
+    GroupId: int = 0
+    NameKey: str = ""
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -3329,6 +3375,7 @@ class BattleFieldCharacter():
     PassiveSkills: list[BattlePassiveSkill] = _field(default_factory=list["BattlePassiveSkill"])
     PlayerName: str = ""
     PlayerRankHitBonus: int = 0
+    RentalRaidMaxHpRate: int = 0
     UnitId: int = 0
     UnitType: _UnitType = _field(default_factory=lambda: _UnitType())
 
@@ -3428,7 +3475,7 @@ class SkillCategory(_Enum):
     SelfInjuryDamage = 18
     # [Description("復活")]
     Resurrection = 50
-    # [Description("回復(演出なし)")]
+    # [Description("回復（影響無効）")]
     SilenceHeal = 51
     # [Description("ステータス吸収")]
     StatusDrain = 100
@@ -4613,6 +4660,8 @@ class NotificationType(_Enum):
     PlayVideoFromMyPage = 27
     # [Description("動画を一度も再生していない場合（イベントポータルから遷移される動画）")]
     PlayVideoFromEventPortal = 28
+    # [Description("人気投票 グループ投票チケットを1枚以上もっているかつ、予選本選いずれかの期間内で、その日一度も投票してない時")]
+    NotPopularityVoteGroupOnDay = 29
 
 # [MessagePackObject(True)]
 _NotificationType = NotificationType
@@ -6739,6 +6788,12 @@ class ErrorCode(_Enum):
     PopularityVoteUnavailablePreliminaryResult = 442009
     # [Description("本選結果を確認できる期限ではありません。")]
     PopularityVoteUnavailableFinalResult = 442010
+    # [Description("グループ投票形式ではありません。")]
+    PopularityVoteNotGroupVote = 442011
+    # [Description("グループ投票のリクエストが不正です。")]
+    PopularityVoteGroupVoteInvalid = 442012
+    # [Description("グループ投票対象に設定できないキャラクターです。")]
+    PopularityVoteNotFoundGroupEntryCharacter = 442013
     # [Description("シリアルコードに間違いがあるか不正な文字が含まれています。")]
     SerialCodeInvalidCode = 450001
     # [Description("シリアルコードの有効期限が終了しました。")]
