@@ -2660,6 +2660,7 @@ class PatternSettingType(_Enum):
     # [Description("ミッションのガイド表示優先度")]
     MissionGuideDisplayOrder = 3
     # [Description("ゲリラパックの報酬内容")]
+    # [Obsolete]
     GuerrillaPackRewardItem = 4
     # [Description("ダイナミックリンクによるワールド誘導")]
     InviteWorldByDynamicLink = 5
@@ -7262,6 +7263,8 @@ class ErrorCode(_Enum):
     NotSupportedRemoteNotificationIgnoreType = 4000003
     # [Description("不正なリクエストです。")]
     PushNotificationNotDefinedLanguageType = 4000004
+    # [Description("不正なリクエストです。")]
+    GvGPushSettingInvalidRequest = 4000005
     # [Description("DMM GAME PLAYERからゲームを起動しなおしてください。")]
     DmmOneTimeTokenExpired = 5000100
     # [Description("不正なリクエストです。")]
@@ -8202,6 +8205,15 @@ class RetrieveItemInfo():
 class RetrieveItemHistory():
     RetrieveItemInfoList: list[RetrieveItemInfo] = _field(default_factory=list["RetrieveItemInfo"])
     RetrieveLocalTime: int = 0
+
+class RentalRaidStageOpenEffectType(_Enum):
+    None_ = 0
+    # [Description("前半レイド(ステージ2)")]
+    FirstHalfBoss = 1
+    # [Description("後半ノーマル(ステージ3)")]
+    SecondHalfNormal = 2
+    # [Description("後半レイド(ステージ4)")]
+    SecondHalfBoss = 3
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -10154,6 +10166,7 @@ class RemoteNotificationType(_Enum):
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class SelectShopProductInfo():
+    ExpirationTime: int = 0
     MbId: int = 0
     ProductId: str = ""
     ShopProductType: _ShopProductType = _field(default_factory=lambda: _ShopProductType())
