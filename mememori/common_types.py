@@ -756,6 +756,11 @@ class RankUpType(_Enum):
     # [Description("同じキャラクターID")]
     SameName = 2
 
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class Emoticon():
+    EmoticonId: int = 0
+
 # [Description("懸賞応募対象アイテム")]
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -1074,6 +1079,8 @@ class MissionAchievementType(_Enum):
     MusicPlayerTransitionCount = 22010100
     # [Description("指定楽曲開放")]
     BuyMusic = 22010200
+    # [Description("楽曲プレイリスト共有")]
+    ShareMusicPlaylist = 22010300
     # [Description("ギルドツリーで1つのタイプのキャラを〇体以上使って戦闘に勝利")]
     GuildTowerWinUnitSameJobTypeBase = 23010100
     # [Description("ギルドツリーで1つのタイプのキャラを1体以上使って戦闘に勝利")]
@@ -1571,6 +1578,8 @@ class MissionTransitionDestinationType(_Enum):
     PanelPictureBook = 2101
     # [Description("楽曲再生")]
     MusicPlayer = 2201
+    # [Description("楽曲プレイリスト")]
+    MusicPlaylist = 2202
     # [Description("ギルドツリーメイン画面")]
     GuildTower = 2301
     # [Description("ギルドツリーLV強化ダイアログ")]
@@ -1961,6 +1970,8 @@ class LimitedEventType(_Enum):
     NotificationForceCancel = 10000
     # [Description("GooglePlayのレシート消費をクライアントで行う")]
     EnableGooglePlayReceiptConsumeByClient = 10001
+    # [Description("Deeplinkのエラー判定 PurchaseStateType.FetchProductWaitチェック有効")]
+    CheckDeeplinkPurchaseStateFetchProductWait = 10002
 
 # [Description("キャラクターレアリティを持つ可能性があるアイテムが実装するインターフェース")]
 class IUserCharacterItem(_Protocol):
@@ -3686,6 +3697,14 @@ class EffectType(_Enum):
     Skill1CoolTimeIncrease = 3005
     # [Description("スキル2のクールタイムを増加")]
     Skill2CoolTimeIncrease = 3006
+    # [Description("ランダムなバフ効果のターン数を増やす")]
+    ExtendRandomBuffTurn = 3031
+    # [Description("ランダムなデバフ効果のターン数を増やす")]
+    ExtendRandomDeBuffTurn = 3032
+    # [Description("ランダムなバフ効果のターン数を減らす")]
+    ReduceRandomBuffTurn = 3033
+    # [Description("ランダムなデバフ効果のターン数を減らす")]
+    ReduceRandomDeBuffTurn = 3034
     # [Description("すべてのバフ効果のターンを増やす")]
     ExtendAllBuffTurn = 3041
     # [Description("すべてのデバフ効果のターンを増やす")]
@@ -4679,6 +4698,7 @@ class UserOpenContentDtoInfo():
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class UserFriendBattleOptionDtoInfo():
+    DefenseDeckComment: str = ""
     IsAllowedBattle: bool = False
     IsUsedBattleLeagueDeckInDefenseParty: bool = False
     IsUsedLockEquipmentInDefenseParty: bool = False
@@ -4865,6 +4885,18 @@ class ChatSettingData():
     FontSize: int = 0
 
 # [MessagePackObject(True)]
+@_dataclass(slots=True)
+class ChatShopItem():
+    # [Description("ChatShopMBのId")]
+    ChatShopId: int = 0
+    # [Description("消費アイテム")]
+    ConsumeItem: UserItem = _field(default_factory=lambda: UserItem())
+    # [Description("獲得アイテム")]
+    GiveItem: UserItem = _field(default_factory=lambda: UserItem())
+    # [Description("並び順")]
+    SortOrder: int = 0
+
+# [MessagePackObject(True)]
 _ChatSettingData = ChatSettingData
 _LegendLeagueClassType = LegendLeagueClassType
 _PrivacySettingsType = PrivacySettingsType
@@ -4886,6 +4918,7 @@ _UserSyncGvgDeckDtoInfo = UserSyncGvgDeckDtoInfo
 class UserSyncData():
     BlockPlayerIdList: list[int] = _field(default_factory=list["int"])
     CanJoinTodayLegendLeague: bool | None = None
+    ChatEmoticonList: list[ChatShopItem] = _field(default_factory=list["ChatShopItem"])
     ChatSettingData: _ChatSettingData = _field(default_factory=lambda: _ChatSettingData())
     ClearedTutorialIdList: list[int] = _field(default_factory=list["int"])
     ConfirmedItemQuestList: list[ConfirmedItemQuest] = _field(default_factory=list["ConfirmedItemQuest"])
@@ -5335,6 +5368,8 @@ class ErrorCode(_Enum):
     CommonNotFoundCurrentMaxClearQuestId = 1004
     # [Description("プレイヤー生成日の情報がありません。")]
     CommonNotFoundCreatePlayerTimestamp = 1005
+    # [Description("未許可のクライアントからの通信です。")]
+    CommonInvalidClient = 2000
     # [Description("ユーザーデータがありません")]
     AuthNotFoundUserAccountDto = 10001
     # [Description("ユーザーのプレイヤーデータが存在しません")]
@@ -6663,6 +6698,14 @@ class ErrorCode(_Enum):
     MusicInvalidMusicId = 392006
     # [Description("プレイリストの曲数上限を超えています。")]
     MusicOverMaxPlaylistMusicCount = 392007
+    # [Description("プレイリストの共有コード生成に失敗しました。")]
+    MusicFailedGeneratePlaylistShareCode = 392008
+    # [Description("プレイリストに曲が一つも存在しないと共有できません。")]
+    MusicNotEnoughMusicCountInPlaylist = 392009
+    # [Description("共有されたプレイリストを見つけませんでした。")]
+    MusicNotFoundSharePlaylist = 392010
+    # [Description("プレイリストの共有期限がきれました。")]
+    MusicExpiredSharePlaylist = 392011
     # [Description("ユーザーのアカウント情報が存在しません")]
     TutorialAccountDtoNotFound = 401000
     # [Description("ユーザーのステータス情報が存在しません")]
@@ -7005,6 +7048,12 @@ class ErrorCode(_Enum):
     RentalRaidNotOpenBattle = 532015
     # [Description("バトルデータがありません。")]
     RentalRaidNotFoundRankingBattleLog = 532016
+    # [Description("購入できない商品です。")]
+    ChatShopInvalidBuyItem = 542000
+    # [Description("購入済みです。")]
+    ChatShopAlreadyBuyItem = 542001
+    # [Description("不正なアイテム種類です。")]
+    ChatShopInvalidItemType = 542010
     # [Description("存在しないTreasureChestです。")]
     ItemOpenTreasureChestIdNotFound = 602004
     # [Description("存在しないTreasureChestです。")]
@@ -8517,6 +8566,15 @@ class UserPlaylistInfo():
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
+class PlaylistShareInfo():
+    MusicIdList: list[int] = _field(default_factory=list["int"])
+    PlayerIconId: int = 0
+    PlayerName: str = ""
+    PlaylistName: str = ""
+    PlaylistShareCode: str = ""
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
 class UserPanelMissionDtoInfo():
     ReceivedBingoTypeList: list[BingoType] = _field(default_factory=list["BingoType"])
     SheetNo: int = 0
@@ -9641,6 +9699,20 @@ class ChatBattleInfo(_ArrayPacked):
     # [Key(1)]
     ChatBattlePartyInfoList: list[ChatBattlePartyInfo] = _field(default_factory=list["ChatBattlePartyInfo"])
 
+# [MessagePackObject(False)]
+@_dataclass(slots=True)
+class ChatMusicPlaylistInfo(_ArrayPacked):
+    # [Key(0)]
+    FirstMusicId: int = 0
+    # [Key(1)]
+    PlayerIconId: int = 0
+    # [Key(2)]
+    PlaylistName: str = ""
+    # [Key(3)]
+    MusicCount: int = 0
+    # [Key(4)]
+    PlaylistShareCode: str = ""
+
 # [Description("システムチャット種別")]
 class SystemChatType(_Enum):
     None_ = 0
@@ -9663,6 +9735,7 @@ class SystemChatType(_Enum):
 
 # [MessagePackObject(False)]
 _ChatBattleInfo = ChatBattleInfo
+_ChatMusicPlaylistInfo = ChatMusicPlaylistInfo
 _ChatType = ChatType
 _SystemChatMessageIdType = SystemChatMessageIdType
 _SystemChatType = SystemChatType
@@ -9696,6 +9769,8 @@ class ChatInfo(_ArrayPacked):
     BalloonItemId: int = 0
     # [Key(13)]
     ChatBattleInfo: _ChatBattleInfo = _field(default_factory=lambda: _ChatBattleInfo())
+    # [Key(14)]
+    ChatMusicPlaylistInfo: _ChatMusicPlaylistInfo = _field(default_factory=lambda: _ChatMusicPlaylistInfo())
 
 class ChatReactionType(_Enum):
     # [Description("リアクションなし")]

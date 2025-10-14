@@ -789,6 +789,15 @@ class ChatEffectKeywordMB(MasterBookBase):
     # [PropertyOrder(4)]
     EndTimeFixJST: str = ""
 
+# [Description("チャットスタンプ")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class ChatEmoticonMB(MasterBookBase):
+    # [Description("絵文字リスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(1)]
+    EmoticonList: list[Emoticon] = _field(default_factory=list["Emoticon"])
+
 # [Description("コラボミッション")]
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
