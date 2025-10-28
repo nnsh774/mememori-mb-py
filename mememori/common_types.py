@@ -2387,6 +2387,8 @@ class OpenCommandType(_Enum):
     EquipmentSynchro = 570
     # [Description("武具リセット")]
     EquipmentReset = 580
+    # [Description("セレクト音楽設定")]
+    SelectMusicSetting = 600
     # [Description("武具固定")]
     LockEquipment = 1000
     # [Description("武具固定(ギルドバトル用)")]
