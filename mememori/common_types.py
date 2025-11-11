@@ -4019,12 +4019,16 @@ class SubSetType(_Enum):
     # [Description("Live2D後の基本演出")]
     DefaultLive2DAfter = 2
     # [Description("Live2Dのセット内連撃（5回未満）の演出")]
+    # [Obsolete]
     UnderFiveLive2DInSubSet = 3
     # [Description("Live2D後のセット内連撃（5回未満）の演出")]
+    # [Obsolete]
     UnderFiveLive2DAfterInSubSet = 4
     # [Description("Live2Dのセット内連撃（5回以上）の演出")]
+    # [Obsolete]
     AboveFourLive2DInSubSet = 5
     # [Description("Live2D後のセット内連撃（5回以上）の演出")]
+    # [Obsolete]
     AboveFourLive2DAfterInSubSet = 6
     # [Description("Live2Dのセット外連撃（5回未満）の演出")]
     UnderFiveLive2DOutOfSubSet = 7
@@ -4282,6 +4286,8 @@ class SnsType(_Enum):
     Facebook = 4
     GameCenter = 5
     GooglePlay = 6
+    Dmm = 7
+    Steam = 8
 
 class LockEquipmentDeckType(_Enum):
     None_ = 0
@@ -5952,6 +5958,8 @@ class ErrorCode(_Enum):
     GuildRaidAlreadyRewardWorldItem = 192015
     # [Description("ギルドレイドの期限外です。")]
     GuildRaidNotOpenGuildRaid = 192016
+    # [Description("受取可能な報酬を全て受取済みです。")]
+    GuildRaidNotExistReceivableReward = 192017
     # [Description("ガチャ開催中です。")]
     GachaAlreadyBeenOpened = 200110
     # [Description("既にその聖遺物が選択されています。")]
@@ -6528,6 +6536,8 @@ class ErrorCode(_Enum):
     GlobalGvgNotFoundReceivableReward = 302003
     # [Description("指定されたパーティが存在しません。")]
     GlobalGvgNotFoundParty = 302004
+    # [Description("マッチング処理中です。")]
+    GlobalGvgNotMatchingYet = 302005
     # [Description("ユーザのレベルリンクデータが見つかりません")]
     LevelLinkUserLevelLinkDtoNotFound = 311000
     # [Description("ユーザのキャラクターデータが見つかりません")]
@@ -7244,6 +7254,8 @@ class ErrorCode(_Enum):
     MagicOnionGlobalGvgAddCastlePartyNotFoundCharacterCache = 900318
     # [Description("グランドバトルの参加条件を満たしていません。")]
     MagicOnionNotJoinedGrandBattle = 900319
+    # [Description("グランドバトルのマッチング処理中です。")]
+    MagicOnionNotMatchingYetGlobalBattle = 900320
     # [Description("認証に失敗しました。")]
     MagicOnionAuthenticationFail = 1000000
     # [Description("プレイヤーの情報を見つけません。")]
