@@ -4018,18 +4018,6 @@ class SubSetType(_Enum):
     DefaultLive2D = 1
     # [Description("Live2D後の基本演出")]
     DefaultLive2DAfter = 2
-    # [Description("Live2Dのセット内連撃（5回未満）の演出")]
-    # [Obsolete]
-    UnderFiveLive2DInSubSet = 3
-    # [Description("Live2D後のセット内連撃（5回未満）の演出")]
-    # [Obsolete]
-    UnderFiveLive2DAfterInSubSet = 4
-    # [Description("Live2Dのセット内連撃（5回以上）の演出")]
-    # [Obsolete]
-    AboveFourLive2DInSubSet = 5
-    # [Description("Live2D後のセット内連撃（5回以上）の演出")]
-    # [Obsolete]
-    AboveFourLive2DAfterInSubSet = 6
     # [Description("Live2Dのセット外連撃（5回未満）の演出")]
     UnderFiveLive2DOutOfSubSet = 7
     # [Description("Live2D後のセット外連撃（5回未満）の演出")]
