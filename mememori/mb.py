@@ -239,6 +239,35 @@ class BoardRankMB(MasterBookBase):
     # [PropertyOrder(5)]
     QuestLotteryInfoListId: int = 0
 
+# [Description("書庫整理お手伝い派遣")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class BookSortAssistanceMB(MasterBookBase):
+    # [Description("書庫整理イベントID")]
+    # [PropertyOrder(1)]
+    BookSortEventId: int = 0
+    # [Description("お手伝い派遣終了日時")]
+    # [PropertyOrder(2)]
+    EndTime: str = ""
+    # [Description("パック購入先遷移ID")]
+    # [PropertyOrder(3)]
+    ShopTabId: int = 0
+    # [Description("パック商品ID")]
+    # [PropertyOrder(4)]
+    ShopProductDefaultId: int = 0
+    # [Description("レアリティ別獲得グレード数リスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(5)]
+    BookSortAssistanceRewardGradeList: list[BookSortAssistanceRewardGrade] = _field(default_factory=list["BookSortAssistanceRewardGrade"])
+    # [Description("お手伝いレベル制御リスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(6)]
+    BookSortAssistanceLvList: list[BookSortAssistanceLv] = _field(default_factory=list["BookSortAssistanceLv"])
+    # [Description("追加クエスト枠解放キャラ指定リスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(7)]
+    BookSortAddAssistanceConditionList: list[BookSortAddAssistanceCondition] = _field(default_factory=list["BookSortAddAssistanceCondition"])
+
 # [Description("書庫整理ボーナスフロア報酬")]
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -263,6 +292,13 @@ class BookSortEventMB(MasterBookBase):
     # [Description("時間タイプ")]
     # [PropertyOrder(1)]
     StartEndTimeZoneType: _StartEndTimeZoneType = _field(default_factory=lambda: _StartEndTimeZoneType())
+    # [Description("当たり抽選係数Cリスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(10)]
+    LotteryWinCoefficientListC: list[WinningLotteryCoefficient] = _field(default_factory=list["WinningLotteryCoefficient"])
+    # [Description("アイコン表示箇所")]
+    # [PropertyOrder(11)]
+    MypageIconDisplayLocationType: _MypageIconDisplayLocationType = _field(default_factory=lambda: _MypageIconDisplayLocationType())
     # [Description("開始日時")]
     # [PropertyOrder(2)]
     StartTime: str = ""
@@ -281,9 +317,14 @@ class BookSortEventMB(MasterBookBase):
     # [Description("ボーナスフロア個別設定")]
     # [PropertyOrder(7)]
     BonusFloorList: list[int] = _field(default_factory=list["int"])
-    # [Description("アイコン表示箇所")]
+    # [Description("当たり抽選係数Aリスト")]
+    # [Nest(False, 0)]
     # [PropertyOrder(8)]
-    MypageIconDisplayLocationType: _MypageIconDisplayLocationType = _field(default_factory=lambda: _MypageIconDisplayLocationType())
+    LotteryWinCoefficientListA: list[WinningLotteryCoefficient] = _field(default_factory=list["WinningLotteryCoefficient"])
+    # [Description("当たり抽選係数Bリスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(9)]
+    LotteryWinCoefficientListB: list[WinningLotteryCoefficient] = _field(default_factory=list["WinningLotteryCoefficient"])
 
 # [Description("ボスデータ")]
 # [MessagePackObject(True)]

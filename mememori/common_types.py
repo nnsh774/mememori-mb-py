@@ -142,6 +142,8 @@ class ItemType(_Enum):
     SweepstakesTicket = 47
     # [Description("グループ投票チケット")]
     GroupVotingTicket = 48
+    # [Description("お手伝い派遣追加アイテム")]
+    BookSortEventAddAssistanceItem = 49
     # [Description("イベント交換所アイテム")]
     EventExchangePlaceItem = 50
     # [Description("シンクロハンマー")]
@@ -428,6 +430,49 @@ class BoardRankConditionInfo():
     TotalRequireCount: int = 0
 
 # [MessagePackObject(True)]
+_CharacterRarityFlags = CharacterRarityFlags
+@_dataclass(slots=True)
+class BookSortAssistanceRewardGrade():
+    # [Description("キャラレアリティ")]
+    CharacterRarityFlags: _Flags[_CharacterRarityFlags] = _field(default_factory=lambda: _Flags["_CharacterRarityFlags"]([]))
+    # [Description("グレード")]
+    Grade: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class BookSortAssistanceLv():
+    # [Description("お手伝いレベル")]
+    AssistanceLv: int = 0
+    # [Description("基本お手伝い枠数")]
+    BaseAssistanceCount: int = 0
+    # [Description("一括派遣解放")]
+    IsAvailableBulkDispatch: bool = False
+    # [Description("達成グレード数ごとの報酬アイテム数量")]
+    ItemCountList: list[int] = _field(default_factory=list["int"])
+    # [Description("クエスト最大完了タイム")]
+    MaxRequiredTime: str = ""
+    # [Description("出現クエストグレード数")]
+    QuestGrade: int = 0
+    # [Description("出現クエスト表示名")]
+    QuestNameKey: str = ""
+    # [Description("必要派遣回数")]
+    RequiredDispatchCount: int = 0
+    # [Description("報酬アイテムのアイテムid")]
+    RewardItemId: int = 0
+    # [Description("報酬アイテムのアイテムtype")]
+    RewardItemType: ItemType = _field(default_factory=lambda: ItemType())
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class BookSortAddAssistanceCondition():
+    # [Description("対象キャラID")]
+    CharacterId: int = 0
+    # [Description("対象レアリティ")]
+    CharacterRarityFlags: _Flags[_CharacterRarityFlags] = _field(default_factory=lambda: _Flags["_CharacterRarityFlags"]([]))
+    # [Description("対象ガチャID")]
+    GachaCaseId: int = 0
+
+# [MessagePackObject(True)]
 @_dataclass(slots=True)
 class BookSortBonusFloorSelectItems():
     EndMaxClearQuestId: int = 0
@@ -443,6 +488,12 @@ class StartEndTimeZoneType(_Enum):
     LocalStartJstEnd = 1
     JstStartLocalEnd = 10
     JstStartJstEnd = 11
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class WinningLotteryCoefficient():
+    CellThreshold: int = 0
+    Coefficient: int = 0
 
 # [Description("マイページアイコン表示場所タイプ")]
 class MypageIconDisplayLocationType(_Enum):
@@ -3075,139 +3126,112 @@ class StartEndTime():
 class ApiRequestBase():
     pass
 
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class BookSortAssistanceQuestStart():
+    # [Description("お手伝い派遣クエストGUID")]
+    UserBookSortAssistanceQuestGuid: str = ""
+    # [Description("派遣キャラクターGUID")]
+    UserCharacterGuid: str = ""
+
 @_dataclass(slots=True)
 class ApiResponseBase():
     pass
 
+class BookSortAssistanceQuestStatusType(_Enum):
+    # [Description("不明")]
+    None_ = 0
+    # [Description("報酬未受取")]
+    NotReceived = 1
+    # [Description("未派遣")]
+    NotDispatched = 2
+    # [Description("未解放")]
+    Locked = 3
+    # [Description("派遣中")]
+    Dispatched = 4
+    # [Description("報酬受取済み")]
+    Received = 5
+
 # [MessagePackObject(True)]
+_BookSortAssistanceQuestStatusType = BookSortAssistanceQuestStatusType
 @_dataclass(slots=True)
-class UserCharacterInfo():
+class UserBookSortAssistanceQuest():
+    # [Description("状態")]
+    BookSortAssistanceQuestStatusType: _BookSortAssistanceQuestStatusType = _field(default_factory=lambda: _BookSortAssistanceQuestStatusType())
+    # [Description("派遣キャラクターID")]
     CharacterId: int = 0
-    Exp: int = 0
+    # [Description("派遣キャラクターレアリティ")]
+    CharacterRarityFlags: _Flags[_CharacterRarityFlags] = _field(default_factory=lambda: _Flags["_CharacterRarityFlags"]([]))
+    # [Description("派遣完了時間")]
+    DispatchEndLocalTimeStamp: int = 0
+    # [Description("グレード")]
+    Grade: int = 0
+    # [Description("GUID")]
     Guid: str = ""
-    IsLocked: bool = False
-    Level: int = 0
-    PlayerId: int = 0
-    RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
-    SubLevel: int = 0
-
-# [Description("フレンド状態種別")]
-class FriendStatusType(_Enum):
-    # [Description("初期値")]
-    None_ = 0
-    # [Description("フレンドでない")]
-    Stranger = 1
-    # [Description("フレンド")]
-    Friend = 2
-    # [Description("フレンド申請中")]
-    Applying = 3
-    # [Description("承認待ち")]
-    Receive = 4
-
-class IComparable(_Protocol):
-    pass
-
-class IFormattable(_Protocol):
-    pass
-
-# [IsReadOnly]
-# [Serializable]
-@_dataclass(slots=True)
-class TimeSpan():
-    MaxValue: _timedelta = _field(default_factory=lambda: _timedelta())
-    MinValue: _timedelta = _field(default_factory=lambda: _timedelta())
-    Zero: _timedelta = _field(default_factory=lambda: _timedelta())
-
-class PlayerGuildPositionType(_Enum):
-    None_ = 0
-    # [Description("マスター")]
-    Leader = 1
-    # [Description("ベテラン")]
-    Veteran = 2
-    # [Description("メンバー")]
-    Member = 3
-    # [Description("サブマスター")]
-    SubLeader = 4
-    # [Description("指揮官")]
-    Commander = 5
-
-class PlayerRecruitType(_Enum):
-    # [Description("希望しない")]
-    None_ = 0
-    # [Description("希望する")]
-    Desire = 1
-    # [Description("興味がある")]
-    Interested = 2
-
-class PlayerCommunicationPolicyType(_Enum):
-    # [Description("指定なし")]
-    None_ = 0
-    # [Description("無言")]
-    Silence = 1
-    # [Description("たまに雑談")]
-    SmallTalk = 2
-    # [Description("おしゃべり")]
-    Conversationalist = 3
-
-class PlayerEventPolicyType(_Enum):
-    # [Description("指定なし")]
-    None_ = 0
-    # [Description("マイペース")]
-    Freely = 1
-    # [Description("毎日参加")]
-    Daily = 2
-    # [Description("上位を狙う")]
-    Seriously = 3
-
-class PlayerGuildBattlePolicyType(_Enum):
-    # [Description("指定なし")]
-    None_ = 0
-    # [Description("リアル優先")]
-    Freely = 1
-    # [Description("そこそこ貢献")]
-    Leisurely = 2
-    # [Description("上位を狙う")]
-    Seriously = 3
+    # [Description("クエスト表示名")]
+    NameKey: str = ""
+    # [Description("報酬")]
+    RewardItem: UserItem = _field(default_factory=lambda: UserItem())
 
 # [MessagePackObject(True)]
-_PlayerGuildPositionType = PlayerGuildPositionType
-_PlayerRecruitType = PlayerRecruitType
 @_dataclass(slots=True)
-class PlayerInfo():
-    BackgroundCharacterId: int = 0
-    BattleLeagueRankingToday: int = 0
-    BattlePower: int = 0
-    ChatBalloonItemId: int = 0
-    Comment: str = ""
-    CommunicationPolicyType: PlayerCommunicationPolicyType = _field(default_factory=lambda: PlayerCommunicationPolicyType())
-    CumulativeGuildFame: int = 0
-    DeckUserCharacterInfoList: list[UserCharacterInfo] = _field(default_factory=list["UserCharacterInfo"])
-    EventPolicyType: PlayerEventPolicyType = _field(default_factory=lambda: PlayerEventPolicyType())
-    FriendStatus: FriendStatusType = _field(default_factory=lambda: FriendStatusType())
-    GuildBattlePolicyType: PlayerGuildBattlePolicyType = _field(default_factory=lambda: PlayerGuildBattlePolicyType())
-    GuildId: int = 0
-    GuildJoinRequestUtcTimeStamp: int = 0
-    GuildJoinTimeStamp: int = 0
-    GuildName: str = ""
-    GuildPeriodTotalFame: int = 0
-    IsAllowedFriendBattle: bool = False
-    IsBlock: bool = False
-    IsRecruit: bool = False
-    LastLoginTime: _timedelta = _field(default_factory=lambda: _timedelta())
-    LatestQuestId: int = 0
-    LatestTowerBattleQuestId: int = 0
-    LegendLeaguePointToday: int = 0
-    LegendLeagueRankingToday: int = 0
-    LocalRaidBattlePower: int = 0
-    MainCharacterIconId: int = 0
-    NpcNameKey: str = ""
-    PlayerGuildPositionType: _PlayerGuildPositionType = _field(default_factory=lambda: _PlayerGuildPositionType())
-    PlayerId: int = 0
-    PlayerLevel: int = 0
-    PlayerName: str = ""
-    PlayerRecruitType: _PlayerRecruitType = _field(default_factory=lambda: _PlayerRecruitType())
-    PrevLegendLeagueClass: LegendLeagueClassType = _field(default_factory=lambda: LegendLeagueClassType())
-    RecruitGuildMemberTimeStamp: int = 0
+class UserBookSortAssistanceLv():
+    AssistanceLv: int = 0
+    DispatchCount: int = 0
+
+class IUserSyncApiResponse(_Protocol):
+    pass
+
+# [Description("アイテム所持上限確認済みクエスト")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class ConfirmedItemQuest():
+    # [Description("アイテムタイプ")]
+    # [PropertyOrder(1)]
+    ItemType: _ItemType = _field(default_factory=lambda: _ItemType())
+    # [Description("アイテムId")]
+    # [PropertyOrder(2)]
+    ItemId: int = 0
+    # [Description("クエストID")]
+    # [PropertyOrder(3)]
+    QuestId: int = 0
+
+class SnsType(_Enum):
+    None_ = 0
+    OrtegaId = 1
+    AppleId = 2
+    Twitter = 3
+    Facebook = 4
+    GameCenter = 5
+    GooglePlay = 6
+    Dmm = 7
+    Steam = 8
+
+class LockEquipmentDeckType(_Enum):
+    None_ = 0
+    League = 1
+    GuildTowerLatestBattle = 2
+    GuildTowerLatestRegistration = 3
+    GuildBattle = 4
+    ElementTowerBlue = 5
+    ElementTowerRed = 6
+    ElementTowerGreen = 7
+    ElementTowerYellow = 8
+
+# [Description("装備固定誘導ダイアログタイプ")]
+class LeadLockEquipmentDialogType(_Enum):
+    # [Description("ダイアログ表示無し")]
+    None_ = 0
+    # [Description("新キャラ入手")]
+    NewCharacter = 1
+    # [Description("最後の更新またはキャンセルから一定期間経過")]
+    PassedDays = 2
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class LeadLockEquipmentDialogInfo():
+    DialogType: LeadLockEquipmentDialogType = _field(default_factory=lambda: LeadLockEquipmentDialogType())
+    PassedDays: int = 0
 
 class IReadOnlyEquipment(_Protocol):
     pass
@@ -3257,6 +3281,824 @@ class UserEquipmentDtoInfo():
     SphereId4: int = 0
     # [Description("宝石スロット解放数")]
     SphereUnlockedCount: int = 0
+
+# [Description("プライバシー設定タイプ")]
+class PrivacySettingsType(_Enum):
+    # [Description("未設定")]
+    None_ = 0
+    # [Description("オプトイン")]
+    OptIn = 1
+    # [Description("オプトアウト")]
+    OptOut = 2
+
+# [Description("ゲリラパックランク種別")]
+class ShopGuerrillaPackRankType(_Enum):
+    # [Description("120")]
+    Rank1 = 1
+    # [Description("610")]
+    Rank2 = 2
+    # [Description("980")]
+    Rank3 = 3
+    # [Description("1480")]
+    Rank4 = 4
+    # [Description("3060")]
+    Rank5 = 5
+    # [Description("6100")]
+    Rank6 = 6
+    # [Description("12000")]
+    Rank7 = 7
+
+# [Description("ゲリラパック解放タイプ")]
+class ShopGuerrillaPackOpenType(_Enum):
+    # [Description("メインステージ")]
+    AutoBattle = 1
+    # [Description("プレイヤーランク")]
+    PlayerRank = 2
+    # [Description("無窮の塔")]
+    TowerBattle = 3
+    # [Description("藍の塔")]
+    TowerBattleBlue = 4
+    # [Description("紅の塔")]
+    TowerBattleRed = 5
+    # [Description("翠の塔")]
+    TowerBattleGreen = 6
+    # [Description("黄の塔")]
+    TowerBattleYellow = 7
+    # [Description("属性の塔の最低クリア階層")]
+    TowerBattleMinClearElementTower = 8
+
+# [MessagePackObject(True)]
+_ShopGuerrillaPackOpenType = ShopGuerrillaPackOpenType
+_ShopGuerrillaPackRankType = ShopGuerrillaPackRankType
+@_dataclass(slots=True)
+class ShopProductGuerrillaPack():
+    # [Description("ダイアログベース画像ID")]
+    DialogImageId: int = 0
+    # [Description("割引率")]
+    DiscountRate: int = 0
+    # [Description("終了日時")]
+    EndTime: int = 0
+    # [Description("商品名キー")]
+    NameKey: str = ""
+    # [Description("ProductIdのDictonary")]
+    ProductIdDict: dict[DeviceType, str] = _field(default_factory=dict["DeviceType", "str"])
+    # [Description("ゲリラパックID")]
+    ShopGuerrillaPackId: int = 0
+    # [Description("ゲリラパック解放タイプ")]
+    ShopGuerrillaPackOpenType: _ShopGuerrillaPackOpenType = _field(default_factory=lambda: _ShopGuerrillaPackOpenType())
+    # [Description("ゲリラパック解放値")]
+    ShopGuerrillaPackOpenValue: int = 0
+    # [Description("ランク種別")]
+    ShopGuerrillaPackRankType: _ShopGuerrillaPackRankType = _field(default_factory=lambda: _ShopGuerrillaPackRankType())
+    # [Description("商品値段")]
+    ShopProductPrice: int = 0
+    # [Description("訴求文言キー")]
+    TextKey: str = ""
+    # [Description("報酬リスト")]
+    UserItemList: list[UserItem] = _field(default_factory=list["UserItem"])
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserBattleBossDtoInfo():
+    BossClearMaxQuestId: int = 0
+    BossLastChallengeTime: int = 0
+    BossTodayUseCurrencyCount: int = 0
+    BossTodayUseTicketCount: int = 0
+    BossTodayWinCount: int = 0
+    IsOpenedNewQuest: bool = False
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserBattleLegendLeagueDtoInfo():
+    AttackSucceededNum: int = 0
+    DefenseSucceededNum: int = 0
+    LegendLeagueLastChallengeTime: int = 0
+    LegendLeagueTodayCount: int = 0
+    LegendLeagueTodayUseCurrencyCount: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserBattlePvpDtoInfo():
+    AttackSucceededNum: int = 0
+    DefenseSucceededNum: int = 0
+    GetTodayDefenseSucceededRewardCount: int = 0
+    MaxRanking: int = 0
+    PvpLastChallengeTime: int = 0
+    PvpTodayCount: int = 0
+    PvpTodayUseCurrencyCount: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserBoxSizeDtoInfo():
+    # [Description("CharacterBoxSizeMBを参照")]
+    CharacterBoxSizeId: int = 0
+    # [Description("プレイヤーID")]
+    PlayerId: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserCharacterBookDtoInfo():
+    CharacterId: int = 0
+    MaxCharacterLevel: int = 0
+    MaxCharacterRarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
+    MaxEpisodeId: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserCharacterCollectionDtoInfo():
+    CharacterCollectionId: int = 0
+    CollectionLevel: int = 0
+
+class ICharacterInfo(_Protocol):
+    pass
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserCharacterDtoInfo():
+    CharacterId: int = 0
+    Exp: int = 0
+    Guid: str = ""
+    IsLocked: bool = False
+    Level: int = 0
+    PlayerId: int = 0
+    RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserCharacterRankReleaseDtoInfo():
+    # [Description("CharacterMBのID")]
+    CharacterId: int = 0
+    # [Description("プレイヤーID")]
+    PlayerId: int = 0
+
+# [Description("デッキを使用したコンテンツ")]
+class DeckUseContentType(_Enum):
+    None_ = 0
+    # [Description("放置")]
+    Auto = 1
+    # [Description("ボスバトル")]
+    Boss = 2
+    # [Description("無窮の塔")]
+    Infinite = 3
+    # [Description("時空の洞窟")]
+    DungeonBattle = 4
+    # [Description("幻影の神殿")]
+    LocalRaid = 5
+    # [Description("バトルリーグ（攻撃）")]
+    BattleLeagueOffense = 6
+    # [Description("バトルリーグ（防御）")]
+    BattleLeagueDefense = 7
+    # [Description("レジェンドリーグ（攻撃）")]
+    LegendLeagueOffense = 8
+    # [Description("レジェンドリーグ（防御）")]
+    LegendLeagueDefense = 9
+    # [Description("ギルドハント")]
+    GuildHunt = 10
+    # [Description("愁（しゅう）の塔")]
+    BlueTower = 11
+    # [Description("業（ごう）の塔")]
+    RedTower = 12
+    # [Description("心（しん）の塔")]
+    GreenTower = 13
+    # [Description("渇（かつ）の塔")]
+    YellowTower = 14
+    # [Description("模擬戦（攻撃）")]
+    FriendBattleOffense = 15
+    # [Description("模擬戦（防御）")]
+    FriendBattleDefense = 16
+    # [Description("レンタルレイド")]
+    RentalRaid = 17
+    # [Description("ギルドバトル")]
+    GuildBattle = 1000
+    # [Description("グランドバトル")]
+    GrandBattle = 2000
+
+# [MessagePackObject(True)]
+_DeckUseContentType = DeckUseContentType
+@_dataclass(slots=True)
+class UserDeckDtoInfo():
+    CharacterId1: int = 0
+    CharacterId2: int = 0
+    CharacterId3: int = 0
+    CharacterId4: int = 0
+    CharacterId5: int = 0
+    DeckBattlePower: int = 0
+    DeckNo: int = 0
+    DeckUseContentType: _DeckUseContentType = _field(default_factory=lambda: _DeckUseContentType())
+    UserCharacterGuid1: str = ""
+    UserCharacterGuid2: str = ""
+    UserCharacterGuid3: str = ""
+    UserCharacterGuid4: str = ""
+    UserCharacterGuid5: str = ""
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserEquipmentStatusDtoInfo():
+    LastResetCountUpdateTime: int = 0
+    SynchroMaxPossessionCount: int = 0
+    SynchroMissionRewardedCount: int = 0
+    UseResetCount: int = 0
+
+# [Description("ミッション状態種別")]
+class MissionStatusType(_Enum):
+    # [Description("未解放")]
+    Locked = 0
+    # [Description("進行中")]
+    Progress = 1
+    # [Description("未受取")]
+    NotReceived = 2
+    # [Description("獲得済")]
+    Received = 3
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserFriendMissionDtoInfo():
+    AchievementType: MissionAchievementType = _field(default_factory=lambda: MissionAchievementType())
+    FriendCampaignId: int = 0
+    MissionStatusHistory: dict[MissionStatusType, list[int]] = _field(default_factory=dict["MissionStatusType", "list[int]"])
+    ProgressCount: int = 0
+
+# [Description("誘導タイプ")]
+class GuidanceType(_Enum):
+    # [Description("なし")]
+    None_ = 0
+    # [Description("勧誘設定")]
+    RecruitSetting = 1
+    # [Description("ギルド加入")]
+    GuildJoining = 2
+    # [Description("勧誘設定")]
+    RecruitSetting2 = 3
+    # [Description("ワールド誘導")]
+    WorldGuidance = 4
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserItemDtoInfo():
+    ItemCount: int = 0
+    ItemId: int = 0
+    ItemType: _ItemType = _field(default_factory=lambda: _ItemType())
+    PlayerId: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserLevelLinkDtoInfo():
+    BuyFrameCount: int = 0
+    IsPartyMode: bool = False
+    MemberMaxCount: int = 0
+    PartyLevel: int = 0
+    PartyMaxLevel: int = 0
+    PartySubLevel: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserLevelLinkMemberDtoInfo():
+    CellNo: int = 0
+    CharacterId: int = 0
+    UnavailableTime: int = 0
+    UserCharacterGuid: str = ""
+
+# [Description("ミッションクリア個数/累計貢献メダル報酬状態種別")]
+class MissionActivityRewardStatusType(_Enum):
+    # [Description("未解放")]
+    Locked = 0
+    # [Description("獲得可能")]
+    NotReceived = 1
+    # [Description("獲得済")]
+    Received = 2
+
+# [MessagePackObject(True)]
+_MissionGroupType = MissionGroupType
+@_dataclass(slots=True)
+class UserMissionActivityDtoInfo():
+    MissionGroupType: _MissionGroupType = _field(default_factory=lambda: _MissionGroupType())
+    PlayerId: int = 0
+    ProgressCount: int = 0
+    RewardStatusDict: dict[int, MissionActivityRewardStatusType] = _field(default_factory=dict["int", "MissionActivityRewardStatusType"])
+
+# [MessagePackObject(True)]
+_MissionType = MissionType
+@_dataclass(slots=True)
+class UserMissionDtoInfo():
+    AchievementType: MissionAchievementType = _field(default_factory=lambda: MissionAchievementType())
+    MissionStatusHistory: dict[MissionStatusType, list[int]] = _field(default_factory=dict["MissionStatusType", "list[int]"])
+    MissionType: _MissionType = _field(default_factory=lambda: _MissionType())
+    PlayerId: int = 0
+    ProgressCount: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserMissionOccurrenceHistoryDtoInfo():
+    BeginnerStartTime: int = 0
+    ComebackStartTime: int = 0
+    DailyStartTime: int = 0
+    LimitedMissionMBId: int = 0
+    LimitedStartTime: int = 0
+    NewCharacterMissionMBId: int = 0
+    WeeklyStartTime: int = 0
+
+# [Description("通知タイプ")]
+class NotificationType(_Enum):
+    None_ = 0
+    # [Description("新しいガチャ権を入手")]
+    NewGachaTicket = 1
+    # [Description("セレクトリストに登録しているキャラのレアリティが最大")]
+    MaxRarityInSelectList = 2
+    # [Description("セレクトリストに登録できるキャラが追加")]
+    NewCharacterInSelectList = 3
+    # [Description("無料ガチャ回数が残っている")]
+    GachaFreeCount = 4
+    # [Description("ギルドレイドコンテンツ挑戦/解放可能")]
+    GuildRaidAvailable = 5
+    # [Description("新しいギルド加入申請")]
+    NewGuildJoinRequest = 6
+    # [Description("ギルドレベルアップ")]
+    GuildLevelUp = 7
+    # [Description("Local GVG 受け取り可能なギルドバトル報酬がある場合")]
+    LocalGvgReward = 8
+    # [Description("Global GVG 受け取り可能なギルドバトル報酬がある場合")]
+    GlobalGvgReward = 9
+    # [Description("新しく登録された回収アイテムがある場合")]
+    NewRetrieveItem = 10
+    # [Description("ギルドミッションの受け取り可能な報酬がある場合")]
+    ReceivableGuildMission = 11
+    # [Description("新しいギルドメンバー勧誘がある場合")]
+    NewRecruitGuildMember = 12
+    # [Description("ギルドツリーミッションの受取可能な報酬がある場合")]
+    ReceivableGuildTowerMission = 13
+    # [Description("人気投票のミッションで報酬を受け取れるものがあるとき")]
+    ReceivablePopularityVoteMission = 14
+    # [Description("投票報酬で報酬を受け取れるものがあるとき")]
+    ReceivablePopularityVoteReward = 15
+    # [Description("投票チケットを1枚以上もっているかつ、現在予選期間内で、その予選中に一度も投票したことが無い時")]
+    NotPopularityVoteInPreliminary = 16
+    # [Description("投票チケットを1枚以上もっているかつ、現在本選期間内で、その本選中に一度も投票したことが無い時")]
+    NotPopularityVoteInFinal = 17
+    # [Description("投票チケットを1枚以上もっているかつ、予選本選いずれかの期間内で、その日一度も投票してない時")]
+    NotPopularityVoteOnDay = 18
+    # [Description("予選中間発表の結果が出た時（現在時間が予選中間発表日時を過ぎると表示）")]
+    PreliminaryInterimResult = 19
+    # [Description("予選結果が出た時（現在時間が本選開始日時を過ぎると表示）")]
+    PreliminaryResult = 20
+    # [Description("本選中間発表の結果が出た時（現在時間が本選中間発表日時を過ぎると表示）")]
+    FinalInterimResult = 21
+    # [Description("本選結果が出た時（現在時間が結果発表開始日時を過ぎると表示）")]
+    FinalResult = 22
+    # [Description("進化解放可能")]
+    RankRelease = 23
+    # [Description("新規獲得したチャットふきだしがあるとき")]
+    ChatBalloon = 24
+    # [Description("外部サイトへ遷移できるマイページアイコンをタップしていない場合")]
+    MyPageIconWithOuterWebSite = 25
+    # [Description("外部サイトへ遷移できるイベントポータルをタップしていない場合")]
+    EventPortalWithOuterWebSite = 26
+    # [Description("動画を一度も再生していない場合（マイページから遷移される動画）")]
+    PlayVideoFromMyPage = 27
+    # [Description("動画を一度も再生していない場合（イベントポータルから遷移される動画）")]
+    PlayVideoFromEventPortal = 28
+    # [Description("人気投票 グループ投票チケットを1枚以上もっているかつ、予選本選いずれかの期間内で、その日一度も投票してない時")]
+    NotPopularityVoteGroupOnDay = 29
+
+# [MessagePackObject(True)]
+_NotificationType = NotificationType
+@_dataclass(slots=True)
+class UserNotificationDtoInfo():
+    NotificationType: _NotificationType = _field(default_factory=lambda: _NotificationType())
+    Value: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserOpenContentDtoInfo():
+    OpenContentId: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserFriendBattleOptionDtoInfo():
+    DefenseDeckComment: str = ""
+    IsAllowedBattle: bool = False
+    IsUsedBattleLeagueDeckInDefenseParty: bool = False
+    IsUsedLockEquipmentInDefenseParty: bool = False
+    IsUsedLockEquipmentInOffenseParty: bool = False
+    PlayerId: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserRankUpPrioritySettingDtoInfo():
+    Enabled: bool = False
+    PlayerId: int = 0
+    SettingDict: dict[ElementType, list[int]] = _field(default_factory=dict["ElementType", "list[int]"])
+
+class PlayerRecruitType(_Enum):
+    # [Description("希望しない")]
+    None_ = 0
+    # [Description("希望する")]
+    Desire = 1
+    # [Description("興味がある")]
+    Interested = 2
+
+class PlayerCommunicationPolicyType(_Enum):
+    # [Description("指定なし")]
+    None_ = 0
+    # [Description("無言")]
+    Silence = 1
+    # [Description("たまに雑談")]
+    SmallTalk = 2
+    # [Description("おしゃべり")]
+    Conversationalist = 3
+
+class PlayerEventPolicyType(_Enum):
+    # [Description("指定なし")]
+    None_ = 0
+    # [Description("マイペース")]
+    Freely = 1
+    # [Description("毎日参加")]
+    Daily = 2
+    # [Description("上位を狙う")]
+    Seriously = 3
+
+class PlayerGuildBattlePolicyType(_Enum):
+    # [Description("指定なし")]
+    None_ = 0
+    # [Description("リアル優先")]
+    Freely = 1
+    # [Description("そこそこ貢献")]
+    Leisurely = 2
+    # [Description("上位を狙う")]
+    Seriously = 3
+
+# [MessagePackObject(True)]
+_PlayerRecruitType = PlayerRecruitType
+@_dataclass(slots=True)
+class UserRecruitGuildMemberSettingDtoInfo():
+    CommunicationPolicyType: PlayerCommunicationPolicyType = _field(default_factory=lambda: PlayerCommunicationPolicyType())
+    EventPolicyType: PlayerEventPolicyType = _field(default_factory=lambda: PlayerEventPolicyType())
+    GuildBattlePolicyType: PlayerGuildBattlePolicyType = _field(default_factory=lambda: PlayerGuildBattlePolicyType())
+    GuildLvLowerLimit: int = 0
+    GuildPowerLowerLimit: int = 0
+    PlayerRecruitType: _PlayerRecruitType = _field(default_factory=lambda: _PlayerRecruitType())
+    UpdateLocalTime: int = 0
+
+# [Description("ユーザー設定データ")]
+class PlayerSettingsType(_Enum):
+    # [Description("不明")]
+    None_ = 0
+    # [Description("レアリティNのキャラ自動販売")]
+    AutoSellRarityNCharacter = 1
+    # [Description("週間トピックスのバトルリーグ掲載許可")]
+    WeeklyTopicsBattleLeaguePostingPermission = 2
+    # [Description("週間トピックスのレジェンドリーグ掲載許可")]
+    WeeklyTopicsLegendLeaguePostingPermission = 3
+    # [Description("ギルドバトルパーティ保護")]
+    GuildBattlePartyMemberProtect = 4
+
+# [MessagePackObject(True)]
+_PlayerSettingsType = PlayerSettingsType
+@_dataclass(slots=True)
+class UserSettingsDtoInfo():
+    PlayerId: int = 0
+    PlayerSettingsType: _PlayerSettingsType = _field(default_factory=lambda: _PlayerSettingsType())
+    Value: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserShopAchievementPackDtoInfo():
+    ChapterId: int = 0
+    ShopAchievementPackId: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserShopFirstChargeBonusDtoInfo():
+    IsReceivedDay1: bool = False
+    IsReceivedDay2: bool = False
+    IsReceivedDay3: bool = False
+    OpenTimeStamp: int = 0
+
+class IComparable(_Protocol):
+    pass
+
+class IFormattable(_Protocol):
+    pass
+
+# [CLSCompliant(False)]
+class IConvertible(_Protocol):
+    pass
+
+class ISerializable(_Protocol):
+    pass
+
+# [IsReadOnly]
+# [Serializable]
+@_dataclass(slots=True)
+class DateTime():
+    MaxValue: _datetime = _datetime.min
+    MinValue: _datetime = _datetime.min
+    UnixEpoch: _datetime = _datetime.min
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserShopFreeGrowthPackDtoInfo():
+    IsBuff: bool = False
+    PlayerId: int = 0
+    ReceiveDateTime: _datetime = _datetime.min
+    ShopGrowthPackId: int = 0
+    ShopProductGrowthPackId: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserShopMonthlyBoostDtoInfo():
+    ExpirationTimeStamp: int = 0
+    IsPrePurchased: bool = False
+    LatestReceivedDate: int = 0
+    PlayerId: int = 0
+    PrevReceivedDate: int = 0
+    ShopMonthlyBoostId: int = 0
+
+# [MessagePackObject(True)]
+_DeviceType = DeviceType
+@_dataclass(slots=True)
+class UserShopSubscriptionDtoInfo():
+    DeviceType: _DeviceType = _field(default_factory=lambda: _DeviceType())
+    ExpirationTimeStamp: int = 0
+    ProductId: str = ""
+    TransactionId: str = ""
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserStatusDtoInfo():
+    BackgroundCharacterId: int = 0
+    Birthday: int = 0
+    BoardRank: int = 0
+    Comment: str = ""
+    CreateAt: int = 0
+    Exp: int = 0
+    FavoriteCharacterId1: int = 0
+    FavoriteCharacterId2: int = 0
+    FavoriteCharacterId3: int = 0
+    FavoriteCharacterId4: int = 0
+    FavoriteCharacterId5: int = 0
+    IsAlreadyChangedName: bool = False
+    IsFirstVisitGuildAtDay: bool = False
+    IsReachBattleLeagueTop50: bool = False
+    LastLeaveGuildTime: int = 0
+    LastLoginTime: int = 0
+    LastLvUpTime: int = 0
+    MainCharacterIconId: int = 0
+    Name: str = ""
+    PlayerId: int = 0
+    PreviousLoginTime: int = 0
+    Rank: int = 0
+    Vip: int = 0
+    VipExp: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserSyncGvgDeckDtoInfo():
+    EndIntervalTimestamp: int = 0
+    PlayerId: int = 0
+    SelectedDeckType: DeckUseContentType = _field(default_factory=lambda: DeckUseContentType())
+
+# [MessagePackObject(True)]
+_TowerType = TowerType
+@_dataclass(slots=True)
+class UserTowerBattleDtoInfo():
+    BoughtCount: int = 0
+    LastUpdateTime: int = 0
+    MaxTowerBattleId: int = 0
+    PlayerId: int = 0
+    TodayBattleCount: int = 0
+    TodayBoughtCountByCurrency: int = 0
+    TodayClearNewFloorCount: int = 0
+    TowerType: _TowerType = _field(default_factory=lambda: _TowerType())
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserVipGiftDtoInfo():
+    PlayerId: int = 0
+    VipGiftId: int = 0
+    VipLv: int = 0
+
+class ChatType(_Enum):
+    SvS = 0
+    World = 1
+    Guild = 2
+    Private = 3
+    Friend = 4
+    Block = 5
+
+# [Description("チャット背景タイプ")]
+class ChatBackgroundType(_Enum):
+    # [Description("デフォルト")]
+    Default = 0
+    # [Description("ベースの色変更(暖色)＋とけねこワンポイント")]
+    Warm = 1
+    # [Description("ベースの色変更(寒色)＋タイトルロゴ")]
+    Cool = 2
+    # [Description("とけねこスタンプちりばめ")]
+    Studded = 3
+    # [Description("メメモリ調の筆跡やインクのにじみのようなデザイン")]
+    Smear = 4
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class ChatSettingData():
+    BackgroundTypeDictionary: dict[ChatType, ChatBackgroundType] = _field(default_factory=dict["ChatType", "ChatBackgroundType"])
+    BalloonItemId: int = 0
+    FontSize: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class ChatShopItem():
+    # [Description("ChatShopMBのId")]
+    ChatShopId: int = 0
+    # [Description("消費アイテム")]
+    ConsumeItem: UserItem = _field(default_factory=lambda: UserItem())
+    # [Description("獲得アイテム")]
+    GiveItem: UserItem = _field(default_factory=lambda: UserItem())
+    # [Description("並び順")]
+    SortOrder: int = 0
+
+# [MessagePackObject(True)]
+_ChatSettingData = ChatSettingData
+_LegendLeagueClassType = LegendLeagueClassType
+_PrivacySettingsType = PrivacySettingsType
+_UserBattleBossDtoInfo = UserBattleBossDtoInfo
+_UserBattleLegendLeagueDtoInfo = UserBattleLegendLeagueDtoInfo
+_UserBattlePvpDtoInfo = UserBattlePvpDtoInfo
+_UserBoxSizeDtoInfo = UserBoxSizeDtoInfo
+_UserEquipmentStatusDtoInfo = UserEquipmentStatusDtoInfo
+_UserFriendBattleOptionDtoInfo = UserFriendBattleOptionDtoInfo
+_UserItemDtoInfo = UserItemDtoInfo
+_UserLevelLinkDtoInfo = UserLevelLinkDtoInfo
+_UserMissionOccurrenceHistoryDtoInfo = UserMissionOccurrenceHistoryDtoInfo
+_UserRankUpPrioritySettingDtoInfo = UserRankUpPrioritySettingDtoInfo
+_UserRecruitGuildMemberSettingDtoInfo = UserRecruitGuildMemberSettingDtoInfo
+_UserShopFirstChargeBonusDtoInfo = UserShopFirstChargeBonusDtoInfo
+_UserStatusDtoInfo = UserStatusDtoInfo
+_UserSyncGvgDeckDtoInfo = UserSyncGvgDeckDtoInfo
+@_dataclass(slots=True)
+class UserSyncData():
+    BlockPlayerIdList: list[int] = _field(default_factory=list["int"])
+    CanJoinTodayLegendLeague: bool | None = None
+    ChatEmoticonList: list[ChatShopItem] = _field(default_factory=list["ChatShopItem"])
+    ChatSettingData: _ChatSettingData = _field(default_factory=lambda: _ChatSettingData())
+    ClearedTutorialIdList: list[int] = _field(default_factory=list["int"])
+    ConfirmedItemQuestList: list[ConfirmedItemQuest] = _field(default_factory=list["ConfirmedItemQuest"])
+    CreateUserIdTimestamp: int | None = None
+    CreateWorldLocalTimeStamp: int | None = None
+    DataLinkageMap: dict[SnsType, bool] = _field(default_factory=dict["SnsType", "bool"])
+    DeletedCharacterGuidList: list[str] = _field(default_factory=list["str"])
+    DeletedEquipmentGuidList: list[str] = _field(default_factory=list["str"])
+    ExistPurchasableOneWeekLimitedPack: bool | None = None
+    ExistUnconfirmedRetrieveItemHistory: bool | None = None
+    ExistVipDailyGift: bool | None = None
+    FriendBattleFavoritePlayerIdList: list[int] = _field(default_factory=list["int"])
+    GivenItemCountInfoList: list[UserItem] = _field(default_factory=list["UserItem"])
+    GuildJoinLimitCount: int | None = None
+    HasTransitionedPanelPictureBook: bool | None = None
+    IsDataLinkage: bool | None = None
+    IsJoinedGlobalGvg: bool | None = None
+    IsJoinedLocalGvg: bool | None = None
+    IsReceivedSnsShareReward: bool | None = None
+    IsRetrievedItem: bool | None = None
+    IsValidContractPrivilege: bool | None = None
+    LatestAnnounceChatRegistrationLocalTimestamp: int | None = None
+    LatestGuildSurveyCreationLocalTimestamp: int | None = None
+    LeadLockEquipmentDialogInfoMap: dict[LockEquipmentDeckType, LeadLockEquipmentDialogInfo] = _field(default_factory=dict["LockEquipmentDeckType", "LeadLockEquipmentDialogInfo"])
+    LegendLeagueClassType: _LegendLeagueClassType | None = None
+    LocalRaidChallengeCount: int | None = None
+    LockedEquipmentCharacterGuidListMap: dict[LockEquipmentDeckType, list[str]] = _field(default_factory=dict["LockEquipmentDeckType", "list[str]"])
+    LockedUserEquipmentDtoInfoListMap: dict[LockEquipmentDeckType, list[UserEquipmentDtoInfo]] = _field(default_factory=dict["LockEquipmentDeckType", "list[UserEquipmentDtoInfo]"])
+    PresentCount: int | None = None
+    PrivacySettingsType: _PrivacySettingsType | None = None
+    ReceivableAchieveRankingRewardIdMap: dict[RankingDataType, int] = _field(default_factory=dict["RankingDataType", "int"])
+    ReceivedAchieveRankingRewardIdList: list[int] = _field(default_factory=list["int"])
+    ReceivedAutoBattleRewardLastTime: int | None = None
+    ReceivedGuildTowerFloorRewardIdList: list[int] = _field(default_factory=list["int"])
+    ReleaseLockEquipmentCooldownTimeStampMap: dict[LockEquipmentDeckType, int] = _field(default_factory=dict["LockEquipmentDeckType", "int"])
+    ShopCurrencyMissionProgressMap: dict[str, int] = _field(default_factory=dict["str", "int"])
+    ShopProductGuerrillaPackList: list[ShopProductGuerrillaPack] = _field(default_factory=list["ShopProductGuerrillaPack"])
+    StripePoint: int = 0
+    TimeServerId: int | None = None
+    TodayChallengeFriendBattleCount: int | None = None
+    TreasureChestCeilingCountMap: dict[int, int] = _field(default_factory=dict["int", "int"])
+    UserBattleBossDtoInfo: _UserBattleBossDtoInfo = _field(default_factory=lambda: _UserBattleBossDtoInfo())
+    UserBattleLegendLeagueDtoInfo: _UserBattleLegendLeagueDtoInfo = _field(default_factory=lambda: _UserBattleLegendLeagueDtoInfo())
+    UserBattlePvpDtoInfo: _UserBattlePvpDtoInfo = _field(default_factory=lambda: _UserBattlePvpDtoInfo())
+    UserBoxSizeDtoInfo: _UserBoxSizeDtoInfo = _field(default_factory=lambda: _UserBoxSizeDtoInfo())
+    UserCharacterBookDtoInfos: list[UserCharacterBookDtoInfo] = _field(default_factory=list["UserCharacterBookDtoInfo"])
+    UserCharacterCollectionDtoInfos: list[UserCharacterCollectionDtoInfo] = _field(default_factory=list["UserCharacterCollectionDtoInfo"])
+    UserCharacterDtoInfos: list[UserCharacterDtoInfo] = _field(default_factory=list["UserCharacterDtoInfo"])
+    UserCharacterRankReleaseDtoInfos: list[UserCharacterRankReleaseDtoInfo] = _field(default_factory=list["UserCharacterRankReleaseDtoInfo"])
+    UserDeckDtoInfos: list[UserDeckDtoInfo] = _field(default_factory=list["UserDeckDtoInfo"])
+    UserEquipmentDtoInfos: list[UserEquipmentDtoInfo] = _field(default_factory=list["UserEquipmentDtoInfo"])
+    UserEquipmentStatusDtoInfo: _UserEquipmentStatusDtoInfo = _field(default_factory=lambda: _UserEquipmentStatusDtoInfo())
+    UserFriendBattleOptionDtoInfo: _UserFriendBattleOptionDtoInfo = _field(default_factory=lambda: _UserFriendBattleOptionDtoInfo())
+    UserFriendMissionDtoInfoList: list[UserFriendMissionDtoInfo] = _field(default_factory=list["UserFriendMissionDtoInfo"])
+    UserGuidanceTimeMap: dict[GuidanceType, int] = _field(default_factory=dict["GuidanceType", "int"])
+    UserItemDtoInfo: list[_UserItemDtoInfo] = _field(default_factory=list["_UserItemDtoInfo"])
+    UserLevelLinkDtoInfo: _UserLevelLinkDtoInfo = _field(default_factory=lambda: _UserLevelLinkDtoInfo())
+    UserLevelLinkMemberDtoInfos: list[UserLevelLinkMemberDtoInfo] = _field(default_factory=list["UserLevelLinkMemberDtoInfo"])
+    UserMissionActivityDtoInfos: list[UserMissionActivityDtoInfo] = _field(default_factory=list["UserMissionActivityDtoInfo"])
+    UserMissionDtoInfos: list[UserMissionDtoInfo] = _field(default_factory=list["UserMissionDtoInfo"])
+    UserMissionOccurrenceHistoryDtoInfo: _UserMissionOccurrenceHistoryDtoInfo = _field(default_factory=lambda: _UserMissionOccurrenceHistoryDtoInfo())
+    UserNotificationDtoInfoInfos: list[UserNotificationDtoInfo] = _field(default_factory=list["UserNotificationDtoInfo"])
+    UserOpenContentDtoInfos: list[UserOpenContentDtoInfo] = _field(default_factory=list["UserOpenContentDtoInfo"])
+    UserRankUpPrioritySettingDtoInfo: _UserRankUpPrioritySettingDtoInfo = _field(default_factory=lambda: _UserRankUpPrioritySettingDtoInfo())
+    UserRecruitGuildMemberSettingDtoInfo: _UserRecruitGuildMemberSettingDtoInfo = _field(default_factory=lambda: _UserRecruitGuildMemberSettingDtoInfo())
+    UserSettingsDtoInfoList: list[UserSettingsDtoInfo] = _field(default_factory=list["UserSettingsDtoInfo"])
+    UserShopAchievementPackDtoInfos: list[UserShopAchievementPackDtoInfo] = _field(default_factory=list["UserShopAchievementPackDtoInfo"])
+    UserShopFirstChargeBonusDtoInfo: _UserShopFirstChargeBonusDtoInfo = _field(default_factory=lambda: _UserShopFirstChargeBonusDtoInfo())
+    UserShopFreeGrowthPackDtoInfos: list[UserShopFreeGrowthPackDtoInfo] = _field(default_factory=list["UserShopFreeGrowthPackDtoInfo"])
+    UserShopMonthlyBoostDtoInfos: list[UserShopMonthlyBoostDtoInfo] = _field(default_factory=list["UserShopMonthlyBoostDtoInfo"])
+    UserShopSubscriptionDtoInfos: list[UserShopSubscriptionDtoInfo] = _field(default_factory=list["UserShopSubscriptionDtoInfo"])
+    UserStatusDtoInfo: _UserStatusDtoInfo = _field(default_factory=lambda: _UserStatusDtoInfo())
+    UserSyncGvgDeckDtoInfo: _UserSyncGvgDeckDtoInfo = _field(default_factory=lambda: _UserSyncGvgDeckDtoInfo())
+    UserTowerBattleDtoInfos: list[UserTowerBattleDtoInfo] = _field(default_factory=list["UserTowerBattleDtoInfo"])
+    UserVipGiftDtoInfos: list[UserVipGiftDtoInfo] = _field(default_factory=list["UserVipGiftDtoInfo"])
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserCharacterInfo():
+    CharacterId: int = 0
+    Exp: int = 0
+    Guid: str = ""
+    IsLocked: bool = False
+    Level: int = 0
+    PlayerId: int = 0
+    RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
+    SubLevel: int = 0
+
+# [Description("フレンド状態種別")]
+class FriendStatusType(_Enum):
+    # [Description("初期値")]
+    None_ = 0
+    # [Description("フレンドでない")]
+    Stranger = 1
+    # [Description("フレンド")]
+    Friend = 2
+    # [Description("フレンド申請中")]
+    Applying = 3
+    # [Description("承認待ち")]
+    Receive = 4
+
+# [IsReadOnly]
+# [Serializable]
+@_dataclass(slots=True)
+class TimeSpan():
+    MaxValue: _timedelta = _field(default_factory=lambda: _timedelta())
+    MinValue: _timedelta = _field(default_factory=lambda: _timedelta())
+    Zero: _timedelta = _field(default_factory=lambda: _timedelta())
+
+class PlayerGuildPositionType(_Enum):
+    None_ = 0
+    # [Description("マスター")]
+    Leader = 1
+    # [Description("ベテラン")]
+    Veteran = 2
+    # [Description("メンバー")]
+    Member = 3
+    # [Description("サブマスター")]
+    SubLeader = 4
+    # [Description("指揮官")]
+    Commander = 5
+
+# [MessagePackObject(True)]
+_PlayerGuildPositionType = PlayerGuildPositionType
+@_dataclass(slots=True)
+class PlayerInfo():
+    BackgroundCharacterId: int = 0
+    BattleLeagueRankingToday: int = 0
+    BattlePower: int = 0
+    ChatBalloonItemId: int = 0
+    Comment: str = ""
+    CommunicationPolicyType: PlayerCommunicationPolicyType = _field(default_factory=lambda: PlayerCommunicationPolicyType())
+    CumulativeGuildFame: int = 0
+    DeckUserCharacterInfoList: list[UserCharacterInfo] = _field(default_factory=list["UserCharacterInfo"])
+    EventPolicyType: PlayerEventPolicyType = _field(default_factory=lambda: PlayerEventPolicyType())
+    FriendStatus: FriendStatusType = _field(default_factory=lambda: FriendStatusType())
+    GuildBattlePolicyType: PlayerGuildBattlePolicyType = _field(default_factory=lambda: PlayerGuildBattlePolicyType())
+    GuildId: int = 0
+    GuildJoinRequestUtcTimeStamp: int = 0
+    GuildJoinTimeStamp: int = 0
+    GuildName: str = ""
+    GuildPeriodTotalFame: int = 0
+    IsAllowedFriendBattle: bool = False
+    IsBlock: bool = False
+    IsRecruit: bool = False
+    LastLoginTime: _timedelta = _field(default_factory=lambda: _timedelta())
+    LatestQuestId: int = 0
+    LatestTowerBattleQuestId: int = 0
+    LegendLeaguePointToday: int = 0
+    LegendLeagueRankingToday: int = 0
+    LocalRaidBattlePower: int = 0
+    MainCharacterIconId: int = 0
+    NpcNameKey: str = ""
+    PlayerGuildPositionType: _PlayerGuildPositionType = _field(default_factory=lambda: _PlayerGuildPositionType())
+    PlayerId: int = 0
+    PlayerLevel: int = 0
+    PlayerName: str = ""
+    PlayerRecruitType: _PlayerRecruitType = _field(default_factory=lambda: _PlayerRecruitType())
+    PrevLegendLeagueClass: LegendLeagueClassType = _field(default_factory=lambda: LegendLeagueClassType())
+    RecruitGuildMemberTimeStamp: int = 0
 
 # [MessagePackObject(True)]
 _BaseParameter = BaseParameter
@@ -3362,7 +4204,6 @@ class DungeonBattleInfo():
     UseDungeonRelicCountDict: dict[int, int] = _field(default_factory=dict["int", "int"])
 
 # [MessagePackObject(True)]
-_CharacterRarityFlags = CharacterRarityFlags
 _DungeonBattleInfo = DungeonBattleInfo
 _ElementType = ElementType
 _JobFlags = JobFlags
@@ -4249,748 +5090,6 @@ class WeeklyTopicsShopData():
     ExpirationTimeStamp: int = 0
     TradeShopItemList: list[TradeShopItem] = _field(default_factory=list["TradeShopItem"])
 
-class IUserSyncApiResponse(_Protocol):
-    pass
-
-# [Description("アイテム所持上限確認済みクエスト")]
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class ConfirmedItemQuest():
-    # [Description("アイテムタイプ")]
-    # [PropertyOrder(1)]
-    ItemType: _ItemType = _field(default_factory=lambda: _ItemType())
-    # [Description("アイテムId")]
-    # [PropertyOrder(2)]
-    ItemId: int = 0
-    # [Description("クエストID")]
-    # [PropertyOrder(3)]
-    QuestId: int = 0
-
-class SnsType(_Enum):
-    None_ = 0
-    OrtegaId = 1
-    AppleId = 2
-    Twitter = 3
-    Facebook = 4
-    GameCenter = 5
-    GooglePlay = 6
-    Dmm = 7
-    Steam = 8
-
-class LockEquipmentDeckType(_Enum):
-    None_ = 0
-    League = 1
-    GuildTowerLatestBattle = 2
-    GuildTowerLatestRegistration = 3
-    GuildBattle = 4
-    ElementTowerBlue = 5
-    ElementTowerRed = 6
-    ElementTowerGreen = 7
-    ElementTowerYellow = 8
-
-# [Description("装備固定誘導ダイアログタイプ")]
-class LeadLockEquipmentDialogType(_Enum):
-    # [Description("ダイアログ表示無し")]
-    None_ = 0
-    # [Description("新キャラ入手")]
-    NewCharacter = 1
-    # [Description("最後の更新またはキャンセルから一定期間経過")]
-    PassedDays = 2
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class LeadLockEquipmentDialogInfo():
-    DialogType: LeadLockEquipmentDialogType = _field(default_factory=lambda: LeadLockEquipmentDialogType())
-    PassedDays: int = 0
-
-# [Description("プライバシー設定タイプ")]
-class PrivacySettingsType(_Enum):
-    # [Description("未設定")]
-    None_ = 0
-    # [Description("オプトイン")]
-    OptIn = 1
-    # [Description("オプトアウト")]
-    OptOut = 2
-
-# [Description("ゲリラパックランク種別")]
-class ShopGuerrillaPackRankType(_Enum):
-    # [Description("120")]
-    Rank1 = 1
-    # [Description("610")]
-    Rank2 = 2
-    # [Description("980")]
-    Rank3 = 3
-    # [Description("1480")]
-    Rank4 = 4
-    # [Description("3060")]
-    Rank5 = 5
-    # [Description("6100")]
-    Rank6 = 6
-    # [Description("12000")]
-    Rank7 = 7
-
-# [Description("ゲリラパック解放タイプ")]
-class ShopGuerrillaPackOpenType(_Enum):
-    # [Description("メインステージ")]
-    AutoBattle = 1
-    # [Description("プレイヤーランク")]
-    PlayerRank = 2
-    # [Description("無窮の塔")]
-    TowerBattle = 3
-    # [Description("藍の塔")]
-    TowerBattleBlue = 4
-    # [Description("紅の塔")]
-    TowerBattleRed = 5
-    # [Description("翠の塔")]
-    TowerBattleGreen = 6
-    # [Description("黄の塔")]
-    TowerBattleYellow = 7
-    # [Description("属性の塔の最低クリア階層")]
-    TowerBattleMinClearElementTower = 8
-
-# [MessagePackObject(True)]
-_ShopGuerrillaPackOpenType = ShopGuerrillaPackOpenType
-_ShopGuerrillaPackRankType = ShopGuerrillaPackRankType
-@_dataclass(slots=True)
-class ShopProductGuerrillaPack():
-    # [Description("ダイアログベース画像ID")]
-    DialogImageId: int = 0
-    # [Description("割引率")]
-    DiscountRate: int = 0
-    # [Description("終了日時")]
-    EndTime: int = 0
-    # [Description("商品名キー")]
-    NameKey: str = ""
-    # [Description("ProductIdのDictonary")]
-    ProductIdDict: dict[DeviceType, str] = _field(default_factory=dict["DeviceType", "str"])
-    # [Description("ゲリラパックID")]
-    ShopGuerrillaPackId: int = 0
-    # [Description("ゲリラパック解放タイプ")]
-    ShopGuerrillaPackOpenType: _ShopGuerrillaPackOpenType = _field(default_factory=lambda: _ShopGuerrillaPackOpenType())
-    # [Description("ゲリラパック解放値")]
-    ShopGuerrillaPackOpenValue: int = 0
-    # [Description("ランク種別")]
-    ShopGuerrillaPackRankType: _ShopGuerrillaPackRankType = _field(default_factory=lambda: _ShopGuerrillaPackRankType())
-    # [Description("商品値段")]
-    ShopProductPrice: int = 0
-    # [Description("訴求文言キー")]
-    TextKey: str = ""
-    # [Description("報酬リスト")]
-    UserItemList: list[UserItem] = _field(default_factory=list["UserItem"])
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserBattleBossDtoInfo():
-    BossClearMaxQuestId: int = 0
-    BossLastChallengeTime: int = 0
-    BossTodayUseCurrencyCount: int = 0
-    BossTodayUseTicketCount: int = 0
-    BossTodayWinCount: int = 0
-    IsOpenedNewQuest: bool = False
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserBattleLegendLeagueDtoInfo():
-    AttackSucceededNum: int = 0
-    DefenseSucceededNum: int = 0
-    LegendLeagueLastChallengeTime: int = 0
-    LegendLeagueTodayCount: int = 0
-    LegendLeagueTodayUseCurrencyCount: int = 0
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserBattlePvpDtoInfo():
-    AttackSucceededNum: int = 0
-    DefenseSucceededNum: int = 0
-    GetTodayDefenseSucceededRewardCount: int = 0
-    MaxRanking: int = 0
-    PvpLastChallengeTime: int = 0
-    PvpTodayCount: int = 0
-    PvpTodayUseCurrencyCount: int = 0
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserBoxSizeDtoInfo():
-    # [Description("CharacterBoxSizeMBを参照")]
-    CharacterBoxSizeId: int = 0
-    # [Description("プレイヤーID")]
-    PlayerId: int = 0
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserCharacterBookDtoInfo():
-    CharacterId: int = 0
-    MaxCharacterLevel: int = 0
-    MaxCharacterRarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
-    MaxEpisodeId: int = 0
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserCharacterCollectionDtoInfo():
-    CharacterCollectionId: int = 0
-    CollectionLevel: int = 0
-
-class ICharacterInfo(_Protocol):
-    pass
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserCharacterDtoInfo():
-    CharacterId: int = 0
-    Exp: int = 0
-    Guid: str = ""
-    IsLocked: bool = False
-    Level: int = 0
-    PlayerId: int = 0
-    RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserCharacterRankReleaseDtoInfo():
-    # [Description("CharacterMBのID")]
-    CharacterId: int = 0
-    # [Description("プレイヤーID")]
-    PlayerId: int = 0
-
-# [Description("デッキを使用したコンテンツ")]
-class DeckUseContentType(_Enum):
-    None_ = 0
-    # [Description("放置")]
-    Auto = 1
-    # [Description("ボスバトル")]
-    Boss = 2
-    # [Description("無窮の塔")]
-    Infinite = 3
-    # [Description("時空の洞窟")]
-    DungeonBattle = 4
-    # [Description("幻影の神殿")]
-    LocalRaid = 5
-    # [Description("バトルリーグ（攻撃）")]
-    BattleLeagueOffense = 6
-    # [Description("バトルリーグ（防御）")]
-    BattleLeagueDefense = 7
-    # [Description("レジェンドリーグ（攻撃）")]
-    LegendLeagueOffense = 8
-    # [Description("レジェンドリーグ（防御）")]
-    LegendLeagueDefense = 9
-    # [Description("ギルドハント")]
-    GuildHunt = 10
-    # [Description("愁（しゅう）の塔")]
-    BlueTower = 11
-    # [Description("業（ごう）の塔")]
-    RedTower = 12
-    # [Description("心（しん）の塔")]
-    GreenTower = 13
-    # [Description("渇（かつ）の塔")]
-    YellowTower = 14
-    # [Description("模擬戦（攻撃）")]
-    FriendBattleOffense = 15
-    # [Description("模擬戦（防御）")]
-    FriendBattleDefense = 16
-    # [Description("レンタルレイド")]
-    RentalRaid = 17
-    # [Description("ギルドバトル")]
-    GuildBattle = 1000
-    # [Description("グランドバトル")]
-    GrandBattle = 2000
-
-# [MessagePackObject(True)]
-_DeckUseContentType = DeckUseContentType
-@_dataclass(slots=True)
-class UserDeckDtoInfo():
-    CharacterId1: int = 0
-    CharacterId2: int = 0
-    CharacterId3: int = 0
-    CharacterId4: int = 0
-    CharacterId5: int = 0
-    DeckBattlePower: int = 0
-    DeckNo: int = 0
-    DeckUseContentType: _DeckUseContentType = _field(default_factory=lambda: _DeckUseContentType())
-    UserCharacterGuid1: str = ""
-    UserCharacterGuid2: str = ""
-    UserCharacterGuid3: str = ""
-    UserCharacterGuid4: str = ""
-    UserCharacterGuid5: str = ""
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserEquipmentStatusDtoInfo():
-    LastResetCountUpdateTime: int = 0
-    SynchroMaxPossessionCount: int = 0
-    SynchroMissionRewardedCount: int = 0
-    UseResetCount: int = 0
-
-# [Description("ミッション状態種別")]
-class MissionStatusType(_Enum):
-    # [Description("未解放")]
-    Locked = 0
-    # [Description("進行中")]
-    Progress = 1
-    # [Description("未受取")]
-    NotReceived = 2
-    # [Description("獲得済")]
-    Received = 3
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserFriendMissionDtoInfo():
-    AchievementType: MissionAchievementType = _field(default_factory=lambda: MissionAchievementType())
-    FriendCampaignId: int = 0
-    MissionStatusHistory: dict[MissionStatusType, list[int]] = _field(default_factory=dict["MissionStatusType", "list[int]"])
-    ProgressCount: int = 0
-
-# [Description("誘導タイプ")]
-class GuidanceType(_Enum):
-    # [Description("なし")]
-    None_ = 0
-    # [Description("勧誘設定")]
-    RecruitSetting = 1
-    # [Description("ギルド加入")]
-    GuildJoining = 2
-    # [Description("勧誘設定")]
-    RecruitSetting2 = 3
-    # [Description("ワールド誘導")]
-    WorldGuidance = 4
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserItemDtoInfo():
-    ItemCount: int = 0
-    ItemId: int = 0
-    ItemType: _ItemType = _field(default_factory=lambda: _ItemType())
-    PlayerId: int = 0
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserLevelLinkDtoInfo():
-    BuyFrameCount: int = 0
-    IsPartyMode: bool = False
-    MemberMaxCount: int = 0
-    PartyLevel: int = 0
-    PartyMaxLevel: int = 0
-    PartySubLevel: int = 0
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserLevelLinkMemberDtoInfo():
-    CellNo: int = 0
-    CharacterId: int = 0
-    UnavailableTime: int = 0
-    UserCharacterGuid: str = ""
-
-# [Description("ミッションクリア個数/累計貢献メダル報酬状態種別")]
-class MissionActivityRewardStatusType(_Enum):
-    # [Description("未解放")]
-    Locked = 0
-    # [Description("獲得可能")]
-    NotReceived = 1
-    # [Description("獲得済")]
-    Received = 2
-
-# [MessagePackObject(True)]
-_MissionGroupType = MissionGroupType
-@_dataclass(slots=True)
-class UserMissionActivityDtoInfo():
-    MissionGroupType: _MissionGroupType = _field(default_factory=lambda: _MissionGroupType())
-    PlayerId: int = 0
-    ProgressCount: int = 0
-    RewardStatusDict: dict[int, MissionActivityRewardStatusType] = _field(default_factory=dict["int", "MissionActivityRewardStatusType"])
-
-# [MessagePackObject(True)]
-_MissionType = MissionType
-@_dataclass(slots=True)
-class UserMissionDtoInfo():
-    AchievementType: MissionAchievementType = _field(default_factory=lambda: MissionAchievementType())
-    MissionStatusHistory: dict[MissionStatusType, list[int]] = _field(default_factory=dict["MissionStatusType", "list[int]"])
-    MissionType: _MissionType = _field(default_factory=lambda: _MissionType())
-    PlayerId: int = 0
-    ProgressCount: int = 0
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserMissionOccurrenceHistoryDtoInfo():
-    BeginnerStartTime: int = 0
-    ComebackStartTime: int = 0
-    DailyStartTime: int = 0
-    LimitedMissionMBId: int = 0
-    LimitedStartTime: int = 0
-    NewCharacterMissionMBId: int = 0
-    WeeklyStartTime: int = 0
-
-# [Description("通知タイプ")]
-class NotificationType(_Enum):
-    None_ = 0
-    # [Description("新しいガチャ権を入手")]
-    NewGachaTicket = 1
-    # [Description("セレクトリストに登録しているキャラのレアリティが最大")]
-    MaxRarityInSelectList = 2
-    # [Description("セレクトリストに登録できるキャラが追加")]
-    NewCharacterInSelectList = 3
-    # [Description("無料ガチャ回数が残っている")]
-    GachaFreeCount = 4
-    # [Description("ギルドレイドコンテンツ挑戦/解放可能")]
-    GuildRaidAvailable = 5
-    # [Description("新しいギルド加入申請")]
-    NewGuildJoinRequest = 6
-    # [Description("ギルドレベルアップ")]
-    GuildLevelUp = 7
-    # [Description("Local GVG 受け取り可能なギルドバトル報酬がある場合")]
-    LocalGvgReward = 8
-    # [Description("Global GVG 受け取り可能なギルドバトル報酬がある場合")]
-    GlobalGvgReward = 9
-    # [Description("新しく登録された回収アイテムがある場合")]
-    NewRetrieveItem = 10
-    # [Description("ギルドミッションの受け取り可能な報酬がある場合")]
-    ReceivableGuildMission = 11
-    # [Description("新しいギルドメンバー勧誘がある場合")]
-    NewRecruitGuildMember = 12
-    # [Description("ギルドツリーミッションの受取可能な報酬がある場合")]
-    ReceivableGuildTowerMission = 13
-    # [Description("人気投票のミッションで報酬を受け取れるものがあるとき")]
-    ReceivablePopularityVoteMission = 14
-    # [Description("投票報酬で報酬を受け取れるものがあるとき")]
-    ReceivablePopularityVoteReward = 15
-    # [Description("投票チケットを1枚以上もっているかつ、現在予選期間内で、その予選中に一度も投票したことが無い時")]
-    NotPopularityVoteInPreliminary = 16
-    # [Description("投票チケットを1枚以上もっているかつ、現在本選期間内で、その本選中に一度も投票したことが無い時")]
-    NotPopularityVoteInFinal = 17
-    # [Description("投票チケットを1枚以上もっているかつ、予選本選いずれかの期間内で、その日一度も投票してない時")]
-    NotPopularityVoteOnDay = 18
-    # [Description("予選中間発表の結果が出た時（現在時間が予選中間発表日時を過ぎると表示）")]
-    PreliminaryInterimResult = 19
-    # [Description("予選結果が出た時（現在時間が本選開始日時を過ぎると表示）")]
-    PreliminaryResult = 20
-    # [Description("本選中間発表の結果が出た時（現在時間が本選中間発表日時を過ぎると表示）")]
-    FinalInterimResult = 21
-    # [Description("本選結果が出た時（現在時間が結果発表開始日時を過ぎると表示）")]
-    FinalResult = 22
-    # [Description("進化解放可能")]
-    RankRelease = 23
-    # [Description("新規獲得したチャットふきだしがあるとき")]
-    ChatBalloon = 24
-    # [Description("外部サイトへ遷移できるマイページアイコンをタップしていない場合")]
-    MyPageIconWithOuterWebSite = 25
-    # [Description("外部サイトへ遷移できるイベントポータルをタップしていない場合")]
-    EventPortalWithOuterWebSite = 26
-    # [Description("動画を一度も再生していない場合（マイページから遷移される動画）")]
-    PlayVideoFromMyPage = 27
-    # [Description("動画を一度も再生していない場合（イベントポータルから遷移される動画）")]
-    PlayVideoFromEventPortal = 28
-    # [Description("人気投票 グループ投票チケットを1枚以上もっているかつ、予選本選いずれかの期間内で、その日一度も投票してない時")]
-    NotPopularityVoteGroupOnDay = 29
-
-# [MessagePackObject(True)]
-_NotificationType = NotificationType
-@_dataclass(slots=True)
-class UserNotificationDtoInfo():
-    NotificationType: _NotificationType = _field(default_factory=lambda: _NotificationType())
-    Value: int = 0
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserOpenContentDtoInfo():
-    OpenContentId: int = 0
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserFriendBattleOptionDtoInfo():
-    DefenseDeckComment: str = ""
-    IsAllowedBattle: bool = False
-    IsUsedBattleLeagueDeckInDefenseParty: bool = False
-    IsUsedLockEquipmentInDefenseParty: bool = False
-    IsUsedLockEquipmentInOffenseParty: bool = False
-    PlayerId: int = 0
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserRankUpPrioritySettingDtoInfo():
-    Enabled: bool = False
-    PlayerId: int = 0
-    SettingDict: dict[ElementType, list[int]] = _field(default_factory=dict["ElementType", "list[int]"])
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserRecruitGuildMemberSettingDtoInfo():
-    CommunicationPolicyType: PlayerCommunicationPolicyType = _field(default_factory=lambda: PlayerCommunicationPolicyType())
-    EventPolicyType: PlayerEventPolicyType = _field(default_factory=lambda: PlayerEventPolicyType())
-    GuildBattlePolicyType: PlayerGuildBattlePolicyType = _field(default_factory=lambda: PlayerGuildBattlePolicyType())
-    GuildLvLowerLimit: int = 0
-    GuildPowerLowerLimit: int = 0
-    PlayerRecruitType: _PlayerRecruitType = _field(default_factory=lambda: _PlayerRecruitType())
-    UpdateLocalTime: int = 0
-
-# [Description("ユーザー設定データ")]
-class PlayerSettingsType(_Enum):
-    # [Description("不明")]
-    None_ = 0
-    # [Description("レアリティNのキャラ自動販売")]
-    AutoSellRarityNCharacter = 1
-    # [Description("週間トピックスのバトルリーグ掲載許可")]
-    WeeklyTopicsBattleLeaguePostingPermission = 2
-    # [Description("週間トピックスのレジェンドリーグ掲載許可")]
-    WeeklyTopicsLegendLeaguePostingPermission = 3
-    # [Description("ギルドバトルパーティ保護")]
-    GuildBattlePartyMemberProtect = 4
-
-# [MessagePackObject(True)]
-_PlayerSettingsType = PlayerSettingsType
-@_dataclass(slots=True)
-class UserSettingsDtoInfo():
-    PlayerId: int = 0
-    PlayerSettingsType: _PlayerSettingsType = _field(default_factory=lambda: _PlayerSettingsType())
-    Value: int = 0
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserShopAchievementPackDtoInfo():
-    ChapterId: int = 0
-    ShopAchievementPackId: int = 0
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserShopFirstChargeBonusDtoInfo():
-    IsReceivedDay1: bool = False
-    IsReceivedDay2: bool = False
-    IsReceivedDay3: bool = False
-    OpenTimeStamp: int = 0
-
-# [CLSCompliant(False)]
-class IConvertible(_Protocol):
-    pass
-
-class ISerializable(_Protocol):
-    pass
-
-# [IsReadOnly]
-# [Serializable]
-@_dataclass(slots=True)
-class DateTime():
-    MaxValue: _datetime = _datetime.min
-    MinValue: _datetime = _datetime.min
-    UnixEpoch: _datetime = _datetime.min
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserShopFreeGrowthPackDtoInfo():
-    IsBuff: bool = False
-    PlayerId: int = 0
-    ReceiveDateTime: _datetime = _datetime.min
-    ShopGrowthPackId: int = 0
-    ShopProductGrowthPackId: int = 0
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserShopMonthlyBoostDtoInfo():
-    ExpirationTimeStamp: int = 0
-    IsPrePurchased: bool = False
-    LatestReceivedDate: int = 0
-    PlayerId: int = 0
-    PrevReceivedDate: int = 0
-    ShopMonthlyBoostId: int = 0
-
-# [MessagePackObject(True)]
-_DeviceType = DeviceType
-@_dataclass(slots=True)
-class UserShopSubscriptionDtoInfo():
-    DeviceType: _DeviceType = _field(default_factory=lambda: _DeviceType())
-    ExpirationTimeStamp: int = 0
-    ProductId: str = ""
-    TransactionId: str = ""
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserStatusDtoInfo():
-    BackgroundCharacterId: int = 0
-    Birthday: int = 0
-    BoardRank: int = 0
-    Comment: str = ""
-    CreateAt: int = 0
-    Exp: int = 0
-    FavoriteCharacterId1: int = 0
-    FavoriteCharacterId2: int = 0
-    FavoriteCharacterId3: int = 0
-    FavoriteCharacterId4: int = 0
-    FavoriteCharacterId5: int = 0
-    IsAlreadyChangedName: bool = False
-    IsFirstVisitGuildAtDay: bool = False
-    IsReachBattleLeagueTop50: bool = False
-    LastLeaveGuildTime: int = 0
-    LastLoginTime: int = 0
-    LastLvUpTime: int = 0
-    MainCharacterIconId: int = 0
-    Name: str = ""
-    PlayerId: int = 0
-    PreviousLoginTime: int = 0
-    Rank: int = 0
-    Vip: int = 0
-    VipExp: int = 0
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserSyncGvgDeckDtoInfo():
-    EndIntervalTimestamp: int = 0
-    PlayerId: int = 0
-    SelectedDeckType: DeckUseContentType = _field(default_factory=lambda: DeckUseContentType())
-
-# [MessagePackObject(True)]
-_TowerType = TowerType
-@_dataclass(slots=True)
-class UserTowerBattleDtoInfo():
-    BoughtCount: int = 0
-    LastUpdateTime: int = 0
-    MaxTowerBattleId: int = 0
-    PlayerId: int = 0
-    TodayBattleCount: int = 0
-    TodayBoughtCountByCurrency: int = 0
-    TodayClearNewFloorCount: int = 0
-    TowerType: _TowerType = _field(default_factory=lambda: _TowerType())
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserVipGiftDtoInfo():
-    PlayerId: int = 0
-    VipGiftId: int = 0
-    VipLv: int = 0
-
-class ChatType(_Enum):
-    SvS = 0
-    World = 1
-    Guild = 2
-    Private = 3
-    Friend = 4
-    Block = 5
-
-# [Description("チャット背景タイプ")]
-class ChatBackgroundType(_Enum):
-    # [Description("デフォルト")]
-    Default = 0
-    # [Description("ベースの色変更(暖色)＋とけねこワンポイント")]
-    Warm = 1
-    # [Description("ベースの色変更(寒色)＋タイトルロゴ")]
-    Cool = 2
-    # [Description("とけねこスタンプちりばめ")]
-    Studded = 3
-    # [Description("メメモリ調の筆跡やインクのにじみのようなデザイン")]
-    Smear = 4
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class ChatSettingData():
-    BackgroundTypeDictionary: dict[ChatType, ChatBackgroundType] = _field(default_factory=dict["ChatType", "ChatBackgroundType"])
-    BalloonItemId: int = 0
-    FontSize: int = 0
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class ChatShopItem():
-    # [Description("ChatShopMBのId")]
-    ChatShopId: int = 0
-    # [Description("消費アイテム")]
-    ConsumeItem: UserItem = _field(default_factory=lambda: UserItem())
-    # [Description("獲得アイテム")]
-    GiveItem: UserItem = _field(default_factory=lambda: UserItem())
-    # [Description("並び順")]
-    SortOrder: int = 0
-
-# [MessagePackObject(True)]
-_ChatSettingData = ChatSettingData
-_LegendLeagueClassType = LegendLeagueClassType
-_PrivacySettingsType = PrivacySettingsType
-_UserBattleBossDtoInfo = UserBattleBossDtoInfo
-_UserBattleLegendLeagueDtoInfo = UserBattleLegendLeagueDtoInfo
-_UserBattlePvpDtoInfo = UserBattlePvpDtoInfo
-_UserBoxSizeDtoInfo = UserBoxSizeDtoInfo
-_UserEquipmentStatusDtoInfo = UserEquipmentStatusDtoInfo
-_UserFriendBattleOptionDtoInfo = UserFriendBattleOptionDtoInfo
-_UserItemDtoInfo = UserItemDtoInfo
-_UserLevelLinkDtoInfo = UserLevelLinkDtoInfo
-_UserMissionOccurrenceHistoryDtoInfo = UserMissionOccurrenceHistoryDtoInfo
-_UserRankUpPrioritySettingDtoInfo = UserRankUpPrioritySettingDtoInfo
-_UserRecruitGuildMemberSettingDtoInfo = UserRecruitGuildMemberSettingDtoInfo
-_UserShopFirstChargeBonusDtoInfo = UserShopFirstChargeBonusDtoInfo
-_UserStatusDtoInfo = UserStatusDtoInfo
-_UserSyncGvgDeckDtoInfo = UserSyncGvgDeckDtoInfo
-@_dataclass(slots=True)
-class UserSyncData():
-    BlockPlayerIdList: list[int] = _field(default_factory=list["int"])
-    CanJoinTodayLegendLeague: bool | None = None
-    ChatEmoticonList: list[ChatShopItem] = _field(default_factory=list["ChatShopItem"])
-    ChatSettingData: _ChatSettingData = _field(default_factory=lambda: _ChatSettingData())
-    ClearedTutorialIdList: list[int] = _field(default_factory=list["int"])
-    ConfirmedItemQuestList: list[ConfirmedItemQuest] = _field(default_factory=list["ConfirmedItemQuest"])
-    CreateUserIdTimestamp: int | None = None
-    CreateWorldLocalTimeStamp: int | None = None
-    DataLinkageMap: dict[SnsType, bool] = _field(default_factory=dict["SnsType", "bool"])
-    DeletedCharacterGuidList: list[str] = _field(default_factory=list["str"])
-    DeletedEquipmentGuidList: list[str] = _field(default_factory=list["str"])
-    ExistPurchasableOneWeekLimitedPack: bool | None = None
-    ExistUnconfirmedRetrieveItemHistory: bool | None = None
-    ExistVipDailyGift: bool | None = None
-    FriendBattleFavoritePlayerIdList: list[int] = _field(default_factory=list["int"])
-    GivenItemCountInfoList: list[UserItem] = _field(default_factory=list["UserItem"])
-    GuildJoinLimitCount: int | None = None
-    HasTransitionedPanelPictureBook: bool | None = None
-    IsDataLinkage: bool | None = None
-    IsJoinedGlobalGvg: bool | None = None
-    IsJoinedLocalGvg: bool | None = None
-    IsReceivedSnsShareReward: bool | None = None
-    IsRetrievedItem: bool | None = None
-    IsValidContractPrivilege: bool | None = None
-    LatestAnnounceChatRegistrationLocalTimestamp: int | None = None
-    LatestGuildSurveyCreationLocalTimestamp: int | None = None
-    LeadLockEquipmentDialogInfoMap: dict[LockEquipmentDeckType, LeadLockEquipmentDialogInfo] = _field(default_factory=dict["LockEquipmentDeckType", "LeadLockEquipmentDialogInfo"])
-    LegendLeagueClassType: _LegendLeagueClassType | None = None
-    LocalRaidChallengeCount: int | None = None
-    LockedEquipmentCharacterGuidListMap: dict[LockEquipmentDeckType, list[str]] = _field(default_factory=dict["LockEquipmentDeckType", "list[str]"])
-    LockedUserEquipmentDtoInfoListMap: dict[LockEquipmentDeckType, list[UserEquipmentDtoInfo]] = _field(default_factory=dict["LockEquipmentDeckType", "list[UserEquipmentDtoInfo]"])
-    PresentCount: int | None = None
-    PrivacySettingsType: _PrivacySettingsType | None = None
-    ReceivableAchieveRankingRewardIdMap: dict[RankingDataType, int] = _field(default_factory=dict["RankingDataType", "int"])
-    ReceivedAchieveRankingRewardIdList: list[int] = _field(default_factory=list["int"])
-    ReceivedAutoBattleRewardLastTime: int | None = None
-    ReceivedGuildTowerFloorRewardIdList: list[int] = _field(default_factory=list["int"])
-    ReleaseLockEquipmentCooldownTimeStampMap: dict[LockEquipmentDeckType, int] = _field(default_factory=dict["LockEquipmentDeckType", "int"])
-    ShopCurrencyMissionProgressMap: dict[str, int] = _field(default_factory=dict["str", "int"])
-    ShopProductGuerrillaPackList: list[ShopProductGuerrillaPack] = _field(default_factory=list["ShopProductGuerrillaPack"])
-    StripePoint: int = 0
-    TimeServerId: int | None = None
-    TodayChallengeFriendBattleCount: int | None = None
-    TreasureChestCeilingCountMap: dict[int, int] = _field(default_factory=dict["int", "int"])
-    UserBattleBossDtoInfo: _UserBattleBossDtoInfo = _field(default_factory=lambda: _UserBattleBossDtoInfo())
-    UserBattleLegendLeagueDtoInfo: _UserBattleLegendLeagueDtoInfo = _field(default_factory=lambda: _UserBattleLegendLeagueDtoInfo())
-    UserBattlePvpDtoInfo: _UserBattlePvpDtoInfo = _field(default_factory=lambda: _UserBattlePvpDtoInfo())
-    UserBoxSizeDtoInfo: _UserBoxSizeDtoInfo = _field(default_factory=lambda: _UserBoxSizeDtoInfo())
-    UserCharacterBookDtoInfos: list[UserCharacterBookDtoInfo] = _field(default_factory=list["UserCharacterBookDtoInfo"])
-    UserCharacterCollectionDtoInfos: list[UserCharacterCollectionDtoInfo] = _field(default_factory=list["UserCharacterCollectionDtoInfo"])
-    UserCharacterDtoInfos: list[UserCharacterDtoInfo] = _field(default_factory=list["UserCharacterDtoInfo"])
-    UserCharacterRankReleaseDtoInfos: list[UserCharacterRankReleaseDtoInfo] = _field(default_factory=list["UserCharacterRankReleaseDtoInfo"])
-    UserDeckDtoInfos: list[UserDeckDtoInfo] = _field(default_factory=list["UserDeckDtoInfo"])
-    UserEquipmentDtoInfos: list[UserEquipmentDtoInfo] = _field(default_factory=list["UserEquipmentDtoInfo"])
-    UserEquipmentStatusDtoInfo: _UserEquipmentStatusDtoInfo = _field(default_factory=lambda: _UserEquipmentStatusDtoInfo())
-    UserFriendBattleOptionDtoInfo: _UserFriendBattleOptionDtoInfo = _field(default_factory=lambda: _UserFriendBattleOptionDtoInfo())
-    UserFriendMissionDtoInfoList: list[UserFriendMissionDtoInfo] = _field(default_factory=list["UserFriendMissionDtoInfo"])
-    UserGuidanceTimeMap: dict[GuidanceType, int] = _field(default_factory=dict["GuidanceType", "int"])
-    UserItemDtoInfo: list[_UserItemDtoInfo] = _field(default_factory=list["_UserItemDtoInfo"])
-    UserLevelLinkDtoInfo: _UserLevelLinkDtoInfo = _field(default_factory=lambda: _UserLevelLinkDtoInfo())
-    UserLevelLinkMemberDtoInfos: list[UserLevelLinkMemberDtoInfo] = _field(default_factory=list["UserLevelLinkMemberDtoInfo"])
-    UserMissionActivityDtoInfos: list[UserMissionActivityDtoInfo] = _field(default_factory=list["UserMissionActivityDtoInfo"])
-    UserMissionDtoInfos: list[UserMissionDtoInfo] = _field(default_factory=list["UserMissionDtoInfo"])
-    UserMissionOccurrenceHistoryDtoInfo: _UserMissionOccurrenceHistoryDtoInfo = _field(default_factory=lambda: _UserMissionOccurrenceHistoryDtoInfo())
-    UserNotificationDtoInfoInfos: list[UserNotificationDtoInfo] = _field(default_factory=list["UserNotificationDtoInfo"])
-    UserOpenContentDtoInfos: list[UserOpenContentDtoInfo] = _field(default_factory=list["UserOpenContentDtoInfo"])
-    UserRankUpPrioritySettingDtoInfo: _UserRankUpPrioritySettingDtoInfo = _field(default_factory=lambda: _UserRankUpPrioritySettingDtoInfo())
-    UserRecruitGuildMemberSettingDtoInfo: _UserRecruitGuildMemberSettingDtoInfo = _field(default_factory=lambda: _UserRecruitGuildMemberSettingDtoInfo())
-    UserSettingsDtoInfoList: list[UserSettingsDtoInfo] = _field(default_factory=list["UserSettingsDtoInfo"])
-    UserShopAchievementPackDtoInfos: list[UserShopAchievementPackDtoInfo] = _field(default_factory=list["UserShopAchievementPackDtoInfo"])
-    UserShopFirstChargeBonusDtoInfo: _UserShopFirstChargeBonusDtoInfo = _field(default_factory=lambda: _UserShopFirstChargeBonusDtoInfo())
-    UserShopFreeGrowthPackDtoInfos: list[UserShopFreeGrowthPackDtoInfo] = _field(default_factory=list["UserShopFreeGrowthPackDtoInfo"])
-    UserShopMonthlyBoostDtoInfos: list[UserShopMonthlyBoostDtoInfo] = _field(default_factory=list["UserShopMonthlyBoostDtoInfo"])
-    UserShopSubscriptionDtoInfos: list[UserShopSubscriptionDtoInfo] = _field(default_factory=list["UserShopSubscriptionDtoInfo"])
-    UserStatusDtoInfo: _UserStatusDtoInfo = _field(default_factory=lambda: _UserStatusDtoInfo())
-    UserSyncGvgDeckDtoInfo: _UserSyncGvgDeckDtoInfo = _field(default_factory=lambda: _UserSyncGvgDeckDtoInfo())
-    UserTowerBattleDtoInfos: list[UserTowerBattleDtoInfo] = _field(default_factory=list["UserTowerBattleDtoInfo"])
-    UserVipGiftDtoInfos: list[UserVipGiftDtoInfo] = _field(default_factory=list["UserVipGiftDtoInfo"])
-
 class IHasSteamTicketApiRequest(_Protocol):
     pass
 
@@ -5019,9 +5118,6 @@ class BanChatInfo():
     AccountSuspensionType: _AccountSuspensionType = _field(default_factory=lambda: _AccountSuspensionType())
     BanChatType: _BanChatType = _field(default_factory=lambda: _BanChatType())
     LiftDateTime: str = ""
-
-class IGuildSyncApiResponse(_Protocol):
-    pass
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -5082,6 +5178,77 @@ class UserFriendDtoInfo():
     IsReceived: bool = False
     OtherPlayerId: int = 0
     RegistrationDate: int = 0
+
+# [Description("誘導タイプ")]
+class WorldGuidanceType(_Enum):
+    # [Description("なし")]
+    None_ = 0
+    # [Description("汎用新ワールド")]
+    GenericNewWorld = 1
+    # [Description("VIPワールド")]
+    VIPWorld = 2
+
+# [Description("ワールド誘導情報")]
+# [MessagePackObject(True)]
+_WorldGuidanceType = WorldGuidanceType
+@_dataclass(slots=True)
+class WorldGuidanceInfo():
+    # [Description("ワールド誘導ダイアログタイプ")]
+    # [PropertyOrder(1)]
+    WorldGuidanceType: _WorldGuidanceType = _field(default_factory=lambda: _WorldGuidanceType())
+    # [Description("誘導先ワールドID")]
+    # [PropertyOrder(2)]
+    WorldGuidanceId: int = 0
+
+class ErrorLogType(_Enum):
+    None_ = 0
+    ErrorCode = 1
+    ClientErrorCode = 2
+
+# [MessagePackObject(True)]
+_ErrorLogType = ErrorLogType
+@_dataclass(slots=True)
+class ErrorLogInfo():
+    ApiName: str = ""
+    ErrorCode: int = 0
+    ErrorLogType: _ErrorLogType = _field(default_factory=lambda: _ErrorLogType())
+    LocalTimeStamp: int = 0
+    Message: str = ""
+
+# [Description("楽曲再生時の操作イベント種別")]
+class MusicPlayerPlayEventType(_Enum):
+    # [Description("不明")]
+    None_ = 0
+    # [Description("シーク操作_操作前の位置")]
+    SeekFrom = 1
+    # [Description("シーク操作_操作後の位置")]
+    SeekTo = 2
+    # [Description("一時停止の位置")]
+    Pause = 3
+    # [Description("再開の位置")]
+    Resume = 4
+    # [Description("次の楽曲にスキップした位置")]
+    Skip = 5
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MusicPlayerPlayEventData():
+    EventType: MusicPlayerPlayEventType = _field(default_factory=lambda: MusicPlayerPlayEventType())
+    Position: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MusicPlayerPlayLogInfo():
+    EventDataList: list[MusicPlayerPlayEventData] = _field(default_factory=list["MusicPlayerPlayEventData"])
+    IsComplete: bool = False
+    IsMySelect: bool = False
+    IsShuffle: bool = False
+    MusicMBId: int = 0
+    PlayListGuid: str = ""
+    TotalPlaySeconds: int = 0
+
+class IGuildSyncApiResponse(_Protocol):
+    pass
 
 class GlobalGvgGroupType(_Enum):
     All = 0
@@ -5168,74 +5335,6 @@ class GuildSyncData():
     JoinGuildTime: int = 0
     MatchingNumber: int = 0
     PlayerGuildPositionType: _PlayerGuildPositionType = _field(default_factory=lambda: _PlayerGuildPositionType())
-
-# [Description("誘導タイプ")]
-class WorldGuidanceType(_Enum):
-    # [Description("なし")]
-    None_ = 0
-    # [Description("汎用新ワールド")]
-    GenericNewWorld = 1
-    # [Description("VIPワールド")]
-    VIPWorld = 2
-
-# [Description("ワールド誘導情報")]
-# [MessagePackObject(True)]
-_WorldGuidanceType = WorldGuidanceType
-@_dataclass(slots=True)
-class WorldGuidanceInfo():
-    # [Description("ワールド誘導ダイアログタイプ")]
-    # [PropertyOrder(1)]
-    WorldGuidanceType: _WorldGuidanceType = _field(default_factory=lambda: _WorldGuidanceType())
-    # [Description("誘導先ワールドID")]
-    # [PropertyOrder(2)]
-    WorldGuidanceId: int = 0
-
-class ErrorLogType(_Enum):
-    None_ = 0
-    ErrorCode = 1
-    ClientErrorCode = 2
-
-# [MessagePackObject(True)]
-_ErrorLogType = ErrorLogType
-@_dataclass(slots=True)
-class ErrorLogInfo():
-    ApiName: str = ""
-    ErrorCode: int = 0
-    ErrorLogType: _ErrorLogType = _field(default_factory=lambda: _ErrorLogType())
-    LocalTimeStamp: int = 0
-    Message: str = ""
-
-# [Description("楽曲再生時の操作イベント種別")]
-class MusicPlayerPlayEventType(_Enum):
-    # [Description("不明")]
-    None_ = 0
-    # [Description("シーク操作_操作前の位置")]
-    SeekFrom = 1
-    # [Description("シーク操作_操作後の位置")]
-    SeekTo = 2
-    # [Description("一時停止の位置")]
-    Pause = 3
-    # [Description("再開の位置")]
-    Resume = 4
-    # [Description("次の楽曲にスキップした位置")]
-    Skip = 5
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class MusicPlayerPlayEventData():
-    EventType: MusicPlayerPlayEventType = _field(default_factory=lambda: MusicPlayerPlayEventType())
-    Position: int = 0
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class MusicPlayerPlayLogInfo():
-    EventDataList: list[MusicPlayerPlayEventData] = _field(default_factory=list["MusicPlayerPlayEventData"])
-    IsComplete: bool = False
-    IsMySelect: bool = False
-    IsShuffle: bool = False
-    MusicMBId: int = 0
-    PlayListGuid: str = ""
-    TotalPlaySeconds: int = 0
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -6970,11 +7069,17 @@ class ErrorCode(_Enum):
     GuildSurveyDifferentGuildSurvey = 491011
     # [Description("魔女の書庫整理情報が見つかりません。")]
     BookSortNotFoundUserBookSortDto = 500000
+    # [Description("お手伝い派遣クエスト情報が見つかりません。")]
+    BookSortNotFoundUserBookSortAssistanceQuestDto = 500001
+    # [Description("お手伝い派遣派遣対象キャラクター情報が見つかりません。")]
+    BookSortNotFoundUserCharacterDto = 500002
+    # [Description("お手伝い派遣情報が見つかりません。")]
+    BookSortNotFoundUserBookSortAssistanceDto = 500003
     # [Description("魔女の書庫整理が解放されていません。")]
     BookSortEventNotOpen = 501000
     # [Description("魔女の書庫整理が開催されていません。")]
     BookSortEventNotHeld = 501001
-    # [Description("すでに当たりマスを解放済みです。")]
+    # [Description("すでに当たりマスと鍵マスを解放済みです。")]
     BookSortEventCurrentFloorAlreadyFinished = 501002
     # [Description("ボーナスフロア報酬が未選択です。")]
     BookSortEventNotSelectBonusFloorReward = 501003
@@ -6982,7 +7087,7 @@ class ErrorCode(_Enum):
     BookSortEventChangeBonusFloorRewardLineup = 501004
     # [Description("ボーナスフロアではないフロアです。")]
     BookSortEventNotBonusFloor = 501005
-    # [Description("まだ当たりマスを解放していません。")]
+    # [Description("まだ当たりマスと鍵マスを解放していません。")]
     BookSortEventCurrentFloorNotFinish = 501006
     # [Description("枠外が解放対象に指定されています。")]
     BookSortEventUnlockOutsideFrame = 501007
@@ -6994,6 +7099,26 @@ class ErrorCode(_Enum):
     BookSortEventNotEnoughLockedGridCellBulkUnlock = 501010
     # [Description("選択できないボーナスフロア報酬です。")]
     BookSortEventNotSelectableBonusFloorReward = 501011
+    # [Description("派遣期間が終了しています。")]
+    BookSortAssistanceNotHeld = 501012
+    # [Description("派遣対象の指定が不正です。")]
+    BookSortAssistanceNotAvailableDispatchQuest = 501013
+    # [Description("一括派遣が解放されていません。")]
+    BookSortAssistanceNotAvailableBulkDispatch = 501014
+    # [Description("派遣できないクエストのステータスです。")]
+    BookSortAssistanceNotAvailableDispatchStatus = 501015
+    # [Description("前日以前に発生したお手伝い派遣クエストです。")]
+    BookSortAssistanceNotSameDayQuest = 501016
+    # [Description("派遣済みのキャラクターIDです。")]
+    BookSortAssistanceAlreadyUsedCharacter = 501017
+    # [Description("報酬獲得出来ないステータスです。")]
+    BookSortAssistanceNotAvailableRewardStatus = 501018
+    # [Description("解放出来るお手伝い派遣枠がありません。")]
+    BookSortAssistanceNotAvailableAddAssistance = 501019
+    # [Description("指定の派遣対象クエストが重複しています。")]
+    BookSortAssistanceDuplicateQuestGuid = 501020
+    # [Description("指定の派遣対象キャラクターが重複しています。")]
+    BookSortAssistanceDuplicateCharacterGuid = 501021
     # [Description("開催中のコラボミッションがありません。")]
     SweepstakesCollabMissionNotHeld = 510000
     # [Description("懸賞対象の時間サーバーではありません。")]
@@ -9255,6 +9380,7 @@ class GachaResultItem():
     GachaLotteryItemListId: int = 0
     Guid: str = ""
     IsCeilingItem: bool = False
+    IsSentPresentBox: bool = False
     ItemCount: int = 0
     ItemId: int = 0
     ItemType: _ItemType = _field(default_factory=lambda: _ItemType())
@@ -9947,6 +10073,7 @@ class BountyQuestStartInfo():
 @_dataclass(slots=True)
 class UnlockedGridCellInfo():
     GridCellIndex: int = 0
+    IsKey: bool = False
     IsWin: bool = False
 
 # [MessagePackObject(True)]
