@@ -146,6 +146,8 @@ class ItemType(_Enum):
     BookSortEventAddAssistanceItem = 49
     # [Description("イベント交換所アイテム")]
     EventExchangePlaceItem = 50
+    # [Description("アイコンエフェクト")]
+    IconEffect = 51
     # [Description("シンクロハンマー")]
     SynchroCellUnlockItem = 52
     # [Description("Stripeクーポン")]
@@ -3841,6 +3843,7 @@ class UserStatusDtoInfo():
     LastLeaveGuildTime: int = 0
     LastLoginTime: int = 0
     LastLvUpTime: int = 0
+    MainCharacterIconEffectId: int = 0
     MainCharacterIconId: int = 0
     Name: str = ""
     PlayerId: int = 0
@@ -3917,6 +3920,13 @@ class ChatShopItem():
     SortOrder: int = 0
 
 # [MessagePackObject(True)]
+@_dataclass(slots=True)
+class CharacterIconEffect():
+    ActiveIconEffectId: int = 0
+    IconId: int = 0
+    UnlockedIconEffectIds: list[int] = _field(default_factory=list["int"])
+
+# [MessagePackObject(True)]
 _ChatSettingData = ChatSettingData
 _LegendLeagueClassType = LegendLeagueClassType
 _PrivacySettingsType = PrivacySettingsType
@@ -3938,6 +3948,7 @@ _UserSyncGvgDeckDtoInfo = UserSyncGvgDeckDtoInfo
 class UserSyncData():
     BlockPlayerIdList: list[int] = _field(default_factory=list["int"])
     CanJoinTodayLegendLeague: bool | None = None
+    CharacterIconEffectList: list[CharacterIconEffect] = _field(default_factory=list["CharacterIconEffect"])
     ChatEmoticonList: list[ChatShopItem] = _field(default_factory=list["ChatShopItem"])
     ChatSettingData: _ChatSettingData = _field(default_factory=lambda: _ChatSettingData())
     ClearedTutorialIdList: list[int] = _field(default_factory=list["int"])
@@ -4015,6 +4026,9 @@ class UserSyncData():
     UserTowerBattleDtoInfos: list[UserTowerBattleDtoInfo] = _field(default_factory=list["UserTowerBattleDtoInfo"])
     UserVipGiftDtoInfos: list[UserVipGiftDtoInfo] = _field(default_factory=list["UserVipGiftDtoInfo"])
 
+class IPlayerIconInfo(_Protocol):
+    pass
+
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class UserCharacterInfo():
@@ -4090,6 +4104,7 @@ class PlayerInfo():
     LegendLeaguePointToday: int = 0
     LegendLeagueRankingToday: int = 0
     LocalRaidBattlePower: int = 0
+    MainCharacterIconEffectId: int = 0
     MainCharacterIconId: int = 0
     NpcNameKey: str = ""
     PlayerGuildPositionType: _PlayerGuildPositionType = _field(default_factory=lambda: _PlayerGuildPositionType())
@@ -4927,10 +4942,14 @@ class BattleCharacterReport():
     UnitId: int = 0
     UnitType: _UnitType = _field(default_factory=lambda: _UnitType())
 
+class IShareCharacterOwnerInfo(_Protocol):
+    pass
+
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class ShareCharacterOwnerInfo():
     CharacterGuid: str = ""
+    MainCharacterIconEffectId: int = 0
     MainCharacterIconId: int = 0
     PlayerName: str = ""
     PrevLegendLeagueClass: LegendLeagueClassType = _field(default_factory=lambda: LegendLeagueClassType())
@@ -5823,6 +5842,8 @@ class ErrorCode(_Enum):
     BattlePvpLegendLeagueIconRewardLimitTimeOver = 132020
     # [Description("アイコン報酬購入済みです")]
     BattlePvpLegendLeagueIconRewardAlreadyBuy = 132021
+    # [Description("アイコン報酬購入上限回数を超えました")]
+    BattlePvpLegendLeagueIconRewardBuyCountLimit = 132022
     # [Description("ユーザーのボスバトルデータがありません")]
     BattleBossUserBountyQuestDtoNotFound = 141000
     # [Description("ユーザーデータがありません")]
@@ -7179,6 +7200,14 @@ class ErrorCode(_Enum):
     ChatShopAlreadyBuyItem = 542001
     # [Description("不正なアイテム種類です。")]
     ChatShopInvalidItemType = 542010
+    # [Description("交換条件を満たしていません。")]
+    IconEffectNotEnoughTradeCondition = 552000
+    # [Description("既に解放済みのアイコンエフェクトです。")]
+    IconEffectAlreadyUnlocked = 552001
+    # [Description("アイコンエフェクトが解放されていません。")]
+    IconEffectLocked = 552002
+    # [Description("アイコンエフェクト設定に失敗しました。")]
+    IconEffectSetFailed = 552010
     # [Description("存在しないTreasureChestです。")]
     ItemOpenTreasureChestIdNotFound = 602004
     # [Description("存在しないTreasureChestです。")]
@@ -7600,6 +7629,8 @@ class TowerBattleClearPartyInfo():
     Floor: int = 0
     # [Description("プレイヤーアイコン枠情報")]
     LegendLeagueClass: LegendLeagueClassType = _field(default_factory=lambda: LegendLeagueClassType())
+    # [Description("メインアイコンエフェクト")]
+    MainCharacterIconEffectId: int = 0
     # [Description("メインアイコンキャラクター")]
     MainCharacterIconId: int = 0
     # [Description("クリアしたプレイヤーID")]
@@ -8401,6 +8432,7 @@ class ShareCharacterInfo():
     ElementType: _ElementType = _field(default_factory=lambda: _ElementType())
     Guid: str = ""
     Level: int = 0
+    MainCharacterIconEffectId: int = 0
     MainCharacterIconId: int = 0
     PlayerName: str = ""
     PrevLegendLeagueClass: LegendLeagueClassType = _field(default_factory=lambda: LegendLeagueClassType())
@@ -8913,6 +8945,7 @@ class CastleBattleHistoryInfo(_ArrayPacked):
 class RecordInfo():
     ContinueCount: int = 0
     GuildName: str = ""
+    IconEffectId: int = 0
     IsNpc: bool = False
     LegendLeagueClassType: _LegendLeagueClassType = _field(default_factory=lambda: _LegendLeagueClassType())
     PlayerCharacterId: int = 0
@@ -8985,6 +9018,13 @@ class CharacterSortType(_Enum):
     # [Description("人気投票")]
     PopularityVote = 10
 
+# [Description("レジェンドリーグアイコン報酬交換制限タイプ")]
+class LegendLeagueIconRewardLimitTradeType(_Enum):
+    # [Description("永続")]
+    Permanent = 1
+    # [Description("月間")]
+    Monthly = 2
+
 # [Description("ジェンドリーグアイコン報酬表示タブタイプ")]
 class LegendLeagueIconRewardDisplayTabType(_Enum):
     # [Description("期間限定タブ")]
@@ -9002,8 +9042,10 @@ class LegendLeagueIconReward():
     Id: int = 0
     IsNew: bool = False
     LimitTradeCount: int = 0
+    LimitTradeType: LegendLeagueIconRewardLimitTradeType = _field(default_factory=lambda: LegendLeagueIconRewardLimitTradeType())
     Order: int = 0
     StartLocalTime: int = 0
+    TradeCount: int = 0
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -9069,6 +9111,12 @@ class TreasureChestItemLotteryRateListInfo():
     CeilingCount: int = 0
     LotteryRateList: list[TreasureChestItemLotteryRate] = _field(default_factory=list["TreasureChestItemLotteryRate"])
     TreasureChestItemId: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class IconEffectInfo():
+    IconEffectId: int = 0
+    IconId: int = 0
 
 class GuildTowerEntryType(_Enum):
     # [Description("登録")]
@@ -9163,6 +9211,7 @@ class GuildRaidDtoInfo():
 @_dataclass(slots=True)
 class GuildRaidUserRankingInfo():
     LegendLeagueClass: LegendLeagueClassType = _field(default_factory=lambda: LegendLeagueClassType())
+    MainCharacterIconEffectId: int = 0
     MainCharacterIconId: int = 0
     PlayerId: int = 0
     PlayerName: str = ""
@@ -9899,6 +9948,8 @@ class ChatInfo(_ArrayPacked):
     ChatBattleInfo: _ChatBattleInfo = _field(default_factory=lambda: _ChatBattleInfo())
     # [Key(14)]
     ChatMusicPlaylistInfo: _ChatMusicPlaylistInfo = _field(default_factory=lambda: _ChatMusicPlaylistInfo())
+    # [Key(15)]
+    IconEffectId: int = 0
 
 class ChatReactionType(_Enum):
     # [Description("リアクションなし")]
@@ -9939,6 +9990,7 @@ class AnnounceChatInfo(_ArrayPacked):
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class ReactionPlayerInfo():
+    IconEffectId: int = 0
     IconId: int = 0
     LegendLeagueClassType: _LegendLeagueClassType = _field(default_factory=lambda: _LegendLeagueClassType())
     PlayerName: str = ""
@@ -10138,6 +10190,8 @@ class ClearPartyInfo():
     DeckBattlePower: int = 0
     # [Description("プレイヤーアイコン枠情報")]
     LegendLeagueClass: LegendLeagueClassType = _field(default_factory=lambda: LegendLeagueClassType())
+    # [Description("メインアイコンエフェクト")]
+    MainCharacterIconEffectId: int = 0
     # [Description("メインアイコンキャラクター")]
     MainCharacterIconId: int = 0
     # [Description("クリアしたプレイヤーID")]
@@ -10229,6 +10283,7 @@ class WarningMessageInfo():
 @_dataclass(slots=True)
 class PlayerDataInfo():
     CharacterId: int = 0
+    IconEffectId: int = 0
     LastLoginTime: int = 0
     LegendLeagueClass: LegendLeagueClassType = _field(default_factory=lambda: LegendLeagueClassType())
     Name: str = ""
