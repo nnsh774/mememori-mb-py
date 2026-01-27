@@ -7458,6 +7458,8 @@ class ErrorCode(_Enum):
     MagicOnionOverCastleMemoMessageMaxLength = 1002020
     # [Description("既に他のメンバーにより、拠点メモがリセット済みです。")]
     MagicOnionAlreadyResetCastleMemo = 1002021
+    # [Description("作戦時間が終了しているため布告できません。")]
+    MagicOnionEndDeclarationTime = 1002022
     # [Description("プッシュ通知対象外の端末です。")]
     PushNotificationNotSupportedDeviceType = 4000000
     # [Description("プッシュ通知の登録に必要な情報が取得できません。")]
@@ -9532,6 +9534,8 @@ class EventPortalBannerInfo():
     EndTimeStamp: int = 0
     # [Description("EventBannerMBのID")]
     EventBannerId: int = 0
+    # [Description("イベント挑戦終了日時")]
+    EventChallengeEndTimeStamp: int = 0
     # [Description("アイコン名")]
     IconStringKey: str = ""
     # [Description("バッジを点灯させるか")]
