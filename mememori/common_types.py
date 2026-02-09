@@ -2674,6 +2674,8 @@ class PassiveTrigger(_Enum):
     NextCheckReceiveDamage = 44
     # [Description("敵死亡時（条件なし）")]
     AlwaysEnemyDead = 45
+    # [Description("与バフ解除時")]
+    EnemyRemoveBuff = 46
     # [Description("敵が攻撃した時")]
     EnemyAttack = 50
     # [Description("被致命的ダメージ時回復")]
@@ -3170,6 +3172,8 @@ class UserBookSortAssistanceQuest():
     Grade: int = 0
     # [Description("GUID")]
     Guid: str = ""
+    # [Description("枠解放演出フラグ")]
+    IsUnlockEffect: bool = False
     # [Description("クエスト表示名")]
     NameKey: str = ""
     # [Description("報酬")]
