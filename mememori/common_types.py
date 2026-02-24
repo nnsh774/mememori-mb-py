@@ -659,6 +659,8 @@ class TimelineType(_Enum):
     Memory = 4
     MyPageQlipha = 5
     Monologue = 6
+    SkillSp = 7
+    SkillSpQlipha = 8
 
 # [MessagePackObject(True)]
 _TimelineType = TimelineType
