@@ -3996,6 +3996,7 @@ class UserSyncData():
     StripePoint: int = 0
     TimeServerId: int | None = None
     TodayChallengeFriendBattleCount: int | None = None
+    TotalPoint: int | None = None
     TreasureChestCeilingCountMap: dict[int, int] = _field(default_factory=dict["int", "int"])
     UserBattleBossDtoInfo: _UserBattleBossDtoInfo = _field(default_factory=lambda: _UserBattleBossDtoInfo())
     UserBattleLegendLeagueDtoInfo: _UserBattleLegendLeagueDtoInfo = _field(default_factory=lambda: _UserBattleLegendLeagueDtoInfo())
