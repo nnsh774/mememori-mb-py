@@ -2489,10 +2489,9 @@ class LuckyChanceMB(MasterBookBase):
     # [Description("時間タイプ")]
     # [PropertyOrder(1)]
     StartEndTimeZoneType: _StartEndTimeZoneType = _field(default_factory=lambda: _StartEndTimeZoneType())
-    # [DateTimeString]
-    # [Description("個人情報が削除可能になる日時")]
+    # [Description("景品選択除外キャラId")]
     # [PropertyOrder(10)]
-    CanDeletePersonalInfoTime: str = ""
+    ExcludeSelectionCharacterIdList: list[int] = _field(default_factory=list["int"])
     # [Description("開始日時")]
     # [PropertyOrder(2)]
     StartTime: str = ""
@@ -2510,12 +2509,93 @@ class LuckyChanceMB(MasterBookBase):
     # [PropertyOrder(6)]
     TitleTextKey: str = ""
     # [Description("同一ユーザーの抽選上限回数")]
-    # [PropertyOrder(8)]
+    # [PropertyOrder(7)]
     LimitUserDrawCount: int = 0
     # [Description("消費アイテム")]
     # [Nest(False, 0)]
-    # [PropertyOrder(9)]
+    # [PropertyOrder(8)]
     ConsumeItem: UserItem = _field(default_factory=lambda: UserItem())
+    # [DateTimeString]
+    # [Description("個人情報が削除可能になる日時")]
+    # [PropertyOrder(9)]
+    CanDeletePersonalInfoTime: str = ""
+
+# [Description("採掘ミニゲーム基礎パラメータ")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MiningQuestBaseParametersMB(MasterBookBase):
+    # [Description("基礎制限時間（秒）")]
+    # [PropertyOrder(1)]
+    BaseLimitTimeSeconds: int = 0
+    # [Description("特殊攻撃種類リスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(10)]
+    SpecialAttackList: list[MiningQuestSpecialAttack] = _field(default_factory=list["MiningQuestSpecialAttack"])
+    # [Description("出現ブロックリスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(11)]
+    BlockList: list[MiningQuestBlock] = _field(default_factory=list["MiningQuestBlock"])
+    # [Description("バーチャルスティックサイズリスト")]
+    # [PropertyOrder(12)]
+    VirtualStickSizeList: list[int] = _field(default_factory=list["int"])
+    # [Description("レイヤーグループ別ブロックサイズ倍率")]
+    # [PropertyOrder(13)]
+    LayerBlockSizePercentList: list[int] = _field(default_factory=list["int"])
+    # [Description("レイヤーグループ別ブロック定員割合weight")]
+    # [PropertyOrder(14)]
+    LayerBlockCapacityWeightList: list[int] = _field(default_factory=list["int"])
+    # [Description("基礎通貨アイテム固定獲得量")]
+    # [PropertyOrder(15)]
+    BaseFixedRewardCount: int = 0
+    # [Description("基礎ブロック生成上限数")]
+    # [PropertyOrder(2)]
+    BaseBlockGenerateLimit: int = 0
+    # [Description("基礎攻撃力")]
+    # [PropertyOrder(3)]
+    BaseAttackPower: int = 0
+    # [Description("基礎攻撃範囲")]
+    # [PropertyOrder(4)]
+    BaseAttackRange: int = 0
+    # [Description("基礎攻撃頻度")]
+    # [PropertyOrder(5)]
+    BaseAttackFrequency: int = 0
+    # [Description("基礎攻撃移動速度")]
+    # [PropertyOrder(6)]
+    BaseAttackSpeed: int = 0
+    # [Description("ブロック接触時移動速度倍率")]
+    # [PropertyOrder(7)]
+    ContactBlockAttackSpeedRatePercent: int = 0
+    # [Description("ブロック再生成抽頻度")]
+    # [PropertyOrder(8)]
+    RespawnBlockIntervalMilliseconds: int = 0
+    # [Description("ブロック再生成抽選枠リスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(9)]
+    BlockRespawnList: list[MiningQuestBlockRespawn] = _field(default_factory=list["MiningQuestBlockRespawn"])
+
+# [Description("採掘ミニゲーム能力強化")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MiningQuestReinforcementMB(MasterBookBase):
+    # [Description("強化名称")]
+    # [PropertyOrder(1)]
+    NameTextKey: str = ""
+    # [Description("強化内容説明テキスト")]
+    # [PropertyOrder(2)]
+    DescriptionTextKey: str = ""
+    # [Description("表示グループ")]
+    # [PropertyOrder(3)]
+    DisplayType: MiningQuestReinforcementDisplayType = _field(default_factory=lambda: MiningQuestReinforcementDisplayType())
+    # [Description("強化パラメータ表示タイプ")]
+    # [PropertyOrder(4)]
+    ParameterDisplayType: MiningQuestReinforcementParameterDisplayType = _field(default_factory=lambda: MiningQuestReinforcementParameterDisplayType())
+    # [Description("アイコン画像ID")]
+    # [PropertyOrder(5)]
+    IconImageId: int = 0
+    # [Description("強化内容リスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(6)]
+    ReinforcementInfoList: list[MiningQuestReinforcementInfo] = _field(default_factory=list["MiningQuestReinforcementInfo"])
 
 # [Description("ミッションクリア個数報酬")]
 # [MessagePackObject(True)]

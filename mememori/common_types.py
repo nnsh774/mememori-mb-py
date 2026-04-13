@@ -150,6 +150,10 @@ class ItemType(_Enum):
     IconEffect = 51
     # [Description("シンクロハンマー")]
     SynchroCellUnlockItem = 52
+    # [Description("リアル景品(C景品)")]
+    RealPrizeC = 54
+    # [Description("絵画集め通貨アイテム")]
+    MiningQuestEventRewardItem = 56
     # [Description("Stripeクーポン")]
     StripeCoupon = 1001
 
@@ -1178,6 +1182,26 @@ class MissionAchievementType(_Enum):
     RentalRaidFirstHalfLimitFormation = 28010100
     # [Description("レンタルレイド 後半レイドステージ制限編成の達成ダメージ")]
     RentalRaidSecondHalfLimitFormation = 28010200
+    # [Description("湖底の絵画集め プレイ数")]
+    MiningQuestPlayCount = 29010100
+    # [Description("湖底の絵画集め 水霊の雫の獲得数")]
+    MiningQuestGetRewardCount = 29010200
+    # [Description("湖底の絵画集め 水霊の雫の消費数")]
+    MiningQuestConsumeRewardCount = 29010300
+    # [Description("湖底の絵画集め 強化回数")]
+    MiningQuestReinforcementCount = 29010400
+    # [Description("湖底の絵画集め 特殊能力の獲得数")]
+    MiningQuestSpecialReinforcementCount = 29010500
+    # [Description("湖底の絵画集め 回収力")]
+    MiningQuestAttackPower = 29010600
+    # [Description("湖底の絵画集め 回収速度")]
+    MiningQuestAttackFrequency = 29010700
+    # [Description("湖底の絵画集め 回収Lv")]
+    MiningQuestCollectionLevel = 29010800
+    # [Description("湖底の絵画集め 最高スコア")]
+    MiningQuestMaxScore = 29010900
+    # [Description("湖底の絵画集め 階級")]
+    MiningQuestGrade = 29011000
 
 # [Description("SNS情報")]
 # [MessagePackObject(True)]
@@ -1287,6 +1311,8 @@ class TransferSpotType(_Enum):
     PlayVideo = 330
     # [Description("レンタルレイド")]
     RentalRaid = 340
+    # [Description("湖底の絵画集め")]
+    MiningQuest = 360
     # [Description("フレンド")]
     Friend = 4
 
@@ -1649,6 +1675,8 @@ class MissionTransitionDestinationType(_Enum):
     PlayVideo = 2701
     # [Description("レンタルレイド")]
     RentalRaid = 2801
+    # [Description("湖底の絵画集め")]
+    MiningQuest = 2901
 
 # [Description("ガチャカテゴリータイプ")]
 class GachaCategoryType(_Enum):
@@ -2143,6 +2171,170 @@ class LocalRaidQuestIdGroup():
     # [PropertyOrder(2)]
     LocalRaidQuestIdWeights: list[LocalRaidQuestIdWeight] = _field(default_factory=list["LocalRaidQuestIdWeight"])
 
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MiningQuestBlockRespawn():
+    # [Description("基礎生成ブロック数")]
+    BaseBlockSpawnCount: int = 0
+    # [Description("基礎抽選確率")]
+    BaseLotteryProbability: int = 0
+    # [Description("ブロック再生成抽選枠のID")]
+    BlockRespawnId: int = 0
+
+class MiningQuestSpecialAttackType(_Enum):
+    # [Description("None")]
+    None_ = 0
+    # [Description("波紋（ランダム位置から出現）")]
+    Random = 1
+    # [Description("波紋（操作地点から出現）")]
+    Specified = 2
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MiningQuestSpecialAttackRange():
+    # [Description("範囲")]
+    Range: int = 0
+    # [Description("範囲段階")]
+    Step: int = 0
+    # [Description("解放段階")]
+    UnlockStage: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MiningQuestSpecialAttack():
+    # [Description("攻撃力参照倍率")]
+    AttackPowerRate: int = 0
+    # [Description("攻撃範囲リスト")]
+    # [Nest(True, 1)]
+    AttackRangeList: list[MiningQuestSpecialAttackRange] = _field(default_factory=list["MiningQuestSpecialAttackRange"])
+    # [Description("基礎クールタイム")]
+    BaseCoolTimeMilliseconds: int = 0
+    # [Description("基礎同時発生数")]
+    BaseSimultaneousCount: int = 0
+    # [Description("初回発動クールタイム")]
+    InitialCoolTimeMilliseconds: int = 0
+    # [Description("再生速度")]
+    RangeExpansionIntervalMilliseconds: int = 0
+    # [Description("特殊攻撃のId")]
+    SpecialAttackId: int = 0
+    # [Description("特殊攻撃タイプ")]
+    Type: MiningQuestSpecialAttackType = _field(default_factory=lambda: MiningQuestSpecialAttackType())
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MiningQuestBlock():
+    # [Description("基礎耐久値")]
+    BaseHealth: int = 0
+    # [Description("基礎抽選weight")]
+    BaseLotteryWeight: int = 0
+    # [Description("スコア")]
+    BaseScore: int = 0
+    # [Description("出現ブロックのId")]
+    BlockId: int = 0
+    # [Description("参照画像ID")]
+    ImageId: int = 0
+    # [Description("ブロック名称")]
+    NameTextKey: str = ""
+    # [Description("報酬アイテム獲得量")]
+    RewardItemCount: int = 0
+    # [Description("ブロックサイズ")]
+    Size: int = 0
+
+class MiningQuestReinforcementDisplayType(_Enum):
+    # [Description("None")]
+    None_ = 0
+    # [Description("通常強化の短冊1枠目（回収力）")]
+    AttackPower = 1
+    # [Description("通常強化の短冊2枠目（回収速度）")]
+    AttackFrequency = 2
+    # [Description("特殊強化")]
+    Special = 3
+
+class MiningQuestReinforcementParameterDisplayType(_Enum):
+    # [Description("None")]
+    None_ = 0
+    # [Description("通常表示")]
+    Normal = 1
+    # [Description("出現する美術品レベル")]
+    SpawnBlockLevel = 101
+    # [Description("美術品リポップ率")]
+    RespawnBlockLevel = 102
+    # [Description("ブロックALv")]
+    BlockALevel = 201
+    # [Description("ブロックBLv")]
+    BlockBLevel = 202
+    # [Description("ブロックCLv")]
+    BlockCLevel = 203
+    # [Description("ブロックDLv")]
+    BlockDLevel = 204
+
+class MiningQuestReinforcementParameterType(_Enum):
+    # [Description("None")]
+    None_ = 0
+    # [Description("攻撃力（加算）")]
+    AttackPowerAddition = 1
+    # [Description("攻撃力（乗算）")]
+    AttackPowerMultiplication = 2
+    # [Description("攻撃頻度（加算）")]
+    AttackFrequency = 3
+    # [Description("攻撃範囲（加算）")]
+    AttackRangeAddition = 4
+    # [Description("攻撃範囲（乗算）")]
+    AttackRangeMultiplication = 5
+    # [Description("移動速度（倍率）")]
+    AttackSpeedRate = 6
+    # [Description("制限時間（加算）")]
+    LimitTimeSeconds = 7
+    # [Description("通貨獲得量（倍率）")]
+    RewardCountRate = 8
+    # [Description("ブロック生成上限（加算）")]
+    BlockGenerateLimit = 9
+    # [Description("各ブロックの抽選比重（加算）")]
+    BlockLotteryWeight = 10
+    # [Description("再生成抽選枠の抽選確率（加算）")]
+    BlockRespawnLotteryProbability = 11
+    # [Description("各抽選枠の生成数（加算）")]
+    BlockRespawnCount = 12
+    # [Description("各ブロックの耐久度（加算）")]
+    BlockHealth = 13
+    # [Description("各ブロックの獲得通貨量（加算）")]
+    BlockRewardCount = 14
+    # [Description("特殊攻撃数（加算）")]
+    SpecialAttackSimultaneousCount = 15
+    # [Description("特殊攻撃範囲（解放段階）")]
+    SpecialAttackRangeStage = 16
+    # [Description("特殊攻撃発生頻度（減算）")]
+    SpecialAttackCoolTimeMillisecondsSubtraction = 17
+    # [Description("獲得上限拡張Lv")]
+    MaxRewardCountLevel = 18
+    # [Description("各ブロックのスコア")]
+    BlockScore = 19
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MiningQuestReinforcementParameter():
+    # [Description("強化パラメータID")]
+    ParameterId: int = 0
+    # [Description("強化パラメータtype")]
+    ParameterType: MiningQuestReinforcementParameterType = _field(default_factory=lambda: MiningQuestReinforcementParameterType())
+    # [Description("表示順")]
+    SortOrder: int = 0
+    # [Description("パラメータ値")]
+    Value: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MiningQuestReinforcementInfo():
+    # [Description("強化レベル")]
+    Level: int = 0
+    # [Description("該当Lvで適用されるパラメータリスト")]
+    # [Nest(True, 1)]
+    ParameterList: list[MiningQuestReinforcementParameter] = _field(default_factory=list["MiningQuestReinforcementParameter"])
+    # [Description("解放条件回収Lv")]
+    RequiredCollectionLevel: int = 0
+    # [Description("必要通貨アイテム数量")]
+    RequiredItemCount: int = 0
+
 # [Description("ミッショングループ")]
 class MissionGroupType(_Enum):
     # [Description("メイン")]
@@ -2173,6 +2365,8 @@ class MissionGroupType(_Enum):
     BookSort = 14
     # [Description("レンタルレイド")]
     RentalRaid = 15
+    # [Description("湖底の絵画集め")]
+    MiningQuest = 17
     # [Description("デイリー追加報酬")]
     DailyBonus = 1000
 
@@ -2269,6 +2463,7 @@ class MissionType(_Enum):
     PopularityVote = 13
     BookSort = 14
     RentalRaid = 15
+    MiningQuest = 17
 
 # [Description("解放されるコマンドの種類")]
 class OpenCommandType(_Enum):
@@ -2444,6 +2639,8 @@ class OpenCommandType(_Enum):
     EquipmentReset = 580
     # [Description("セレクト音楽設定")]
     SelectMusicSetting = 600
+    # [Description("湖底の絵画集め")]
+    MiningQuest = 620
     # [Description("武具固定")]
     LockEquipment = 1000
     # [Description("武具固定(ギルドバトル用)")]
@@ -2678,6 +2875,8 @@ class PassiveTrigger(_Enum):
     AlwaysEnemyDead = 45
     # [Description("与バフ解除時")]
     EnemyRemoveBuff = 46
+    # [Description("自身以外の味方の与デバフ時")]
+    AllyGiveDeBuff = 47
     # [Description("敵が攻撃した時")]
     EnemyAttack = 50
     # [Description("被致命的ダメージ時回復")]
@@ -5649,6 +5848,10 @@ class ErrorCode(_Enum):
     BattleCommonNotFoundActiveSkillConditionFormula = 97009
     # [Description("バトル種別が無効です。")]
     BattleCommonInvalidBattleType = 97010
+    # [Description("効果系スキルの最大スタック値データが存在しません。")]
+    BattleCommonNotFoundStatusSubSubSkillEffectMaxCountFormula = 97011
+    # [Description("効果系スキルのスタックデータが存在しません。")]
+    BattleCommonNotFoundStatusSubSubSkillEffectCountFormula = 97012
     # [Description("ユーザーの放置バトルデータがありません")]
     BattleAutoUserBattleAutoDtoNotFound = 101000
     # [Description("ユーザーのボスバトルデータがありません")]
@@ -7049,6 +7252,16 @@ class ErrorCode(_Enum):
     LuckyChanceContainsHalfWidthCharacterBlockNumber = 471027
     # [Description("建物名を全角で入力してください。")]
     LuckyChanceContainsHalfWidthCharacterBuildingName = 471028
+    # [Description("景品キャラが選択されていません。")]
+    LuckyChanceNotSelectCharacter = 471029
+    # [Description("景品キャラが選択済みです。")]
+    LuckyChanceCharacterAlreadySelected = 471030
+    # [Description("キャラ選択対象の景品がありません。")]
+    LuckyChanceNotExistSelectCharacterPrize = 471031
+    # [Description("住所登録が完了していません。")]
+    LuckyChanceNotRegisteredAddress = 471032
+    # [Description("選択対象外のキャラクターです。")]
+    LuckyChanceExcludeSelectionCharacter = 471033
     # [Description("ユーザーのフレンド情報が見つかりません。")]
     FriendBattleUserFriendDtoNotFound = 480000
     # [Description("ユーザーのステータス情報が見つかりません。")]
@@ -7215,6 +7428,28 @@ class ErrorCode(_Enum):
     IconEffectLocked = 552002
     # [Description("アイコンエフェクト設定に失敗しました。")]
     IconEffectSetFailed = 552010
+    # [Description("MiningQuestのユーザーデータが見つかりません。")]
+    MiningQuestNotFoundUserMiningQuestDto = 560000
+    # [Description("開催中の湖底の絵画集めイベントがありません。")]
+    MiningQuestEventNotHeld = 561000
+    # [Description("進行中の湖底の絵画集めクエストがありません。")]
+    MiningQuestNotProgress = 561001
+    # [Description("まだ制限時間が残っています。")]
+    MiningQuestNotFinished = 561002
+    # [Description("強化先のレベル設定がありません。")]
+    MiningQuestNotExistReinforcementLevel = 561003
+    # [Description("回収レベルが不足しています。")]
+    MiningQuestNotEnoughCollectionLevel = 561004
+    # [Description("日付が更新されています。")]
+    MiningQuestChangeDay = 561005
+    # [Description("解放できるイベントダイヤ購入特典がありません。")]
+    MiningQuestUnavailableUnlockBenefit = 561006
+    # [Description("既に受取済みです。")]
+    MiningQuestAlreadyReceivedDailyReward = 561007
+    # [Description("報酬が受け取れません。")]
+    MiningQuestNotReceivedDailyReward = 561008
+    # [Description("湖底の絵画集めイベントが解放されていません。")]
+    MiningQuestEventNotOpen = 561009
     # [Description("存在しないTreasureChestです。")]
     ItemOpenTreasureChestIdNotFound = 602004
     # [Description("存在しないTreasureChestです。")]
@@ -8764,6 +8999,152 @@ class AcquisitionMissionRewardInfo():
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
+class MiningQuestMinedBlockInfo():
+    # [Description("出現ブロックのId")]
+    BlockId: int = 0
+    # [Description("採掘数")]
+    Count: int = 0
+    # [Description("参照画像ID")]
+    ImageId: int = 0
+
+class MiningQuestGradeType(_Enum):
+    # [Description("None")]
+    None_ = 0
+    # [Description("階級A")]
+    A = 1
+    # [Description("階級B")]
+    B = 2
+    # [Description("階級C")]
+    C = 3
+    # [Description("階級D")]
+    D = 4
+    # [Description("階級E")]
+    E = 5
+    # [Description("階級F")]
+    F = 6
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MiningQuestBenefitInfo():
+    # [Description("解放済みフラグ")]
+    IsUnlocked: bool = False
+    # [Description("特典レベル")]
+    Level: int = 0
+    # [Description("解放ダイヤ数")]
+    RequiredPurchaseCount: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MiningQuestBlockLotteryInfo():
+    # [Description("出現ブロックのID")]
+    BlockId: int = 0
+    # [Description("抽選weight")]
+    LotteryWeight: int = 0
+    # [Description("ブロック名称")]
+    NameTextKey: str = ""
+
+class MiningQuestDailyRewardStatusType(_Enum):
+    # [Description("不明")]
+    None_ = 0
+    # [Description("未解放")]
+    Locked = 1
+    # [Description("未受取")]
+    NotReceived = 2
+    # [Description("受取済み")]
+    Received = 3
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MiningQuestGradeInfo():
+    # [Description("日次報酬リスト")]
+    DailyRewardList: list[UserItem] = _field(default_factory=list["UserItem"])
+    # [Description("日次報酬ステータス")]
+    DailyRewardStatusType: MiningQuestDailyRewardStatusType = _field(default_factory=lambda: MiningQuestDailyRewardStatusType())
+    # [Description("階級タイプ")]
+    GradeType: MiningQuestGradeType = _field(default_factory=lambda: MiningQuestGradeType())
+    # [Description("階級名")]
+    NameTextKey: str = ""
+    # [Description("必要スコア")]
+    Score: int = 0
+    # [Description("シーズン報酬リスト")]
+    SeasonRewardList: list[UserItem] = _field(default_factory=list["UserItem"])
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserMiningQuestReinforcementInfo():
+    # [Description("強化Lv")]
+    Level: int = 0
+    # [Description("強化ID")]
+    MiningQuestReinforcementId: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MiningQuestParameterInfo():
+    # [Description("攻撃頻度（上限1000）")]
+    AttackFrequency: int = 0
+    # [Description("攻撃力（攻撃頻度が1000を超えた分の補正をかけた値）")]
+    AttackPower: int = 0
+    # [Description("攻撃範囲")]
+    AttackRange: int = 0
+    # [Description("攻撃速度")]
+    AttackSpeed: int = 0
+    # [Description("ブロック生成上限数")]
+    BlockGenerateLimit: int = 0
+    # [Description("ブロック接触時移動速度倍率")]
+    ContactBlockAttackSpeedRatePercent: int = 0
+    # [Description("ブロック再生成抽頻度")]
+    RespawnBlockIntervalMilliseconds: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MiningQuestBlockInfo():
+    # [Description("出現ブロックのID")]
+    BlockId: int = 0
+    # [Description("耐久値")]
+    Health: int = 0
+    # [Description("参照画像ID")]
+    ImageId: int = 0
+    # [Description("抽選weight")]
+    LotteryWeight: int = 0
+    # [Description("ブロック名称")]
+    NameTextKey: str = ""
+    # [Description("スコア")]
+    Score: int = 0
+    # [Description("ブロックサイズ")]
+    Size: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MiningQuestBlockRespawnInfo():
+    # [Description("ブロック再生成抽選枠のID")]
+    BlockRespawnId: int = 0
+    # [Description("生成ブロック数")]
+    BlockSpawnCount: int = 0
+    # [Description("抽選確率")]
+    LotteryProbability: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class MiningQuestSpecialAttackInfo():
+    # [Description("攻撃力")]
+    AttackPower: int = 0
+    # [Description("攻撃範囲リスト（有効な範囲値を、範囲段階昇順に返す）")]
+    AttackRangeList: list[int] = _field(default_factory=list["int"])
+    # [Description("クールタイム")]
+    CoolTimeMilliseconds: int = 0
+    # [Description("初回発動クールタイム")]
+    InitialCoolTimeMilliseconds: int = 0
+    # [Description("再生速度")]
+    RangeExpansionIntervalMilliseconds: int = 0
+    # [Description("同時発生数")]
+    SimultaneousCount: int = 0
+    # [Description("特殊攻撃のId")]
+    SpecialAttackId: int = 0
+    # [Description("特殊攻撃タイプ")]
+    SpecialAttackType: MiningQuestSpecialAttackType = _field(default_factory=lambda: MiningQuestSpecialAttackType())
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
 class LuckyChanceLotteryItemInfo():
     LotteryItem: UserItem = _field(default_factory=lambda: UserItem())
     LotteryLimitCount: int = 0
@@ -8780,6 +9161,14 @@ class LuckyChanceInputFormType(_Enum):
     InputMailAddress = 3
     # [Description("個人情報登録済み")]
     RegisteredPersonalInfo = 4
+    # [Description("個人情報入力(キャラクター選択あり)")]
+    InputSelectCharacter = 5
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class LuckyChanceRegisteredPrizeItemInfo():
+    CharacterId: int = 0
+    UserItem: _UserItem = _field(default_factory=lambda: _UserItem())
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -8799,6 +9188,12 @@ class LuckyChancePersonalInfo():
     NameFurigana: str = ""
     PhoneNumber: str = ""
     PostalCode: str = ""
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class LuckyChanceRealPrizeCItemInfo():
+    CharacterId: int = 0
+    ItemId: int = 0
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
