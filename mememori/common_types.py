@@ -1997,9 +1997,6 @@ class HelpPartInfo():
     # [Description("付加情報")]
     # [PropertyOrder(3)]
     HelpParameterType: _HelpParameterType = _field(default_factory=lambda: _HelpParameterType())
-    # [Description("本文")]
-    # [PropertyOrder(4)]
-    MainText: str = ""
 
 # [Description("問い合わせボタンタイプ")]
 class InquiryButtonType(_Enum):
@@ -5806,6 +5803,10 @@ class ErrorCode(_Enum):
     UserNotFoundPlayerInfo = 92006
     # [Description("所持したことがないキャラクターは背景に設定できません。")]
     UserInvalidBackgroundCharacterId = 92007
+    # [Description("プレイヤー名変更が禁止されています。")]
+    UserPlayerNameChangeProhibited = 92008
+    # [Description("コメント変更が禁止されています。")]
+    UserPlayerCommentChangeProhibited = 92009
     # [Description("所持してないキャラクターです")]
     UserSetDeckNotFoundCharacter = 93101
     # [Description("デッキ内にキャラクターがいません。")]

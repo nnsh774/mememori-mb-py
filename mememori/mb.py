@@ -1798,6 +1798,9 @@ class GuildRaidBossMB(MasterBookBase):
     # [Description("マイページ表示タイプ")]
     # [PropertyOrder(28)]
     IsActiveMypageIcon: bool = False
+    # [Description("イベントチュートリアルID")]
+    # [PropertyOrder(29)]
+    EventTutorialId: int = 0
     # [Description("ボス種別")]
     # [PropertyOrder(3)]
     GuildRaidBossType: _GuildRaidBossType = _field(default_factory=lambda: _GuildRaidBossType())
