@@ -5312,35 +5312,6 @@ class WeeklyTopicsShopData():
     ExpirationTimeStamp: int = 0
     TradeShopItemList: list[TradeShopItem] = _field(default_factory=list["TradeShopItem"])
 
-class IHasSteamTicketApiRequest(_Protocol):
-    pass
-
-# [Description("アカウント停止タイプ")]
-class AccountSuspensionType(_Enum):
-    # [Description("解除")]
-    Lift = 0
-    # [Description("永久停止")]
-    Permanent = 1
-    # [Description("時限停止")]
-    Period = 2
-
-class BanChatType(_Enum):
-    # [Description("不明")]
-    None_ = 0
-    # [Description("全てのチャット")]
-    All = 1
-    # [Description("ワールド、ワールドグループチャット")]
-    WorldAndWorldGroup = 2
-
-# [MessagePackObject(True)]
-_AccountSuspensionType = AccountSuspensionType
-_BanChatType = BanChatType
-@_dataclass(slots=True)
-class BanChatInfo():
-    AccountSuspensionType: _AccountSuspensionType = _field(default_factory=lambda: _AccountSuspensionType())
-    BanChatType: _BanChatType = _field(default_factory=lambda: _BanChatType())
-    LiftDateTime: str = ""
-
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class MissionGuideInfo():
@@ -5421,6 +5392,35 @@ class WorldGuidanceInfo():
     # [Description("誘導先ワールドID")]
     # [PropertyOrder(2)]
     WorldGuidanceId: int = 0
+
+class IHasSteamTicketApiRequest(_Protocol):
+    pass
+
+# [Description("アカウント停止タイプ")]
+class AccountSuspensionType(_Enum):
+    # [Description("解除")]
+    Lift = 0
+    # [Description("永久停止")]
+    Permanent = 1
+    # [Description("時限停止")]
+    Period = 2
+
+class BanChatType(_Enum):
+    # [Description("不明")]
+    None_ = 0
+    # [Description("全てのチャット")]
+    All = 1
+    # [Description("ワールド、ワールドグループチャット")]
+    WorldAndWorldGroup = 2
+
+# [MessagePackObject(True)]
+_AccountSuspensionType = AccountSuspensionType
+_BanChatType = BanChatType
+@_dataclass(slots=True)
+class BanChatInfo():
+    AccountSuspensionType: _AccountSuspensionType = _field(default_factory=lambda: _AccountSuspensionType())
+    BanChatType: _BanChatType = _field(default_factory=lambda: _BanChatType())
+    LiftDateTime: str = ""
 
 class ErrorLogType(_Enum):
     None_ = 0
