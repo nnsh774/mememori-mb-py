@@ -156,6 +156,8 @@ class ItemType(_Enum):
     MiningQuestEventRewardItem = 56
     # [Description("Stripeクーポン")]
     StripeCoupon = 1001
+    # [Description("Webクリスタル")]
+    WebCrystal = 2001
 
 # [MessagePackObject(True)]
 _ItemType = ItemType
@@ -1311,6 +1313,8 @@ class TransferSpotType(_Enum):
     PlayVideo = 330
     # [Description("レンタルレイド")]
     RentalRaid = 340
+    # [Description("WEBストアログインキャンペーン")]
+    WebStoreLoginCampaign = 350
     # [Description("湖底の絵画集め")]
     MiningQuest = 360
     # [Description("フレンド")]
@@ -2052,6 +2056,8 @@ class LimitedEventType(_Enum):
     EnableGooglePlayReceiptConsumeByClient = 10001
     # [Description("Deeplinkのエラー判定 PurchaseStateType.FetchProductWaitチェック有効")]
     CheckDeeplinkPurchaseStateFetchProductWait = 10002
+    # [Description("Webストアのリリース管理")]
+    WebstoreRelease = 20000
 
 # [Description("キャラクターレアリティを持つ可能性があるアイテムが実装するインターフェース")]
 class IUserCharacterItem(_Protocol):
@@ -2636,6 +2642,8 @@ class OpenCommandType(_Enum):
     EquipmentReset = 580
     # [Description("セレクト音楽設定")]
     SelectMusicSetting = 600
+    # [Description("クリスタルの使用")]
+    WebCrystal = 610
     # [Description("湖底の絵画集め")]
     MiningQuest = 620
     # [Description("武具固定")]
@@ -2798,7 +2806,7 @@ class PassiveTrigger(_Enum):
     ReceiveDamage = 8
     # [Description("攻撃時")]
     GiveDamage = 9
-    # [Description("第三者の攻撃時、味方の被攻撃時")]
+    # [Description("第三者の攻撃時、味方の被攻撃時（命中or回避）")]
     AllyReceiveDamage = 10
     # [Description("被デバフ時")]
     ReceiveDebuff = 11
@@ -2874,6 +2882,8 @@ class PassiveTrigger(_Enum):
     EnemyRemoveBuff = 46
     # [Description("自身以外の味方の与デバフ時")]
     AllyGiveDeBuff = 47
+    # [Description("自身以外の味方の被攻撃時（命中のみ）")]
+    AllyReceiveDamageHitOnly = 48
     # [Description("敵が攻撃した時")]
     EnemyAttack = 50
     # [Description("被致命的ダメージ時回復")]
@@ -2934,6 +2944,8 @@ class PatternSettingType(_Enum):
     FirstChargeBonusButton = 6
     # [Description("一週間限定パックの購入期限プッシュ通知")]
     OneWeekLimitedPackPushNotification = 7
+    # [Description("WEBストア誘導ダイアログ表示")]
+    WebStoreGuidance = 8
 
 # [Description("人気投票形式タイプ")]
 class PopularityVoteVotingType(_Enum):
@@ -3019,6 +3031,29 @@ class QuestDifficultyType(_Enum):
     Easy = 0
     # [Description("Hard")]
     Hard = 1
+
+# [Description("決済手段タイプ")]
+class ShopPayType(_Enum):
+    # [Description("クレジット")]
+    CreditCard = 0
+    # [Description("au PAY（auかんたん決済）")]
+    AuPay = 8
+    # [Description("d払い")]
+    DocomoPay = 9
+    # [Description("ソフトバンクまとめて支払い（B）")]
+    SoftBankPay = 11
+    # [Description("ApplePay")]
+    ApplePay = 27
+    # [Description("AmazonPay")]
+    AmazonPay = 38
+    # [Description("PayPay")]
+    PayPay = 45
+    # [Description("au PAY（ネット支払い）ウェブ方式")]
+    AuPayNet = 49
+    # [Description("GooglePay(Gmoにはないタイプ)")]
+    GooglePay = 200
+    # [Description("クレジットカード(Stripe)")]
+    StripeCreditCard = 300
 
 class SphereType(_Enum):
     EquipmentIcon = 0
@@ -4187,9 +4222,7 @@ class UserSyncData():
     ReceivedAutoBattleRewardLastTime: int | None = None
     ReceivedGuildTowerFloorRewardIdList: list[int] = _field(default_factory=list["int"])
     ReleaseLockEquipmentCooldownTimeStampMap: dict[LockEquipmentDeckType, int] = _field(default_factory=dict["LockEquipmentDeckType", "int"])
-    ShopCurrencyMissionProgressMap: dict[str, int] = _field(default_factory=dict["str", "int"])
     ShopProductGuerrillaPackList: list[ShopProductGuerrillaPack] = _field(default_factory=list["ShopProductGuerrillaPack"])
-    StripePoint: int = 0
     TimeServerId: int | None = None
     TodayChallengeFriendBattleCount: int | None = None
     TotalPoint: int | None = None
@@ -5312,6 +5345,14 @@ class WeeklyTopicsShopData():
     ExpirationTimeStamp: int = 0
     TradeShopItemList: list[TradeShopItem] = _field(default_factory=list["TradeShopItem"])
 
+# [Description("レアリティアイテム")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class RarityItem():
+    # [Nest(True, 1)]
+    Item: UserItem = _field(default_factory=lambda: UserItem())
+    RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
+
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class MissionGuideInfo():
@@ -5771,6 +5812,10 @@ class ErrorCode(_Enum):
     ItemEditorNotConsumableItem = 80004
     # [Description("付与できないアイテムです。")]
     ItemEditorCanNotGiveItem = 80005
+    # [Description("WEBクリスタルが足りません。")]
+    ItemEditorNotEnoughWebCrystal = 80006
+    # [Description("WEBクリスタル(有償)が足りません。")]
+    ItemEditorNotEnoughWebCrystalPaid = 80007
     # [Description("ユーザのボックスデータが存在しません。")]
     ItemEditorUserBoxSizeDtoNotFound = 82000
     # [Description("ユーザーのステータスデータが存在しません。")]
@@ -6673,11 +6718,11 @@ class ErrorCode(_Enum):
     ShopUserShopChargeBonusMissionDtoNotFound = 261003
     # [Description("ユーザデータが見つかりません。")]
     ShopUserAccountDtoNotFound = 261004
-    # [Description("ユーザデータが見つかりません。")]
+    # [Description("課金ミッションデータが見つかりません。")]
     ShopUserCurrencyMissionDtoNotFound = 261005
-    # [Description("ユーザデータが見つかりません。")]
+    # [Description("月間ブーストデータが見つかりません。")]
     ShopMonthlyBoostDtoNotFound = 261006
-    # [Description("ユーザデータが見つかりません。")]
+    # [Description("達成パックデータが見つかりません。")]
     ShopAchievementPackDtoNotFound = 261007
     # [Description("不正なリクエストです。")]
     ShopBuyProductInvalidRequest = 262000
@@ -6761,6 +6806,10 @@ class ErrorCode(_Enum):
     ShopAlreadyUsedCoupon = 262041
     # [Description("利用できない商品タイプです。")]
     ShopNotSupportShopProductType = 262042
+    # [Description("不正なリクエストです。")]
+    ShopBuyProductWithWebCrystalInvalidRequest = 262050
+    # [Description("不正なリクエストです。")]
+    ShopGetPaymentDetailHistoryInvaildRequest = 262051
     # [Description("ユーザーのステータスデータが見つかりません。")]
     ChatUserStatusDtoNotFound = 271000
     # [Description("ユーザーのアカウントデータが見つかりません。")]
@@ -7807,6 +7856,30 @@ class ErrorCode(_Enum):
     SteamNotFoundNextPayment = 6000309
     # [Description("レート制限により課金処理が失敗しました。")]
     SteamRateLimited = 6000310
+    # [Description("GMO注文データが存在しません。")]
+    GmoGmoOrderDtoNotFound = 6010000
+    # [Description("ユーザーデータが存在しません。")]
+    GmoUserStatusDtoNotFound = 6010001
+    # [Description("Gmo 処理済みの注文です。")]
+    GmoAlreadyUsedOrder = 6011000
+    # [Description("Gmo プレゼントデータ生成に失敗しました。")]
+    GmoFailToCreatePresentData = 6011001
+    # [Description("Gmo 不正な通知がしました。")]
+    GmoInvalidNoticeType = 6011002
+    # [Description("Gmo 不正な決済手段です。")]
+    GmoInvalidPayType = 6011003
+    # [Description("Gmo OrderIdが存在しません。")]
+    GmoNotFoundOrderId = 6011004
+    # [Description("Gmo Statusが存在しません。")]
+    GmoNotFoundStatus = 6011005
+    # [Description("Gmo トークンが不正です。")]
+    GmoInvalidTokenData = 6011006
+    # [Description("Gmo トークンのプライベートキーが不正です。")]
+    GmoInvalidTokenPrivateKey = 6011007
+    # [Description("Gmo 利用できない通貨コードです。")]
+    GmoInvalidCurrencyCode = 6011008
+    # [Description("Gmo 決済した値段が不正です。")]
+    GmoInvalidTokenPrice = 6011009
 
 # [Description("エラーに対する挙動")]
 class ErrorHandlingType(_Enum):
@@ -7950,8 +8023,6 @@ class ShopProductType(_Enum):
     ContractPrivilege = 5
     # [Description("月間ブースト")]
     MonthlyBoost = 6
-    # [Description("課金機能付きミッション")]
-    CurrencyMission = 7
     # [Description("初課金ボーナス")]
     FirstChargeBonus = 8
     # [Description("達成パック")]
@@ -7962,6 +8033,8 @@ class ShopProductType(_Enum):
     GuerrillaPack = 11
     # [Description("ミッションパス")]
     MissionPass = 12
+    # [Description("WEBストア")]
+    WebStore = 13
     # [Description("全検索")]
     AllSearch = 99
 
@@ -7992,7 +8065,6 @@ class BulkShopRewardInfo():
     Count: int = 0
     ItemList: list[UserItem] = _field(default_factory=list["UserItem"])
     Price: int = 0
-    ShopPoint: int = 0
     ShopProductNameKey: str = ""
     ShopProductType: _ShopProductType = _field(default_factory=lambda: _ShopProductType())
 
@@ -8155,66 +8227,8 @@ class ShopProductCurrency():
     # [Description("報酬リスト")]
     UserItemList: list[UserItem] = _field(default_factory=list["UserItem"])
 
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class ShopCurrencyMissionInfo():
-    # [Description("商品ID")]
-    # [Nest(True, 1)]
-    CommonRewardItem: UserItem = _field(default_factory=lambda: UserItem())
-    # [Description("商品種別タイプ")]
-    # [Nest(True, 1)]
-    PremiumRewardItem1: UserItem = _field(default_factory=lambda: UserItem())
-    # [Description("商品種別タイプ")]
-    # [Nest(True, 1)]
-    PremiumRewardItem2: UserItem = _field(default_factory=lambda: UserItem())
-    # [Description("要求Pt")]
-    RequiredPoint: int = 0
-
-class ShopCurrencyMissionType(_Enum):
-    # [Description("貢献メダル収集")]
-    ActivityMedal = 1
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class UserShopCurrencyMissionRewardDtoInfo():
-    IsReceiveCommon: bool = False
-    IsReceivePremium: bool = False
-    RequiredPoint: int = 0
-
-# [MessagePackObject(True)]
-_ShopCurrencyMissionType = ShopCurrencyMissionType
-@_dataclass(slots=True)
-class ShopProductCurrencyMission():
-    # [Description("現在のポイント")]
-    CurrentPoint: int = 0
-    # [Description("ダイアログベース画像ID")]
-    DialogImageId: int = 0
-    # [Description("ミッションの終了日時")]
-    EndDateTime: str = ""
-    # [Description("開放についての説明キー")]
-    ExplanationKey: str = ""
-    # [Description("PT購入ボタン表示するか")]
-    IsDisplayBuyPointButton: bool = False
-    # [Description("開放報酬")]
-    IsPremium: bool = False
-    # [Description("商品名キー")]
-    NameKey: str = ""
-    # [Description("パネルベース画像ID")]
-    PanelImageId: int = 0
-    # [Description("ProductId")]
-    ProductId: str = ""
-    # [Description("目標リスト")]
-    ShopCurrencyMissionInfoList: list[ShopCurrencyMissionInfo] = _field(default_factory=list["ShopCurrencyMissionInfo"])
-    # [Description("課金機能付きミッションの種類")]
-    ShopCurrencyMissionType: _ShopCurrencyMissionType = _field(default_factory=lambda: _ShopCurrencyMissionType())
-    # [Description("商品値段")]
-    ShopProductPrice: int = 0
-    # [Description("詳細ダイアログの概要説明キー")]
-    SummaryKey: str = ""
-    # [Description("開放報酬")]
-    UserItem: _UserItem = _field(default_factory=lambda: _UserItem())
-    # [Description("受取状況リスト")]
-    UserShopCurrencyMissionRewardDtoInfoList: list[UserShopCurrencyMissionRewardDtoInfo] = _field(default_factory=list["UserShopCurrencyMissionRewardDtoInfo"])
+class IShopProductLimitPack(_Protocol):
+    pass
 
 # [Description("購入回数制限タイプ")]
 class ShopBuyLimitType(_Enum):
@@ -8267,6 +8281,8 @@ class ShopProductDefault():
     MBId: int = 0
     # [Description("商品名キー")]
     NameKey: str = ""
+    # [Description("解放VIPレベル")]
+    OpenVipLevel: int = 0
     # [Description("ProductId")]
     ProductId: str = ""
     # [Description("購入回数リセット時間")]
@@ -8401,7 +8417,6 @@ _ShopProductAchievementPack = ShopProductAchievementPack
 _ShopProductChargeBonus = ShopProductChargeBonus
 _ShopProductContractPrivilege = ShopProductContractPrivilege
 _ShopProductCurrency = ShopProductCurrency
-_ShopProductCurrencyMission = ShopProductCurrencyMission
 _ShopProductDefault = ShopProductDefault
 _ShopProductFirstChargeBonus = ShopProductFirstChargeBonus
 _ShopProductGrowthPack = ShopProductGrowthPack
@@ -8421,8 +8436,6 @@ class ShopProductInfo():
     ShopProductContractPrivilege: _ShopProductContractPrivilege = _field(default_factory=lambda: _ShopProductContractPrivilege())
     # [Description("買い切りダイヤ商品用データ")]
     ShopProductCurrency: _ShopProductCurrency = _field(default_factory=lambda: _ShopProductCurrency())
-    # [Description("課金機能付きミッション用データ")]
-    ShopProductCurrencyMission: _ShopProductCurrencyMission = _field(default_factory=lambda: _ShopProductCurrencyMission())
     # [Description("買い切り一般商品用データ")]
     ShopProductDefault: _ShopProductDefault = _field(default_factory=lambda: _ShopProductDefault())
     # [Description("初課金ボーナス用データ")]
@@ -8436,46 +8449,6 @@ class ShopProductInfo():
     # [Description("商品種別タイプ")]
     ShopProductType: _ShopProductType = _field(default_factory=lambda: _ShopProductType())
 
-# [Description("Stripeポイント増減タイプ")]
-class StripePointType(_Enum):
-    # [Description("商品購入")]
-    BuyProduct = 0
-    # [Description("補填")]
-    Present = 1
-    # [Description("回収")]
-    Retrieve = 2
-
-# [Description("Stripe支払いタイプ")]
-class StripePaidType(_Enum):
-    # [Description("クレジットカード")]
-    Card = 0
-    # [Description("アップルペイ")]
-    ApplePay = 1
-    # [Description("グーグルペイ")]
-    GooglePay = 2
-
-# [MessagePackObject(True)]
-_StripePaidType = StripePaidType
-_StripePointType = StripePointType
-@_dataclass(slots=True)
-class UserStripePointHistoryInfo():
-    AfterPoint: int = 0
-    BeforePoint: int = 0
-    BuyDateTime: _datetime = _datetime.min
-    CardSubInfo: str = ""
-    ChargeBackDateTime: str = ""
-    DiscountPrice: int = 0
-    IsBulkBuy: bool = False
-    PlayerId: int = 0
-    Price: int = 0
-    ProductNameKey: str = ""
-    RefundDateTime: str = ""
-    SavePoint: int = 0
-    StripePaidType: _StripePaidType = _field(default_factory=lambda: _StripePaidType())
-    StripePointType: _StripePointType = _field(default_factory=lambda: _StripePointType())
-    TransactionId: str = ""
-    UsePoint: int = 0
-
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class AcquisitionShopRewardInfo():
@@ -8483,6 +8456,85 @@ class AcquisitionShopRewardInfo():
     CharacterList: list[UserCharacterDtoInfo] = _field(default_factory=list["UserCharacterDtoInfo"])
     ItemList: list[UserItem] = _field(default_factory=list["UserItem"])
     ShopProductType: _ShopProductType = _field(default_factory=lambda: _ShopProductType())
+
+# [Description("ポイント取得タイプ")]
+class PurchasePointGroupType(_Enum):
+    # [Description("Stripe")]
+    Stripe = 0
+    # [Description("GMO")]
+    Gmo = 1
+    # [Description("管理画面")]
+    Admin = 100
+
+# [Description("Shop決済状態タイプ")]
+class ShopPaymentStateType(_Enum):
+    # [Description("未決済")]
+    None_ = 0
+    # [Description("決済成功")]
+    Purchase = 1
+    # [Description("決済失敗")]
+    InvalidPoint = 2
+    # [Description("返金")]
+    Return = 3
+    # [Description("キャンセル")]
+    Cancel = 4
+    # [Description("セッション切れ(前回セッションが残っていてセッションを強制的に切ったときのステータス)")]
+    ExpiredSession = 5
+    # [Description("補填")]
+    Present = 6
+    # [Description("回収")]
+    Retrieve = 7
+
+# [MessagePackObject(True)]
+_PurchasePointGroupType = PurchasePointGroupType
+_ShopPayType = ShopPayType
+_ShopPaymentStateType = ShopPaymentStateType
+@_dataclass(slots=True)
+class UserShopPaymentHistoryDetailInfo():
+    BulkShopRewardInfos: list[BulkShopRewardInfo] = _field(default_factory=list["BulkShopRewardInfo"])
+    BuyDateTime: _datetime = _datetime.min
+    DiscountPrice: int = 0
+    Price: int = 0
+    PurchasePointGroupType: _PurchasePointGroupType = _field(default_factory=lambda: _PurchasePointGroupType())
+    SavePoint: int = 0
+    ShopPayType: _ShopPayType = _field(default_factory=lambda: _ShopPayType())
+    ShopPaymentStateType: _ShopPaymentStateType = _field(default_factory=lambda: _ShopPaymentStateType())
+    TransactionId: str = ""
+    UsePoint: int = 0
+    WorldId: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UserShopPaymentHistoryInfo():
+    BuyCount: int = 0
+    BuyDateTime: _datetime = _datetime.min
+    DiscountPrice: int = 0
+    PlayerId: int = 0
+    ProductNameKey: str = ""
+    PurchasePointGroupType: _PurchasePointGroupType = _field(default_factory=lambda: _PurchasePointGroupType())
+    ShopPayType: _ShopPayType = _field(default_factory=lambda: _ShopPayType())
+    ShopPaymentStateType: _ShopPaymentStateType = _field(default_factory=lambda: _ShopPaymentStateType())
+    TransactionId: str = ""
+    WorldId: int = 0
+
+class ShopPointHistoryType(_Enum):
+    # [Description("なし")]
+    None_ = 0
+    # [Description("使用")]
+    Use = 1
+    # [Description("獲得")]
+    Save = 2
+
+# [MessagePackObject(True)]
+_ShopPointHistoryType = ShopPointHistoryType
+@_dataclass(slots=True)
+class UserShopPointHistoryInfo():
+    BuyCount: int = 0
+    BuyDateTime: _datetime = _datetime.min
+    ChangePoint: int = 0
+    ProductNameKey: str = ""
+    PurchasePointGroupType: _PurchasePointGroupType = _field(default_factory=lambda: _PurchasePointGroupType())
+    ShopPointHistoryType: _ShopPointHistoryType = _field(default_factory=lambda: _ShopPointHistoryType())
 
 # [Description("装飾データ")]
 # [MessagePackObject(True)]
@@ -8526,6 +8578,41 @@ class ShopTabInfo():
     NameKey: str = ""
     # [Description("商品一覧")]
     ShopProductInfoList: list[ShopProductInfo] = _field(default_factory=list["ShopProductInfo"])
+
+# [Description("ショップバナーの表示タイプ")]
+class ShopBannerDisplayType(_Enum):
+    # [Description("なし")]
+    None_ = 0
+    # [Description("バナー上にテキストと公式サイトボタンを表示する")]
+    Type1 = 1
+    # [Description("バナー上にテキストのみ表示する")]
+    Type2 = 2
+    # [Description("バナー上にテキストと検索窓UIを表示する")]
+    Type3 = 3
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class CustomTextSimpleLayoutInfo():
+    BannerPositionX: float = 0.0
+    BannerPositionY: float = 0.0
+
+# [MessagePackObject(True)]
+_CustomTextSimpleLayoutInfo = CustomTextSimpleLayoutInfo
+_ShopBannerDisplayType = ShopBannerDisplayType
+@_dataclass(slots=True)
+class ShopBannerInfo():
+    # [Description("テキスト座標設定")]
+    CustomTextSimpleLayoutInfo: _CustomTextSimpleLayoutInfo = _field(default_factory=lambda: _CustomTextSimpleLayoutInfo())
+    # [Description("表示テキストキー")]
+    DisplayTextKey: str = ""
+    # [Description("ショップバナーの表示タイプ")]
+    ShopBannerDisplayType: _ShopBannerDisplayType = _field(default_factory=lambda: _ShopBannerDisplayType())
+    # [Description("テキストアライメント設定")]
+    TextAlignment: int = 0
+    # [Description("遷移情報")]
+    TransferSpotInfo: str = ""
+    # [Description("遷移タイプ")]
+    TransferSpotType: _TransferSpotType = _field(default_factory=lambda: _TransferSpotType())
 
 # [Description("ミッションパス報酬情報")]
 # [MessagePackObject(True)]

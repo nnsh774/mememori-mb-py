@@ -3234,6 +3234,24 @@ class RequiredCurrencyMB(MasterBookBase):
     # [PropertyOrder(7)]
     LevelLinkMember: int = 0
 
+# [Description("ショップポイント比率情報")]
+# [MessagePackObject(True)]
+_ShopPayType = ShopPayType
+@_dataclass(slots=True)
+class ShopPointRateMB(MasterBookBase):
+    # [Description("貯めるポイント比率")]
+    # [PropertyOrder(1)]
+    SavePointRate: int = 0
+    # [Description("支払いタイプ")]
+    # [PropertyOrder(2)]
+    ShopPayType: _ShopPayType = _field(default_factory=lambda: _ShopPayType())
+    # [Description("開始日時")]
+    # [PropertyOrder(3)]
+    StartTime: str = ""
+    # [Description("終了日時")]
+    # [PropertyOrder(4)]
+    EndTime: str = ""
+
 # [Description("スキルのリンクテキスト")]
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
