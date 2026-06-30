@@ -755,6 +755,37 @@ class CharacterBloodType(_Enum):
     # [Description("AB型")]
     AB = 4
 
+# [Description("言語")]
+# [Serializable]
+class LanguageType(_Enum):
+    None_ = 0
+    # [Description("日本語")]
+    jaJP = 1
+    # [Description("英語")]
+    enUS = 2
+    # [Description("韓国語")]
+    koKR = 3
+    # [Description("中国語(繁体字)")]
+    zhTW = 4
+    # [Description("フランス語")]
+    frFR = 5
+    # [Description("中国語(簡体字)")]
+    zhCN = 6
+    # [Description("スペイン語")]
+    esMX = 7
+    # [Description("ポルトガル語")]
+    ptBR = 8
+    # [Description("タイ語")]
+    thTH = 9
+    # [Description("インドネシア語")]
+    idID = 10
+    # [Description("ベトナム語")]
+    viVN = 11
+    # [Description("ロシア語")]
+    ruRU = 12
+    # [Description("ドイツ語")]
+    deDE = 13
+
 # [Description("各言語に翻訳されたテキスト")]
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -762,18 +793,6 @@ class TranslatedText():
     # [Description("日本語")]
     # [PropertyOrder(1)]
     jaJP: str = ""
-    # [Description("インドネシア語")]
-    # [PropertyOrder(10)]
-    idID: str = ""
-    # [Description("ベトナム語")]
-    # [PropertyOrder(11)]
-    viVN: str = ""
-    # [Description("ロシア語")]
-    # [PropertyOrder(12)]
-    ruRU: str = ""
-    # [Description("ドイツ語")]
-    # [PropertyOrder(13)]
-    deDE: str = ""
     # [Description("英語")]
     # [PropertyOrder(2)]
     enUS: str = ""
@@ -786,18 +805,7 @@ class TranslatedText():
     # [Description("中国語(簡体字)")]
     # [PropertyOrder(5)]
     zhCN: str = ""
-    # [Description("フランス語")]
-    # [PropertyOrder(6)]
-    frFR: str = ""
-    # [Description("スペイン語")]
-    # [PropertyOrder(7)]
-    esMX: str = ""
-    # [Description("ポルトガル語")]
-    # [PropertyOrder(8)]
-    ptBR: str = ""
-    # [Description("タイ語")]
-    # [PropertyOrder(9)]
-    thTH: str = ""
+    SupportedLanguageTypes: list[LanguageType] = _field(default_factory=list["LanguageType"])
 
 # [Description("ランクアップ·タイプ")]
 class ElementClassificationType(_Enum):
@@ -1776,22 +1784,6 @@ class CustomTextLayout():
     # [Nest(True, 2)]
     # [PropertyOrder(1)]
     jaJP: CustomTextLayoutInfo = _field(default_factory=lambda: CustomTextLayoutInfo())
-    # [Description("インドネシア語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(10)]
-    idID: CustomTextLayoutInfo = _field(default_factory=lambda: CustomTextLayoutInfo())
-    # [Description("ベトナム語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(11)]
-    viVN: CustomTextLayoutInfo = _field(default_factory=lambda: CustomTextLayoutInfo())
-    # [Description("ロシア語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(12)]
-    ruRU: CustomTextLayoutInfo = _field(default_factory=lambda: CustomTextLayoutInfo())
-    # [Description("ドイツ語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(13)]
-    deDE: CustomTextLayoutInfo = _field(default_factory=lambda: CustomTextLayoutInfo())
     # [Description("英語")]
     # [Nest(True, 2)]
     # [PropertyOrder(2)]
@@ -1808,22 +1800,6 @@ class CustomTextLayout():
     # [Nest(True, 2)]
     # [PropertyOrder(5)]
     zhCN: CustomTextLayoutInfo = _field(default_factory=lambda: CustomTextLayoutInfo())
-    # [Description("フランス語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(6)]
-    frFR: CustomTextLayoutInfo = _field(default_factory=lambda: CustomTextLayoutInfo())
-    # [Description("スペイン語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(7)]
-    esMX: CustomTextLayoutInfo = _field(default_factory=lambda: CustomTextLayoutInfo())
-    # [Description("ポルトガル語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(8)]
-    ptBR: CustomTextLayoutInfo = _field(default_factory=lambda: CustomTextLayoutInfo())
-    # [Description("タイ語")]
-    # [Nest(True, 2)]
-    # [PropertyOrder(9)]
-    thTH: CustomTextLayoutInfo = _field(default_factory=lambda: CustomTextLayoutInfo())
 
 # [Description("ガチャボーナスゲージ表示タイプ")]
 class GachaBonusGaugeType(_Enum):
@@ -2058,6 +2034,8 @@ class LimitedEventType(_Enum):
     CheckDeeplinkPurchaseStateFetchProductWait = 10002
     # [Description("Webストアのリリース管理")]
     WebstoreRelease = 20000
+    # [Description("アセットのキャッシュクリア無効")]
+    DisableAssetCacheClear = 30000
 
 # [Description("キャラクターレアリティを持つ可能性があるアイテムが実装するインターフェース")]
 class IUserCharacterItem(_Protocol):
@@ -3105,37 +3083,6 @@ class TermsButtonInfo():
     # [Description("Url")]
     # [PropertyOrder(2)]
     Url: str = ""
-
-# [Description("言語")]
-# [Serializable]
-class LanguageType(_Enum):
-    None_ = 0
-    # [Description("日本語")]
-    jaJP = 1
-    # [Description("英語")]
-    enUS = 2
-    # [Description("韓国語")]
-    koKR = 3
-    # [Description("中国語(繁体字)")]
-    zhTW = 4
-    # [Description("フランス語")]
-    frFR = 5
-    # [Description("中国語(簡体字)")]
-    zhCN = 6
-    # [Description("スペイン語")]
-    esMX = 7
-    # [Description("ポルトガル語")]
-    ptBR = 8
-    # [Description("タイ語")]
-    thTH = 9
-    # [Description("インドネシア語")]
-    idID = 10
-    # [Description("ベトナム語")]
-    viVN = 11
-    # [Description("ロシア語")]
-    ruRU = 12
-    # [Description("ドイツ語")]
-    deDE = 13
 
 class ITextResource(_Protocol):
     pass
@@ -5814,8 +5761,6 @@ class ErrorCode(_Enum):
     ItemEditorCanNotGiveItem = 80005
     # [Description("WEBクリスタルが足りません。")]
     ItemEditorNotEnoughWebCrystal = 80006
-    # [Description("WEBクリスタル(有償)が足りません。")]
-    ItemEditorNotEnoughWebCrystalPaid = 80007
     # [Description("ユーザのボックスデータが存在しません。")]
     ItemEditorUserBoxSizeDtoNotFound = 82000
     # [Description("ユーザーのステータスデータが存在しません。")]
@@ -7880,6 +7825,8 @@ class ErrorCode(_Enum):
     GmoInvalidCurrencyCode = 6011008
     # [Description("Gmo 決済した値段が不正です。")]
     GmoInvalidTokenPrice = 6011009
+    # [Description("Gmo 決済されてない注文です。")]
+    GmoNotPaid = 6011010
 
 # [Description("エラーに対する挙動")]
 class ErrorHandlingType(_Enum):
@@ -8949,6 +8896,12 @@ class UserPresentDtoInfo():
     Message: str = ""
     ReceiveLimitDate: int = 0
     Title: str = ""
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class WebStoreSdkInfo():
+    BuyPrice: int = 0
+    WebStoreProductId: int = 0
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
