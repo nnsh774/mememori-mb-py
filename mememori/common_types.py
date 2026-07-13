@@ -4876,6 +4876,8 @@ class EffectType(_Enum):
     Silence = 6003
     # [Description("固執")]
     Stubborn = 6004
+    # [Description("通常攻撃不可")]
+    Imprison = 6005
     # [Description("HP回復不可")]
     HpRecoveryForbidden = 7002
     # [Description("バフ獲得不可")]
