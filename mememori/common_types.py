@@ -2026,6 +2026,8 @@ class LimitedEventType(_Enum):
     SerialCode = 2
     # [Description("動画再生コメント投稿")]
     PlayVideoComment = 3
+    # [Description("動画再生再生回数表示")]
+    PlayVideoTotalCount = 4
     # [Description("通知強制削除")]
     NotificationForceCancel = 10000
     # [Description("GooglePlayのレシート消費をクライアントで行う")]
@@ -2151,6 +2153,14 @@ class LocalRaidQuestIdGroup():
     # [Nest(True, 1)]
     # [PropertyOrder(2)]
     LocalRaidQuestIdWeights: list[LocalRaidQuestIdWeight] = _field(default_factory=list["LocalRaidQuestIdWeight"])
+
+class MediaType(_Enum):
+    # [Description("なし")]
+    None_ = 0
+    # [Description("その他")]
+    Other = 1
+    # [Description("動画")]
+    Movie = 2
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -6969,6 +6979,12 @@ class ErrorCode(_Enum):
     MissionNotClearedPrevSheetMission = 352026
     # [Description("ギルドツリーイベント終了後にギルドに加入したためミッションを開けません。")]
     MissionJoinGuildAfterEndEvent = 352030
+    # [Description("不正通信です。")]
+    MissionInvalidRequest = 352031
+    # [Description("新キャラミッションは未開催です。")]
+    MissionNotOpenNewCharacterMission = 352032
+    # [Description("コラボミッションは未開催です。")]
+    MissionNotOpenCollabMission = 352033
     # [Description("ユーザーの放置バトルデータが存在しません。")]
     TradeShopUserBattleAutoDtoNotFound = 361000
     # [Description("ユーザーの放置バトルデータが存在しません。")]
@@ -7259,6 +7275,14 @@ class ErrorCode(_Enum):
     LuckyChanceNotRegisteredAddress = 471032
     # [Description("選択対象外のキャラクターです。")]
     LuckyChanceExcludeSelectionCharacter = 471033
+    # [Description("選択中ボックスのマスタデータがありません。")]
+    NotFoundSelectedLuckyChanceButton = 471034
+    # [Description("無効なボックスです。")]
+    InvalidLuckyChanceButton = 471035
+    # [Description("ボックスは選択出来ません（有効なボックスが1つのみ）。")]
+    NoNeedToSelectLuckyChanceButton = 471036
+    # [Description("開催中ラッキーチャンスのユーザーデータがありません。")]
+    NotFoundCurrentUserLuckyChance = 471037
     # [Description("ユーザーのフレンド情報が見つかりません。")]
     FriendBattleUserFriendDtoNotFound = 480000
     # [Description("ユーザーのステータス情報が見つかりません。")]
@@ -9212,6 +9236,14 @@ class LuckyChanceInputFormType(_Enum):
 class LuckyChanceRegisteredPrizeItemInfo():
     CharacterId: int = 0
     UserItem: _UserItem = _field(default_factory=lambda: _UserItem())
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class LuckyChanceButtonInfo():
+    ImageId: int = 0
+    IsDisplayDetailButton: bool = False
+    LuckyChanceButtonId: int = 0
+    NameTextKey: str = ""
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)

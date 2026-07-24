@@ -889,6 +889,7 @@ class CollabMissionMB(MasterBookBase):
 
 # [Description("コミュニティ")]
 # [MessagePackObject(True)]
+# [Obsolete("4.20.0で削除")]
 _CountryCodeType = CountryCodeType
 @_dataclass(slots=True)
 class CommunityMB(MasterBookBase):
@@ -2495,6 +2496,33 @@ class LuckyChanceMB(MasterBookBase):
     # [Description("景品選択除外キャラId")]
     # [PropertyOrder(10)]
     ExcludeSelectionCharacterIdList: list[int] = _field(default_factory=list["int"])
+
+# [Description("メディア")]
+# [MessagePackObject(True)]
+_MediaType = MediaType
+@_dataclass(slots=True)
+class MediaMB(MasterBookBase):
+    # [Description("メディアタイプ")]
+    # [PropertyOrder(1)]
+    MediaType: _MediaType = _field(default_factory=lambda: _MediaType())
+    # [Description("バナーの表示順(昇順)")]
+    # [PropertyOrder(2)]
+    SortOrder: int = 0
+    # [Description("画像Id")]
+    # [PropertyOrder(3)]
+    MovieId: int = 0
+    # [Description("メディアタイトルキー")]
+    # [PropertyOrder(4)]
+    MediaTitleKey: str = ""
+    # [Description("URLキー")]
+    # [PropertyOrder(5)]
+    UrlKey: str = ""
+    # [Description("ミッションId")]
+    # [PropertyOrder(6)]
+    MissionId: int = 0
+    # [Description("表示される設定言語のリスト")]
+    # [PropertyOrder(7)]
+    DisplayLanguageTypeList: list[int] = _field(default_factory=list["int"])
 
 # [Description("採掘ミニゲーム基礎パラメータ")]
 # [MessagePackObject(True)]
