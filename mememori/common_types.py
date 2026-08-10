@@ -6821,6 +6821,14 @@ class ErrorCode(_Enum):
     ChatNotFoundClearPartyInfo = 272021
     # [Description("バトル情報が存在しません。")]
     ChatNotFoundBattleLogInfo = 272022
+    # [Description("ギルド勧誘チャットのインターバル中です。")]
+    ChatRecruitGuildMemberInterval = 272023
+    # [Description("ギルド勧誘チャットが見つかりません。")]
+    ChatRecruitGuildMemberNotFound = 272024
+    # [Description("ギルドメンバーの募集期間が終了しました。")]
+    ChatRecruitGuildMemberExpired = 272025
+    # [Description("募集していたギルドが解散しました。")]
+    ChatRecruitGuildMemberGuildDisbanded = 272026
     # [Description("未受け取りのプレゼントは削除できません。")]
     PresentDeleteNotReceivedPresent = 282001
     # [Description("削除済みのプレゼントは受け取れません。")]
@@ -9784,6 +9792,8 @@ class SystemChatMessageIdType(_Enum):
     DeclareToTargetGuild = 18
     # [Description("Aギルドの[布告したプレイヤー名]がBギルドの[拠点名]に反撃を宣言しました！")]
     RecaptureToTargetGuild = 19
+    # [Description("ギルドメンバーの募集期間が終了しました")]
+    ExpireChatRecruitGuildMember = 20
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -9824,6 +9834,14 @@ class RecruitGuildMemberSearchType(_Enum):
     All = 0
     Free = 1
     Joined = 2
+
+# [MessagePackObject(False)]
+@_dataclass(slots=True)
+class ChatIdentityInfo(_ArrayPacked):
+    # [Key(0)]
+    SendLocalTimestamp: int = 0
+    # [Key(1)]
+    SendPlayerId: int = 0
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -10316,14 +10334,6 @@ class PrivateChatLogPlayerInfo(_ArrayPacked):
     # [Key(2)]
     LocalTimestamp: int = 0
 
-# [MessagePackObject(False)]
-@_dataclass(slots=True)
-class ChatIdentityInfo(_ArrayPacked):
-    # [Key(0)]
-    SendLocalTimestamp: int = 0
-    # [Key(1)]
-    SendPlayerId: int = 0
-
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class ChatBattlePropertyInfo():
@@ -10371,6 +10381,24 @@ class ChatMusicPlaylistInfo(_ArrayPacked):
     # [Key(4)]
     PlaylistShareCode: str = ""
 
+# [MessagePackObject(False)]
+@_dataclass(slots=True)
+class ChatRecruitGuildMemberInfo(_ArrayPacked):
+    # [Key(0)]
+    GuildId: int = 0
+    # [Key(1)]
+    GuildName: str = ""
+    # [Key(2)]
+    GuildLv: int = 0
+    # [Key(3)]
+    IconId: int = 0
+    # [Key(4)]
+    IconEffectId: int = 0
+    # [Key(5)]
+    LegendLeagueClass: LegendLeagueClassType = _field(default_factory=lambda: LegendLeagueClassType())
+    # [Key(6)]
+    RecruitMessage: str = ""
+
 # [Description("システムチャット種別")]
 class SystemChatType(_Enum):
     None_ = 0
@@ -10390,10 +10418,13 @@ class SystemChatType(_Enum):
     Guild = 7
     # [Description("ChangePlayerName")]
     ChangePlayerName = 8
+    # [Description("ChatRecruitGuildMember")]
+    ChatRecruitGuildMember = 9
 
 # [MessagePackObject(False)]
 _ChatBattleInfo = ChatBattleInfo
 _ChatMusicPlaylistInfo = ChatMusicPlaylistInfo
+_ChatRecruitGuildMemberInfo = ChatRecruitGuildMemberInfo
 _ChatType = ChatType
 _SystemChatMessageIdType = SystemChatMessageIdType
 _SystemChatType = SystemChatType
@@ -10431,6 +10462,8 @@ class ChatInfo(_ArrayPacked):
     ChatMusicPlaylistInfo: _ChatMusicPlaylistInfo = _field(default_factory=lambda: _ChatMusicPlaylistInfo())
     # [Key(15)]
     IconEffectId: int = 0
+    # [Key(16)]
+    ChatRecruitGuildMemberInfo: _ChatRecruitGuildMemberInfo = _field(default_factory=lambda: _ChatRecruitGuildMemberInfo())
 
 class ChatReactionType(_Enum):
     # [Description("リアクションなし")]
