@@ -358,34 +358,6 @@ class BossBattleEnemyMB(MasterBookBase):
     # [PropertyOrder(17)]
     EnemyAdjustId: int = 0
 
-# [Description("祈りの泉　イベント")]
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class BountyQuestEventMB(MasterBookBase):
-    # [Description("イベント名")]
-    # [PropertyOrder(1)]
-    EventNameKey: str = ""
-    # [Description("イベント説明")]
-    # [PropertyOrder(2)]
-    EventDescriptionKey: str = ""
-    # [Description("開始時刻")]
-    # [PropertyOrder(3)]
-    StartTime: str = ""
-    # [Description("終了時刻")]
-    # [PropertyOrder(4)]
-    EndTime: str = ""
-    # [Description("報酬量の増加率(%)")]
-    # [PropertyOrder(5)]
-    MultipleNumber: int = 0
-    # [Description("対象となる祈りの泉クエストタイプ")]
-    # [Nest(False, 0)]
-    # [PropertyOrder(6)]
-    TargetQuestTypeList: list[BountyQuestEventTargetQuestTypeInfo] = _field(default_factory=list["BountyQuestEventTargetQuestTypeInfo"])
-    # [Description("対象となるアイテムリスト")]
-    # [Nest(False, 0)]
-    # [PropertyOrder(7)]
-    TargetItemList: list[BountyQuestEventTargetItemInfo] = _field(default_factory=list["BountyQuestEventTargetItemInfo"])
-
 # [Description("アイテム変換情報")]
 # [MessagePackObject(True)]
 _ChangeItemType = ChangeItemType
@@ -2057,11 +2029,14 @@ class InquiryButtonMB(MasterBookBase):
     # [Nest(False, 0)]
     # [PropertyOrder(5)]
     TransferUrl: TranslatedText = _field(default_factory=lambda: TranslatedText())
-    # [Description("タイムサーバーID")]
+    # [Description("注意文キー")]
     # [PropertyOrder(6)]
+    PrecautionTextKey: str = ""
+    # [Description("タイムサーバーID")]
+    # [PropertyOrder(7)]
     TimeServerIds: list[int] = _field(default_factory=list["int"])
     # [Description("デバイスタイプリスト(空いている場合に全体)")]
-    # [PropertyOrder(7)]
+    # [PropertyOrder(8)]
     DeviceTypes: list[int] = _field(default_factory=list["int"])
 
 # [Description("アイテム所持上限クエスト切替")]

@@ -516,20 +516,6 @@ class MypageIconDisplayLocationType(_Enum):
     # [Description("マイページとサブイベントポータル")]
     MypageAndSubEventPortal = 4
 
-class IHasStartEndTime(_Protocol):
-    pass
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class BountyQuestEventTargetItemInfo():
-    ItemId: int = 0
-    ItemType: _ItemType = _field(default_factory=lambda: _ItemType())
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class BountyQuestEventTargetQuestTypeInfo():
-    BountyQuestType: _BountyQuestType = _field(default_factory=lambda: _BountyQuestType())
-
 # [Description("アイテム変換タイプ")]
 class ChangeItemType(_Enum):
     # [Description("販売")]
@@ -1321,8 +1307,8 @@ class TransferSpotType(_Enum):
     PlayVideo = 330
     # [Description("レンタルレイド")]
     RentalRaid = 340
-    # [Description("WEBストアログインキャンペーン")]
-    WebStoreLoginCampaign = 350
+    # [Description("WEBストア説明ダイアログ")]
+    WebStoreDescription = 350
     # [Description("湖底の絵画集め")]
     MiningQuest = 360
     # [Description("フレンド")]
@@ -1550,6 +1536,9 @@ class EquipmentSlotType(_Enum):
     Armor = 5
     # [Description("ブーツ")]
     Shoes = 6
+
+class IHasStartEndTime(_Protocol):
+    pass
 
 # [Description("第2フレーム種類")]
 class SecondaryFrameType(_Enum):
@@ -1988,6 +1977,8 @@ class InquiryButtonType(_Enum):
     Mail = 2
     # [Description("アカウント削除")]
     AccountDelete = 3
+    # [Description("注意文")]
+    Precaution = 4
 
 # [Description("所持数上限切替クエスト")]
 # [MessagePackObject(True)]
@@ -2028,6 +2019,8 @@ class LimitedEventType(_Enum):
     PlayVideoComment = 3
     # [Description("動画再生再生回数表示")]
     PlayVideoTotalCount = 4
+    # [Description("祈りの泉報酬2倍")]
+    BountyQuestRewardBonus = 5
     # [Description("通知強制削除")]
     NotificationForceCancel = 10000
     # [Description("GooglePlayのレシート消費をクライアントで行う")]
@@ -8016,6 +8009,8 @@ class ShopProductType(_Enum):
     MissionPass = 12
     # [Description("WEBストア")]
     WebStore = 13
+    # [Description("WEBストア誘導パネル")]
+    WebStoreGuidancePanel = 14
     # [Description("全検索")]
     AllSearch = 99
 
@@ -8394,6 +8389,14 @@ class ShopProductMonthlyBoost():
     UserItemDailyList: list[_UserItem] = _field(default_factory=list["_UserItem"])
 
 # [MessagePackObject(True)]
+@_dataclass(slots=True)
+class ShopProductWebStoreGuidancePanel():
+    # [Description("コピーボタンを表示フラグ")]
+    IsDisplayCopyButton: bool = False
+    # [Description("お知らせグループId")]
+    NoticeGroupId: int = 0
+
+# [MessagePackObject(True)]
 _ShopProductAchievementPack = ShopProductAchievementPack
 _ShopProductChargeBonus = ShopProductChargeBonus
 _ShopProductContractPrivilege = ShopProductContractPrivilege
@@ -8403,6 +8406,7 @@ _ShopProductFirstChargeBonus = ShopProductFirstChargeBonus
 _ShopProductGrowthPack = ShopProductGrowthPack
 _ShopProductGuerrillaPack = ShopProductGuerrillaPack
 _ShopProductMonthlyBoost = ShopProductMonthlyBoost
+_ShopProductWebStoreGuidancePanel = ShopProductWebStoreGuidancePanel
 @_dataclass(slots=True)
 class ShopProductInfo():
     # [Description("表示順(昇順)")]
@@ -8429,6 +8433,8 @@ class ShopProductInfo():
     ShopProductMonthlyBoost: _ShopProductMonthlyBoost = _field(default_factory=lambda: _ShopProductMonthlyBoost())
     # [Description("商品種別タイプ")]
     ShopProductType: _ShopProductType = _field(default_factory=lambda: _ShopProductType())
+    # [Description("WEBストア誘導パネル用データ")]
+    ShopProductWebStoreGuidancePanel: _ShopProductWebStoreGuidancePanel = _field(default_factory=lambda: _ShopProductWebStoreGuidancePanel())
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -8586,6 +8592,10 @@ class ShopBannerInfo():
     CustomTextSimpleLayoutInfo: _CustomTextSimpleLayoutInfo = _field(default_factory=lambda: _CustomTextSimpleLayoutInfo())
     # [Description("表示テキストキー")]
     DisplayTextKey: str = ""
+    # [Description("コピーボタンを表示フラグ")]
+    IsDisplayCopyButton: bool = False
+    # [Description("お知らせグループId")]
+    NoticeGroupId: int = 0
     # [Description("ショップバナーの表示タイプ")]
     ShopBannerDisplayType: _ShopBannerDisplayType = _field(default_factory=lambda: _ShopBannerDisplayType())
     # [Description("テキストアライメント設定")]
@@ -8666,6 +8676,15 @@ class ShopProductSubInfo():
     ProductId: str = ""
     # [Description("商品値段")]
     ShopProductPrice: int = 0
+
+# [Description("WEBストア誘導タイプ")]
+class WebStoreGuidanceType(_Enum):
+    # [Description("なし")]
+    None_ = 0
+    # [Description("バナー")]
+    Banner = 1
+    # [Description("パネル")]
+    Panel = 2
 
 # [Description("Stripe商品情報")]
 # [MessagePackObject(True)]
@@ -10014,6 +10033,14 @@ class FriendInfoType(_Enum):
 @_dataclass(slots=True)
 class NewFriendInfo():
     FriendType: FriendInfoType = _field(default_factory=lambda: FriendInfoType())
+    PlayerId: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class FriendStatusInfo():
+    FriendStatusType: _FriendStatusType = _field(default_factory=lambda: _FriendStatusType())
+    IsAllowedFriendBattle: bool = False
+    LatestQuestId: int = 0
     PlayerId: int = 0
 
 # [MessagePackObject(True)]
