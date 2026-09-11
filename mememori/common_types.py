@@ -910,6 +910,10 @@ class MissionAchievementType(_Enum):
     ExchangeDungeonBattleBuyCount = 5050100
     # [Description("ロイヤルショップのダイヤ購入でダイヤを購入した時")]
     ShopTotalBuyCurrency = 6010100
+    # [Description("クリスタルの消費数")]
+    ShopConsumeWebCrystalCount = 6020100
+    # [Description("Webストアの無料商品の購入回数")]
+    ShopBuyFreeWebStoreProductCount = 6030100
     # [Description("キャラレベルアップ")]
     CharacterLevelUpCount = 7010100
     # [Description("レベルリンク達成レベル")]
@@ -1612,6 +1616,10 @@ class MissionTransitionDestinationType(_Enum):
     ExchangeDungeonBattle = 505
     # [Description("ロイヤルショップ＿ダイヤ購入タブ")]
     Shop = 601
+    # [Description("Webストア説明ダイアログ")]
+    WebStoreGuidance = 602
+    # [Description("Webストア説明ダイアログ")]
+    WebStoreGuidanceFreeProduct = 603
     # [Description("キャラ画面（所持キャラタブ）")]
     CharacterList = 701
     # [Description("キャラ画面（進化タブ）")]
@@ -2627,6 +2635,8 @@ class OpenCommandType(_Enum):
     WebCrystal = 610
     # [Description("湖底の絵画集め")]
     MiningQuest = 620
+    # [Description("武具強化Lv指定")]
+    EquipmentSpecifyReinforceLevel = 640
     # [Description("武具固定")]
     LockEquipment = 1000
     # [Description("武具固定(ギルドバトル用)")]
