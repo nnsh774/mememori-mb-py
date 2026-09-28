@@ -2029,6 +2029,8 @@ class LimitedEventType(_Enum):
     PlayVideoTotalCount = 4
     # [Description("祈りの泉報酬2倍")]
     BountyQuestRewardBonus = 5
+    # [Description("年齢確認法の制御を解除")]
+    DisableAgeAssurance = 7
     # [Description("通知強制削除")]
     NotificationForceCancel = 10000
     # [Description("GooglePlayのレシート消費をクライアントで行う")]
@@ -6284,6 +6286,8 @@ class ErrorCode(_Enum):
     GuildRaidNotOpenGuildRaid = 192016
     # [Description("受取可能な報酬を全て受取済みです。")]
     GuildRaidNotExistReceivableReward = 192017
+    # [Description("練習機能は利用不可です。")]
+    GuildRaidTrialNotAvailable = 192018
     # [Description("ガチャ開催中です。")]
     GachaAlreadyBeenOpened = 200110
     # [Description("既にその聖遺物が選択されています。")]
