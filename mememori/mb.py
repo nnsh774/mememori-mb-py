@@ -680,14 +680,17 @@ class CharacterProfileMB(MasterBookBase):
     # [Description("歌手(US)キー")]
     # [PropertyOrder(15)]
     VocalUSKey: str = ""
-    # [Description("新キャラ演出メッセージ2キー")]
+    # [Description("検索ワード(JP)")]
     # [PropertyOrder(16)]
+    SearchKeywordsJP: list[str] = _field(default_factory=list["str"])
+    # [Description("新キャラ演出メッセージ2キー")]
+    # [PropertyOrder(17)]
     GachaResultMessage2Key: str = ""
     # [Description("日本語キャラソン歌詞")]
-    # [PropertyOrder(17)]
+    # [PropertyOrder(18)]
     LyricsJPKey: str = ""
     # [Description("英語キャラソン歌詞")]
-    # [PropertyOrder(18)]
+    # [PropertyOrder(19)]
     LyricsUSKey: str = ""
 
 # [Description("キャラクターランクアップ")]
@@ -2759,14 +2762,17 @@ class MusicMB(MasterBookBase):
     # [Description("歌詞キー")]
     # [PropertyOrder(5)]
     LyricsKey: str = ""
-    # [Description("楽曲パス")]
+    # [Description("検索ワード(JP)")]
     # [PropertyOrder(6)]
+    SearchKeywordsJP: list[str] = _field(default_factory=list["str"])
+    # [Description("楽曲パス")]
+    # [PropertyOrder(7)]
     MusicPath: str = ""
     # [Description("サムネイルパス")]
-    # [PropertyOrder(7)]
+    # [PropertyOrder(8)]
     ThumbnailPath: str = ""
     # [Description("専用消費アイテム個数")]
-    # [PropertyOrder(8)]
+    # [PropertyOrder(9)]
     ConsumeMusicTicketCount: int = 0
 
 # [Description("新キャラミッション")]
@@ -3880,6 +3886,56 @@ class TutorialTextBoxMB(MasterBookBase):
     # [Description("ボイスファイルパス")]
     # [PropertyOrder(4)]
     VoiceUSFilePath: str = ""
+
+# [Description("団結ミッション階級MB")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UnionMissionClassMB(MasterBookBase):
+    # [Description("階級")]
+    # [PropertyOrder(1)]
+    ClassType: UnionMissionClassType = _field(default_factory=lambda: UnionMissionClassType())
+    # [Description("階級名")]
+    # [PropertyOrder(2)]
+    ClassNameKey: str = ""
+    # [Description("階級説明テキスト")]
+    # [PropertyOrder(3)]
+    ClassDescriptionKey: str = ""
+    # [Description("1ブロック当たりのギルド数")]
+    # [PropertyOrder(4)]
+    GuildCountPerBlock: int = 0
+    # [Description("1ブロック当たりのNPC数")]
+    # [PropertyOrder(5)]
+    NpcCountPerBlock: int = 0
+    # [Description("昇級条件の順位")]
+    # [PropertyOrder(6)]
+    PromotionRank: int = 0
+    # [Description("降格条件の順位")]
+    # [PropertyOrder(7)]
+    RelegationRank: int = 0
+
+# [Description("団結ミッションイベントMB")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UnionMissionEventMB(MasterBookBase):
+    # [Description("ミッション抽選IDのリスト")]
+    # [PropertyOrder(1)]
+    MissionLotteryIdList: list[int] = _field(default_factory=list["int"])
+    # [DateTimeString]
+    # [Description("準備期間開始日時")]
+    # [PropertyOrder(2)]
+    ReadyStartTime: str = ""
+    # [DateTimeString]
+    # [Description("イベント開始日時")]
+    # [PropertyOrder(3)]
+    StartTime: str = ""
+    # [DateTimeString]
+    # [Description("イベント終了日時")]
+    # [PropertyOrder(4)]
+    EndTime: str = ""
+    # [DateTimeString]
+    # [Description("バナー終了日時")]
+    # [PropertyOrder(5)]
+    DisplayBannerEndTime: str = ""
 
 # [Description("VIP特典")]
 # [MessagePackObject(True)]

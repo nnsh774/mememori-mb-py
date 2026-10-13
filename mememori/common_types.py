@@ -2639,6 +2639,8 @@ class OpenCommandType(_Enum):
     MiningQuest = 620
     # [Description("武具強化Lv指定")]
     EquipmentSpecifyReinforceLevel = 640
+    # [Description("団結ミッション")]
+    UnionMission = 650
     # [Description("武具固定")]
     LockEquipment = 1000
     # [Description("武具固定(ギルドバトル用)")]
@@ -3297,6 +3299,17 @@ class TutorialDescriptionPageInfo():
     # [PropertyOrder(2)]
     ImageId: int = 0
 
+# [Description("団結ミッションの階級タイプ")]
+class UnionMissionClassType(_Enum):
+    # [Description("不明")]
+    None_ = 0
+    # [Description("ブロンズクラス")]
+    Bronze = 1
+    # [Description("シルバークラス")]
+    Silver = 2
+    # [Description("ゴールドクラス")]
+    Gold = 3
+
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class VipGiftInfo():
@@ -3858,6 +3871,8 @@ class NotificationType(_Enum):
     PlayVideoFromEventPortal = 28
     # [Description("人気投票 グループ投票チケットを1枚以上もっているかつ、予選本選いずれかの期間内で、その日一度も投票してない時")]
     NotPopularityVoteGroupOnDay = 29
+    # [Description("団結ミッションにエントリー可能な場合")]
+    EntryUnionMissionAvailable = 30
 
 # [MessagePackObject(True)]
 _NotificationType = NotificationType
@@ -4163,6 +4178,7 @@ class UserSyncData():
     FriendBattleFavoritePlayerIdList: list[int] = _field(default_factory=list["int"])
     GivenItemCountInfoList: list[UserItem] = _field(default_factory=list["UserItem"])
     GuildJoinLimitCount: int | None = None
+    GuildNoteShareLocalTimestampMap: dict[int, int] = _field(default_factory=dict["int", "int"])
     HasTransitionedPanelPictureBook: bool | None = None
     IsDataLinkage: bool | None = None
     IsJoinedGlobalGvg: bool | None = None
@@ -7486,6 +7502,40 @@ class ErrorCode(_Enum):
     MiningQuestNotReceivedDailyReward = 561008
     # [Description("湖底の絵画集めイベントが解放されていません。")]
     MiningQuestEventNotOpen = 561009
+    # [Description("ギルドノートのユーザーデータが見つかりません。")]
+    GuildNoteNotFoundGuildNoteDto = 570000
+    # [Description("ギルドノートの最大件数を超えました。")]
+    GuildNoteOverMaxCount = 571000
+    # [Description("タイトルが入力されていません。")]
+    GuildNoteEmptyTitle = 571001
+    # [Description("タイトルの文字数が上限を超えています。")]
+    GuildNoteOverMaxLengthTitle = 571002
+    # [Description("本文が入力されていません。")]
+    GuildNoteEmptyContent = 571003
+    # [Description("本文の文字数が上限を超えています。")]
+    GuildNoteOverMaxLengthContent = 571004
+    # [Description("存在しないギルドノートです。")]
+    GuildNoteNotBelongToGuild = 571005
+    # [Description("権限が足りていません。")]
+    GuildNoteHasNoPermission = 571006
+    # [Description("カテゴリータイプが不正です。")]
+    GuildNoteInvalidGuildNoteCategoryType = 571007
+    # [Description("ギルドノートのリストが不正です。")]
+    GuildNoteInvalidGuildNoteList = 571008
+    # [Description("ギルドノートのリストを更新してください。")]
+    GuildNoteNeedRefresh = 571009
+    # [Description("ギルドノートを操作中です。")]
+    GuildNoteOperationInProgress = 571010
+    # [Description("ギルドストックが不足しています。")]
+    UnionMissionEntryNotEnoughGuildFame = 581000
+    # [Description("団結ミッションに既にエントリーしています。")]
+    UnionMissionDuplicateEntry = 581001
+    # [Description("団結ミッションのエントリー期間外です。")]
+    UnionMissionNotInEntryPeriod = 581002
+    # [Description("プレイヤーがギルドに所属していません。")]
+    UnionMissionNotBelongToGuild = 581003
+    # [Description("団結ミッションの対象ワールドではありません。")]
+    UnionMissionNotInMatchingWorld = 581028
     # [Description("存在しないTreasureChestです。")]
     ItemOpenTreasureChestIdNotFound = 602004
     # [Description("存在しないTreasureChestです。")]
@@ -9318,6 +9368,8 @@ class LuckyChanceExchangeItemInfo():
     FromItemId: int = 0
     FromItemType: ItemType = _field(default_factory=lambda: ItemType())
     IsExchangeInGameItem: bool = False
+    ReceivingItemId: int = 0
+    ReceivingItemType: ItemType = _field(default_factory=lambda: ItemType())
 
 # [Description("期間限定ログボの報酬アイテム")]
 # [MessagePackObject(True)]
@@ -9779,6 +9831,54 @@ class GuildRaidInfo():
 class WorldRewardInfo():
     GoalDamage: int = 0
     IsReceived: bool = False
+
+# [Description("ギルドノートカテゴリータイプ")]
+class GuildNoteCategoryType(_Enum):
+    # [Description("なし")]
+    None_ = 0
+    # [Description("通常")]
+    Normal = 1
+    # [Description("優先")]
+    Priority = 2
+
+class ChatReactionType(_Enum):
+    # [Description("リアクションなし")]
+    None_ = 0
+    # [Description("ウインク")]
+    Wink = 1
+    # [Description("乾杯")]
+    Cheers = 2
+    # [Description("ハート")]
+    Heart = 3
+    # [Description("悲しい")]
+    Sad = 4
+
+# [MessagePackObject(True)]
+_GuildNoteCategoryType = GuildNoteCategoryType
+@_dataclass(slots=True)
+class GuildNoteInfo():
+    ChatReactionCountMap: dict[ChatReactionType, int] = _field(default_factory=dict["ChatReactionType", "int"])
+    Content: str = ""
+    GuildNoteCategoryType: _GuildNoteCategoryType = _field(default_factory=lambda: _GuildNoteCategoryType())
+    GuildNoteId: int = 0
+    IconEffectId: int = 0
+    IconId: int = 0
+    IsDeletedPlayer: bool = False
+    LegendLeagueClass: LegendLeagueClassType = _field(default_factory=lambda: LegendLeagueClassType())
+    MyChatReactionType: ChatReactionType = _field(default_factory=lambda: ChatReactionType())
+    Order: int = 0
+    PlayerId: int = 0
+    PlayerName: str = ""
+    Title: str = ""
+    UpdateLocalTimeStamp: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class ReactionPlayerInfo():
+    IconEffectId: int = 0
+    IconId: int = 0
+    LegendLeagueClassType: _LegendLeagueClassType = _field(default_factory=lambda: _LegendLeagueClassType())
+    PlayerName: str = ""
 
 # [Description("システムチャット")]
 class SystemChatMessageIdType(_Enum):
@@ -10440,6 +10540,13 @@ class ChatRecruitGuildMemberInfo(_ArrayPacked):
     # [Key(6)]
     RecruitMessage: str = ""
 
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class ChatGuildNoteInfo():
+    Content: str = ""
+    GuildNoteId: int = 0
+    Title: str = ""
+
 # [Description("システムチャット種別")]
 class SystemChatType(_Enum):
     None_ = 0
@@ -10464,6 +10571,7 @@ class SystemChatType(_Enum):
 
 # [MessagePackObject(False)]
 _ChatBattleInfo = ChatBattleInfo
+_ChatGuildNoteInfo = ChatGuildNoteInfo
 _ChatMusicPlaylistInfo = ChatMusicPlaylistInfo
 _ChatRecruitGuildMemberInfo = ChatRecruitGuildMemberInfo
 _ChatType = ChatType
@@ -10505,18 +10613,8 @@ class ChatInfo(_ArrayPacked):
     IconEffectId: int = 0
     # [Key(16)]
     ChatRecruitGuildMemberInfo: _ChatRecruitGuildMemberInfo = _field(default_factory=lambda: _ChatRecruitGuildMemberInfo())
-
-class ChatReactionType(_Enum):
-    # [Description("リアクションなし")]
-    None_ = 0
-    # [Description("ウインク")]
-    Wink = 1
-    # [Description("乾杯")]
-    Cheers = 2
-    # [Description("ハート")]
-    Heart = 3
-    # [Description("悲しい")]
-    Sad = 4
+    # [Key(17)]
+    ChatGuildNoteInfo: _ChatGuildNoteInfo = _field(default_factory=lambda: _ChatGuildNoteInfo())
 
 # [MessagePackObject(False)]
 _ChatInfo = ChatInfo
@@ -10541,14 +10639,6 @@ class AnnounceChatInfo(_ArrayPacked):
     GuildChatInfo: _GuildChatInfo = _field(default_factory=lambda: _GuildChatInfo())
     # [Key(1)]
     RegisterLocalTimestamp: int = 0
-
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class ReactionPlayerInfo():
-    IconEffectId: int = 0
-    IconId: int = 0
-    LegendLeagueClassType: _LegendLeagueClassType = _field(default_factory=lambda: _LegendLeagueClassType())
-    PlayerName: str = ""
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
