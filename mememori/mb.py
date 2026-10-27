@@ -2150,11 +2150,15 @@ class LimitedEventMB(MasterBookBase):
     # [Description("イベントの種類")]
     # [PropertyOrder(1)]
     LimitedEventType: _LimitedEventType = _field(default_factory=lambda: _LimitedEventType())
-    # [Description("開始日時")]
+    # [Description("対象情報リスト")]
+    # [Nest(False, 0)]
     # [PropertyOrder(2)]
+    TargetInfoList: list[TargetInfo] = _field(default_factory=list["TargetInfo"])
+    # [Description("開始日時")]
+    # [PropertyOrder(3)]
     StartTime: str = ""
     # [Description("終了日時")]
-    # [PropertyOrder(3)]
+    # [PropertyOrder(4)]
     EndTime: str = ""
 
 # [Description("期間限定ログインボーナス")]
@@ -3215,6 +3219,9 @@ class RequiredCurrencyMB(MasterBookBase):
     # [Description("レベルリンク枠開放に必要な仮想通貨")]
     # [PropertyOrder(7)]
     LevelLinkMember: int = 0
+    # [Description("団結ミッション受注回数購入に必要な仮想通貨")]
+    # [PropertyOrder(8)]
+    UnionMission: int = 0
 
 # [Description("ショップポイント比率情報")]
 # [MessagePackObject(True)]
@@ -3906,7 +3913,7 @@ class UnionMissionClassMB(MasterBookBase):
     # [Description("1ブロック当たりのNPC数")]
     # [PropertyOrder(5)]
     NpcCountPerBlock: int = 0
-    # [Description("昇級条件の順位")]
+    # [Description("昇格条件の順位")]
     # [PropertyOrder(6)]
     PromotionRank: int = 0
     # [Description("降格条件の順位")]
@@ -3936,6 +3943,93 @@ class UnionMissionEventMB(MasterBookBase):
     # [Description("バナー終了日時")]
     # [PropertyOrder(5)]
     DisplayBannerEndTime: str = ""
+
+# [Description("団結ミッションMB")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UnionMissionMB(MasterBookBase):
+    # [Description("ミッション説明")]
+    # [PropertyOrder(1)]
+    DescriptionKey: str = ""
+    # [Description("ミッション達成難易度")]
+    # [PropertyOrder(2)]
+    Difficulty: int = 0
+    # [Description("ミッション達成タイプ")]
+    # [PropertyOrder(3)]
+    AchievementType: MissionAchievementType = _field(default_factory=lambda: MissionAchievementType())
+    # [Description("達成要求値")]
+    # [PropertyOrder(4)]
+    RequireValue: int = 0
+    # [Description("獲得ポイント")]
+    # [PropertyOrder(5)]
+    GetPoint: int = 0
+    # [Description("達成期限")]
+    # [PropertyOrder(6)]
+    LimitDays: int = 0
+    # [Description("開始日時")]
+    # [PropertyOrder(7)]
+    StartTime: str = ""
+    # [Description("終了日時")]
+    # [PropertyOrder(8)]
+    EndTime: str = ""
+    # [Description("チケットで選択可能か")]
+    # [PropertyOrder(9)]
+    IsSelectableByTicket: bool = False
+
+# [Description("団結ミッションランキング報酬MB")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UnionMissionRankingRewardMB(MasterBookBase):
+    # [Description("階級")]
+    # [PropertyOrder(1)]
+    ClassType: UnionMissionClassType = _field(default_factory=lambda: UnionMissionClassType())
+    # [Description("ランキング種類")]
+    # [PropertyOrder(2)]
+    RankingType: UnionMissionRankingType = _field(default_factory=lambda: UnionMissionRankingType())
+    # [Description("順位")]
+    # [PropertyOrder(3)]
+    Rank: int = 0
+    # [Description("報酬アイテムリスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(4)]
+    RewardItemList: list[RarityItem] = _field(default_factory=list["RarityItem"])
+
+# [Description("団結ミッション繰り返し個人報酬MB")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UnionMissionRepeatPersonalRewardMB(MasterBookBase):
+    # [Description("階級")]
+    # [PropertyOrder(1)]
+    ClassType: UnionMissionClassType = _field(default_factory=lambda: UnionMissionClassType())
+    # [Description("必要個人ポイント")]
+    # [PropertyOrder(2)]
+    RequirePersonalPoint: int = 0
+    # [Description("報酬アイテムリスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(3)]
+    RewardItemList: list[RarityItem] = _field(default_factory=list["RarityItem"])
+
+# [Description("団結ミッション累計ポイント報酬MB")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UnionMissionTotalPointRewardMB(MasterBookBase):
+    # [Description("階級")]
+    # [PropertyOrder(1)]
+    ClassType: UnionMissionClassType = _field(default_factory=lambda: UnionMissionClassType())
+    # [Description("必要ギルドポイント")]
+    # [PropertyOrder(2)]
+    RequireGuildPoint: int = 0
+    # [Description("必要個人ポイント")]
+    # [PropertyOrder(3)]
+    RequirePersonalPoint: int = 0
+    # [Description("ギルドポイント報酬アイテムリスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(4)]
+    GuildPointRewardItemList: list[RarityItem] = _field(default_factory=list["RarityItem"])
+    # [Description("個人ポイント報酬アイテムリスト")]
+    # [Nest(False, 0)]
+    # [PropertyOrder(5)]
+    PersonalPointRewardItemList: list[RarityItem] = _field(default_factory=list["RarityItem"])
 
 # [Description("VIP特典")]
 # [MessagePackObject(True)]

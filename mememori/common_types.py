@@ -154,6 +154,8 @@ class ItemType(_Enum):
     RealPrizeC = 54
     # [Description("絵画集め通貨アイテム")]
     MiningQuestEventRewardItem = 56
+    # [Description("団結ミッションチケット")]
+    UnionMissionTicket = 57
     # [Description("Stripeクーポン")]
     StripeCoupon = 1001
     # [Description("Webクリスタル")]
@@ -914,6 +916,8 @@ class MissionAchievementType(_Enum):
     ShopConsumeWebCrystalCount = 6020100
     # [Description("Webストアの無料商品の購入回数")]
     ShopBuyFreeWebStoreProductCount = 6030100
+    # [Description("クリスタルの獲得数")]
+    ShopGetWebCrystalCount = 6040100
     # [Description("キャラレベルアップ")]
     CharacterLevelUpCount = 7010100
     # [Description("レベルリンク達成レベル")]
@@ -972,6 +976,12 @@ class MissionAchievementType(_Enum):
     EquipmentComposeCountSR = 8030102
     # [Description("SSRアスタロト武具シリーズ合成回数")]
     EquipmentComposeCountSSR = 8030103
+    # [Description("初級封印の宝箱使用回数")]
+    SealedChestBronzeUseCount = 8040100
+    # [Description("中級封印の宝箱使用回数")]
+    SealedChestSilverUseCount = 8040200
+    # [Description("上級封印の宝箱使用回数")]
+    SealedChestGoldUseCount = 8040300
     # [Description("プレイヤー達成レベル")]
     AutoBattleMaxPlayerLevel = 9010100
     # [Description("獲得した合計領民数")]
@@ -1120,6 +1130,8 @@ class MissionAchievementType(_Enum):
     GachaDrawCount = 15010200
     # [Description("ダイヤ消費量")]
     ConsumeCurrencyCount = 15010300
+    # [Description("キャラ・武具ガチャ回数")]
+    GachaCharaOrEquipmentDrawCount = 15010500
     # [Description("ギルド加入回数")]
     GuildJoinCount = 16010100
     # [Description("ギルドログイン回数")]
@@ -1632,6 +1644,8 @@ class MissionTransitionDestinationType(_Enum):
     ItemBoxEquipment = 802
     # [Description("アイテムボックス画面（パーツタブ）")]
     ItemBoxParts = 803
+    # [Description("アイテムボックス画面（アイテムボックス消費タブ）")]
+    ItemBoxConsumption = 804
     # [Description("オートバトル")]
     AutoBattle = 901
     # [Description("高速バトルダイアログ")]
@@ -2029,6 +2043,8 @@ class LimitedEventType(_Enum):
     PlayVideoTotalCount = 4
     # [Description("祈りの泉報酬2倍")]
     BountyQuestRewardBonus = 5
+    # [Description("動画配信モードON時、対象プレイヤーのみ動画再生可能")]
+    PlayVideoIgnoreLiveMode = 6
     # [Description("年齢確認法の制御を解除")]
     DisableAgeAssurance = 7
     # [Description("通知強制削除")]
@@ -2041,6 +2057,14 @@ class LimitedEventType(_Enum):
     WebstoreRelease = 20000
     # [Description("アセットのキャッシュクリア無効")]
     DisableAssetCacheClear = 30000
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class TargetInfo():
+    # [Description("値1")]
+    Value1: int = 0
+    # [Description("値2")]
+    Value2: int = 0
 
 # [Description("キャラクターレアリティを持つ可能性があるアイテムが実装するインターフェース")]
 class IUserCharacterItem(_Protocol):
@@ -3310,6 +3334,23 @@ class UnionMissionClassType(_Enum):
     # [Description("ゴールドクラス")]
     Gold = 3
 
+# [Description("団結ミッションのランキング種別")]
+class UnionMissionRankingType(_Enum):
+    # [Description("不明")]
+    None_ = 0
+    # [Description("個人ランキング")]
+    Personal = 1
+    # [Description("ギルドランキング")]
+    Guild = 2
+
+# [Description("レアリティアイテム")]
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class RarityItem():
+    # [Nest(True, 1)]
+    Item: UserItem = _field(default_factory=lambda: UserItem())
+    RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
+
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class VipGiftInfo():
@@ -3873,6 +3914,12 @@ class NotificationType(_Enum):
     NotPopularityVoteGroupOnDay = 29
     # [Description("団結ミッションにエントリー可能な場合")]
     EntryUnionMissionAvailable = 30
+    # [Description("イベント開催中、かつ、その日に団結ミッション画面に遷移した回数が1回未満の場合")]
+    NotVisitUnionMissionOnDay = 31
+    # [Description("自身がミッション達成済みでポイント受取可能な場合")]
+    ReceivableUnionMissionPoint = 32
+    # [Description("受け取り可能な累計ポイント報酬が存在する場合")]
+    ReceivableUnionMissionReward = 33
 
 # [MessagePackObject(True)]
 _NotificationType = NotificationType
@@ -5004,6 +5051,10 @@ class RemoveEffectType(_Enum):
     TurnCountEnd = 0
     # [Description("ターンの終わりとダメージを受けたとき")]
     TurnCountEndAndReceiveDamage = 1
+    # [Description("付帯者の行動終了時")]
+    ActionEnd = 2
+    # [Description("ターンの終わりと付与者の戦闘不能時")]
+    TurnCountEndAndGranterDead = 3
 
 # [MessagePackObject(True)]
 _EffectGroupType = EffectGroupType
@@ -5325,14 +5376,6 @@ class WeeklyTopicsShopData():
     ExpirationTimeStamp: int = 0
     TradeShopItemList: list[TradeShopItem] = _field(default_factory=list["TradeShopItem"])
 
-# [Description("レアリティアイテム")]
-# [MessagePackObject(True)]
-@_dataclass(slots=True)
-class RarityItem():
-    # [Nest(True, 1)]
-    Item: UserItem = _field(default_factory=lambda: UserItem())
-    RarityFlags: _Flags[CharacterRarityFlags] = _field(default_factory=lambda: _Flags["CharacterRarityFlags"]([]))
-
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
 class MissionGuideInfo():
@@ -5584,6 +5627,107 @@ class GuildSyncData():
 class GvgDeckInfo():
     DeckNo: int = 0
     UserCharacterGuidList: list[str] = _field(default_factory=list["str"])
+
+# [Description("団結ミッションのミッションタイプ")]
+class UnionMissionType(_Enum):
+    # [Description("不明")]
+    None_ = 0
+    # [Description("個人ミッション")]
+    Personal = 1
+    # [Description("共用ミッション")]
+    Shared = 2
+
+# [Description("団結ミッションのミッションパネル状態")]
+class UnionMissionPanelStatus(_Enum):
+    # [Description("不明")]
+    None_ = 0
+    # [Description("未受注")]
+    NotAccepted = 1
+    # [Description("受注中")]
+    Accepted = 2
+    # [Description("更新待ち")]
+    WaitingRefresh = 3
+    # [Description("完了済み")]
+    Completed = 4
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UnionMissionPanelInfo():
+    # [Description("受注しているプレイヤーID")]
+    AcceptedPlayerId: int = 0
+    # [Description("受注日時")]
+    AcceptedTime: int = 0
+    # [Description("ボーナス倍率")]
+    BonusRate: int = 0
+    # [Description("クールタイムが明ける日時")]
+    CoolTimeEndTime: int = 0
+    # [Description("手動でクールタイム解除可能か否か")]
+    IsCoolTimeResettable: bool = False
+    # [Description("達成期限")]
+    LimitTime: int = 0
+    # [Description("ミッションID")]
+    MissionId: int = 0
+    # [Description("パネルを一意に識別するID")]
+    MissionPanelId: int = 0
+    # [Description("個人 or 共用ミッションか")]
+    MissionType: UnionMissionType = _field(default_factory=lambda: UnionMissionType())
+    # [Description("現在の達成値")]
+    ProgressCount: int = 0
+    # [Description("ミッションの受注状態")]
+    Status: UnionMissionPanelStatus = _field(default_factory=lambda: UnionMissionPanelStatus())
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UnionMissionGuildRankingEntry():
+    # [Description("ギルドID。NPCは0")]
+    GuildId: int = 0
+    # [Description("当該ギルドの現在のメンバー数")]
+    GuildMemberCount: int = 0
+    # [Description("ギルド名")]
+    GuildName: str = ""
+    # [Description("プレイヤーアイコン枠情報(ギルドマスター)")]
+    LegendLeagueClass: LegendLeagueClassType = _field(default_factory=lambda: LegendLeagueClassType())
+    # [Description("ギルドマスターのメインアイコンエフェクト")]
+    MainCharacterIconEffectId: int = 0
+    # [Description("ギルドマスターのメインアイコンキャラクター")]
+    MainCharacterIconId: int = 0
+    # [Description("当該ギルドのメンバー数上限")]
+    NumberOfPossibleJoinPeople: int = 0
+    # [Description("ギルドの累計獲得ポイント")]
+    Point: int = 0
+    # [Description("順位")]
+    Rank: int = 0
+
+# [MessagePackObject(True)]
+@_dataclass(slots=True)
+class UnionMissionPersonalRankingEntry():
+    # [Description("受注数")]
+    AcceptedCount: int = 0
+    # [Description("達成数")]
+    AchievedCount: int = 0
+    # [Description("プレイヤーアイコン枠情報")]
+    LegendLeagueClass: LegendLeagueClassType = _field(default_factory=lambda: LegendLeagueClassType())
+    # [Description("メインアイコンエフェクト")]
+    MainCharacterIconEffectId: int = 0
+    # [Description("メインアイコンキャラクター")]
+    MainCharacterIconId: int = 0
+    # [Description("プレイヤーID")]
+    PlayerId: int = 0
+    # [Description("プレイヤー表示名")]
+    PlayerName: str = ""
+    # [Description("累計獲得ポイント")]
+    Point: int = 0
+    # [Description("順位")]
+    Rank: int = 0
+
+# [Description("団結ミッション累計ポイント報酬の種別")]
+class UnionMissionTotalPointRewardType(_Enum):
+    # [Description("不明")]
+    None_ = 0
+    # [Description("ギルドポイント報酬")]
+    Guild = 1
+    # [Description("個人ポイント報酬")]
+    Personal = 2
 
 # [MessagePackObject(True)]
 @_dataclass(slots=True)
@@ -7534,6 +7678,54 @@ class ErrorCode(_Enum):
     UnionMissionNotInEntryPeriod = 581002
     # [Description("プレイヤーがギルドに所属していません。")]
     UnionMissionNotBelongToGuild = 581003
+    # [Description("イベント期間が終了しました。")]
+    UnionMissionEventNotHeld = 581004
+    # [Description("存在しないミッションパネルです。")]
+    UnionMissionPanelNotFound = 581005
+    # [Description("既に他のミッションを受注中です。")]
+    UnionMissionAlreadyAcceptedOtherMission = 581006
+    # [Description("このミッションパネルは受注できません。")]
+    UnionMissionPanelNotAcceptable = 581007
+    # [Description("本日の受注回数の残りがありません。")]
+    UnionMissionNoRemainingAcceptCount = 581008
+    # [Description("自分が受注しているミッションではありません。")]
+    UnionMissionNotAcceptedByYou = 581009
+    # [Description("権限が不足しています。")]
+    UnionMissionHasNoPermission = 581010
+    # [Description("まだクールタイム中です。")]
+    UnionMissionStillInCoolTime = 581011
+    # [Description("ミッションが達成状態ではありません。")]
+    UnionMissionNotCompleted = 581012
+    # [Description("チケットで選択できないミッションです。")]
+    UnionMissionNotSelectableByTicket = 581013
+    # [Description("受注回数購入数が不正です。")]
+    UnionMissionInvalidBuyCount = 581014
+    # [Description("受け取り可能な累計ポイント報酬がありません。")]
+    UnionMissionNoReceivableTotalPointReward = 581015
+    # [Description("累計ポイント報酬の達成条件を満たしていません。")]
+    UnionMissionTotalPointRewardConditionNotMet = 581016
+    # [Description("累計ポイント報酬は既に受け取り済みです。")]
+    UnionMissionTotalPointRewardAlreadyReceived = 581017
+    # [Description("一日に購入できる受注回数の上限を超えました。")]
+    UnionMissionOverBuyAcceptCount = 581018
+    # [Description("既に他のプレイヤーがミッション受注済みのため、受注できません。")]
+    UnionMissionSharedPanelAlreadyAcceptedOnAccept = 581019
+    # [Description("既に他のプレイヤーがミッション更新済みのため、受注できません。")]
+    UnionMissionSharedPanelAlreadyUpdatedOnAccept = 581020
+    # [Description("既に他のプレイヤーがミッション受注済みのため、更新できません。")]
+    UnionMissionSharedPanelAlreadyAcceptedOnRefresh = 581021
+    # [Description("既に他のプレイヤーがミッション更新済みのため、更新できません。")]
+    UnionMissionSharedPanelAlreadyUpdatedOnRefresh = 581022
+    # [Description("期限切れのミッションです。")]
+    UnionMissionMissionExpired = 581023
+    # [Description("既にクールタイムが完了しています。")]
+    UnionMissionCoolTimeAlreadyCompleted = 581024
+    # [Description("集計・マッチング処理時間中は利用できません。")]
+    UnionMissionInBatchTime = 581025
+    # [Description("所属ギルドがマッチング済みではありません。")]
+    UnionMissionNotMatched = 581026
+    # [Description("団結ミッションのブロックギルドデータが見つかりません。")]
+    UnionMissionNotFoundBlockGuildData = 581027
     # [Description("団結ミッションの対象ワールドではありません。")]
     UnionMissionNotInMatchingWorld = 581028
     # [Description("存在しないTreasureChestです。")]
