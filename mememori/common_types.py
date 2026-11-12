@@ -1632,6 +1632,8 @@ class MissionTransitionDestinationType(_Enum):
     WebStoreGuidance = 602
     # [Description("Webストア説明ダイアログ")]
     WebStoreGuidanceFreeProduct = 603
+    # [Description("Webストア説明ダイアログ")]
+    WebStoreGuidanceGetWebCrystal = 604
     # [Description("キャラ画面（所持キャラタブ）")]
     CharacterList = 701
     # [Description("キャラ画面（進化タブ）")]
